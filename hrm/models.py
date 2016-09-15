@@ -171,9 +171,12 @@ class SalaryItem(models.Model):
 
 
 class SalaryInformation(models.Model):
-	salary_item = models.OneToOneField(SalaryItem, on_delete=models.CASCADE)
-	employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
+	salary_item = models.ForeignKey(SalaryItem, on_delete=models.CASCADE)
+	employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 	value = models.DecimalField(max_digits=15, decimal_places=2)
+
+	class Meta:
+		unique_together = (('salary_item', 'employee'))
 
 	def __str__(self):
 		return self.salary_item.name

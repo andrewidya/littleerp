@@ -25,6 +25,7 @@ class SalaryItemAdmin(admin.ModelAdmin):
 
 class SalaryInformationInline(admin.TabularInline):
 	model = SalaryInformation
+	extra = 4
 
 class EmployeeAdmin(admin.ModelAdmin):
 	list_display = ('reg_number', 'name', 'gender', 'marital_status', 'phone_number' ,'date_of_hire', 'division', 'job_title', 'bank_account')
@@ -38,7 +39,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 	)
 
 	inlines = [
-		FamilyOfEmployeeInline, EducationInline, SalaryInformationInline
+		FamilyOfEmployeeInline, EducationInline, SalaryInformationInline,
 	]
 
 class FamilyOfEmployeeAdmin(admin.ModelAdmin):
@@ -54,6 +55,10 @@ class EvaluationPeriodAdmin(admin.ModelAdmin):
 
 class LeaveRecordAdmin(admin.ModelAdmin):
 	list_display = ('date_taken', 'employee')
+
+@admin.register(SalaryInformation)
+class SalaryInformation(admin.ModelAdmin):
+	pass
 
 admin.site.register(Division, DivisionAdmin)
 admin.site.register(JobTitle)
