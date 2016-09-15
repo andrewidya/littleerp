@@ -24,7 +24,7 @@ class SalesOrder(models.Model):
 		return "IDR" + '{:20,.2f}'.format(self.man_power_need * item_cost)
 
 	def customer_head_office(self):
-		return self.customer.customer.name
+		return self.customer.parent.name
 
 class ItemCategory(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)

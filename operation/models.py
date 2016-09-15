@@ -19,14 +19,21 @@ class Training(models.Model):
 	author = models.CharField(verbose_name=_('Trainer'), max_length=50, blank=True)
 	is_certificate = models.BooleanField()
 	report = models.TextField(blank=True)
-	employee = models.ForeignKey(Employee, verbose_name=_('Attendance Person'))
-	customer = models.ForeignKey(Customer)
+	train_type = models.ForeignKey(TrainingType, verbose_name=_('Type of Training'))
+	employee = models.ManyToManyField(Employee, through='TrainingAttendance')
+	customer = models.ManyToManyField(Customer, through='TrainingAttendance')
 
 	class Meta:
 		verbose_name = 'Training'
 
 	def __str__(self):
 		return self.author
+
+class TrainingAttendance(models.Model):
+	training = models.ForeignKey(Training, related_name='training_attendance')
+	employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+	customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
 
 # Customer visiting module
 class VisitEvaluationSubject(models.Model):
