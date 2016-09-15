@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext as _
-from crm.models import Customer, Branch
+from crm.models import Customer
 
 # Create your models here.
 
@@ -28,7 +28,7 @@ class JobTitle(models.Model):
 
 class MaritalStatus(models.Model):
 	code = models.CharField(verbose_name=_('Marital Code'), max_length=4)
-	description = models.CharField(verbose_name=_('Description'), max_length=255)
+	description = models.CharField(verbose_name=_('Description'), max_length=255, blank=True)
 
 	class Meta:
 		verbose_name = 'Marital Status'
@@ -53,12 +53,13 @@ class Employee(models.Model):
 	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
 	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30)
 	date_of_hire = models.DateField(verbose_name=_('Date of Hire'))
-	account_number = models.CharField(verbose_name=_('Account Number'), max_length=20, null=True, blank=True)
+	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
 	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
 	is_active = models.BooleanField()
-	divison = models.ForeignKey(Division)
+	division = models.ForeignKey(Division)
 	job_title = models.ForeignKey(JobTitle)
 	marital_status = models.ForeignKey(MaritalStatus)
+	salary_information = models.ManyToManyField('SalaryItem', through='SalaryInformation')
 
 	class Meta:
 		verbose_name = 'Employee'
@@ -156,8 +157,23 @@ class LeaveRecord(models.Model):
 	date_taken = models.DateField(verbose_name=_('Leave Date Taken'))
 	employee = models.ForeignKey(Employee)
 	customer = models.ForeignKey(Customer)
-	branch = models.ForeignKey(Branch)
 	description = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.employee.name
+
+class SalaryItem(models.Model):
+	name = models.CharField(verbose_name=_('Salary Component Name'), max_length=25)
+	description = models.CharField(max_length=255, blank=True)
+
+	def __str__(self):
+		return self.name
+
+
+class SalaryInformation(models.Model):
+	salary_item = models.OneToOneField(SalaryItem, on_delete=models.CASCADE)
+	employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
+	value = models.DecimalField(max_digits=15, decimal_places=2)
+
+	def __str__(self):
+		return self.salary_item.name

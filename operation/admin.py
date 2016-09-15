@@ -10,7 +10,7 @@ class VisitRecordInline(admin.TabularInline):
 	model = VisitRecord
 
 class VisitAdmin(admin.ModelAdmin):
-	list_display = ('date', 'customer', 'branch', 'visitor')
+	list_display = ('date', 'customer', 'visitor')
 	inlines = [VisitRecordInline]
 
 admin.site.register(Training, TrainingAdmin)

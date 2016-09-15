@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from hrm.models import Employee
-from crm.models import Customer, Branch
-
+from crm.models import Customer
 # Create your models here.
 
 
@@ -22,7 +21,6 @@ class Training(models.Model):
 	report = models.TextField(blank=True)
 	employee = models.ForeignKey(Employee, verbose_name=_('Attendance Person'))
 	customer = models.ForeignKey(Customer)
-	branch = models.ForeignKey(Branch)
 
 	class Meta:
 		verbose_name = 'Training'
@@ -43,7 +41,6 @@ class VisitEvaluationSubject(models.Model):
 class Visit(models.Model):
 	date = models.DateField()
 	customer = models.ForeignKey(Customer)
-	branch = models.ForeignKey(Branch)
 	visitor = models.CharField(verbose_name=_('Visitor'), max_length=20)
 	visit_record = models.ManyToManyField(VisitEvaluationSubject, through='VisitRecord')
 
