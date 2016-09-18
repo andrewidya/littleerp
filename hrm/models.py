@@ -43,6 +43,14 @@ class Employee(models.Model):
 		('L', 'Laki-laki')
 	)
 
+	MARITAL_CHOICES = (
+		('TK', 'Belum Menikah'),
+		('K/0', 'Menikah Anak 0'),
+		('K/1', 'Menikah Anak 1'),
+		('K/2', 'Menikah Anak 2'),
+		('K/3', 'Menikah Anak 3')
+	)
+
 	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=6, unique=True)
 	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15)
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
@@ -58,7 +66,7 @@ class Employee(models.Model):
 	is_active = models.BooleanField()
 	division = models.ForeignKey(Division)
 	job_title = models.ForeignKey(JobTitle)
-	marital_status = models.ForeignKey(MaritalStatus)
+	marital_status = models.CharField(verbose_name=_('Status Pernikahan'), max_length=3, choices=MARITAL_CHOICES)
 	salary_information = models.ManyToManyField('SalaryItem', through='SalaryInformation')
 
 	class Meta:
