@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext as _
+from data_importer.importers import XLSImporter, CSVImporter
 
 # Create your models here.
 
@@ -24,3 +25,14 @@ class Customer(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class CustomerImporterXLS(XLSImporter):
+	fields = ['code', 'name', 'phone_number', 'address', 'city', 'field', 'tax_id_number', 'join_date']
+	class Meta:
+		model = Customer
+
+class CustomerImporterCSV(CSVImporter):
+	fields = ['code', 'name', 'phone_number', 'address', 'city', 'field', 'tax_id_number', 'join_date']
+	class Meta:
+		model = Customer
+		delimiter = ","

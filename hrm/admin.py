@@ -17,9 +17,11 @@ class EducationInline(admin.StackedInline):
 		}),
 	)
 
+@admin.register(Division)
 class DivisionAdmin(admin.ModelAdmin):
 	list_display = ('name', 'description')
 
+@admin.register(SalaryItem)
 class SalaryItemAdmin(admin.ModelAdmin):
 	fields = ('name', 'description')
 
@@ -27,6 +29,7 @@ class SalaryInformationInline(admin.TabularInline):
 	model = SalaryInformation
 	extra = 4
 
+@admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
 	list_display = ('reg_number', 'name', 'gender', 'marital_status', 'phone_number' ,'date_of_hire', 'division', 'job_title', 'bank_account')
 	fieldsets = (
@@ -42,9 +45,11 @@ class EmployeeAdmin(admin.ModelAdmin):
 		FamilyOfEmployeeInline, EducationInline, SalaryInformationInline,
 	]
 
+@admin.register(FamilyOfEmployee)
 class FamilyOfEmployeeAdmin(admin.ModelAdmin):
 	list_display = ('employee', 'name', 'relationship')
 
+@admin.register(EvaluationPeriod)
 class EvaluationPeriodAdmin(admin.ModelAdmin):
 	def save_model(self, reques, obj, form, change):
 		if obj.evaluation_date:
@@ -53,6 +58,7 @@ class EvaluationPeriodAdmin(admin.ModelAdmin):
 					obj.period = str(obj.evaluation_date)
 		obj.save()
 
+@admin.register(LeaveRecord)
 class LeaveRecordAdmin(admin.ModelAdmin):
 	list_display = ('date_taken', 'employee')
 
@@ -60,13 +66,7 @@ class LeaveRecordAdmin(admin.ModelAdmin):
 class SalaryInformation(admin.ModelAdmin):
 	pass
 
-admin.site.register(Division, DivisionAdmin)
 admin.site.register(JobTitle)
 admin.site.register(MaritalStatus)
-admin.site.register(Employee, EmployeeAdmin)
-#admin.site.register(FamilyOfEmployee, FamilyOfEmployeeAdmin)
 admin.site.register(Evaluation)
 admin.site.register(EvaluationItem)
-admin.site.register(EvaluationPeriod, EvaluationPeriodAdmin)
-admin.site.register(LeaveRecord, LeaveRecordAdmin)
-admin.site.register(SalaryItem, SalaryItemAdmin)

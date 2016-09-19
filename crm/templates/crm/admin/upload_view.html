@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify %}
+
+{% block content %}
+<form action="." method="post">  
+<fieldset class="module aligned">  
+	{% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
