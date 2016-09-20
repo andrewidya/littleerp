@@ -3,7 +3,6 @@ from django.utils.translation import ugettext as _
 from data_importer.importers import XLSImporter, CSVImporter
 
 # Create your models here.
-
 class Customer(models.Model):
 	parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('Head Office'))
 	code = models.CharField(verbose_name=_('Code'), max_length=10)

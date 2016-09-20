@@ -26,18 +26,14 @@ class JobTitle(models.Model):
 	def __str__(self):
 		return self.name
 
-class MaritalStatus(models.Model):
-	code = models.CharField(verbose_name=_('Marital Code'), max_length=4)
-	description = models.CharField(verbose_name=_('Description'), max_length=255, blank=True)
-
-	class Meta:
-		verbose_name = 'Marital Status'
-		verbose_name_plural = 'Marital Statuses'
-
-	def __str__(self):
-		return self.code
-
 class Employee(models.Model):
+	BLODD_TYPE_CHOICES = (
+		('A', 'A'),
+		('B', 'B'),
+		('O', 'O'),
+		('AB', 'AB')
+	)
+
 	GENDER_CHOICES = (
 		('P', 'Perempuan'),
 		('L', 'Laki-laki')
@@ -51,23 +47,23 @@ class Employee(models.Model):
 		('K/3', 'Menikah Anak 3')
 	)
 
-	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=6, unique=True)
-	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15)
-	name = models.CharField(verbose_name=_('Name'), max_length=50)
+	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=6, unique=True)	
+	first_name = models.CharField(verbose_name=_('First Name'), max_length=50)
+	last_name = models.CharField(verbose_name=_('Last Name'), max_length=50)
 	birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
 	birth_date = models.DateField(verbose_name=_('Birth Date'))
-	address = models.CharField(verbose_name=_('Address'), max_length=100)
-	city = models.CharField(verbose_name=_('City'), max_length=20)
-	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
-	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30)
-	date_of_hire = models.DateField(verbose_name=_('Date of Hire'))
-	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
 	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
+	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
+	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
+	religion = models.CharField(verbose_name=_('Religion'), max_length=10, blank=True)	
+	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
+	job_title = models.ForeignKey(JobTitle, verbose_name=_('Job Tittle'), blank=True)
+	division = models.ForeignKey(Division, verbose_name=_('Division'), blank=True)
+	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30)
+	blood_type = models.CharField(verbose_name=_('Blood Type'), max_length=2, choices=BLODD_TYPE_CHOICES)
+	date_of_hire = models.DateField(verbose_name=_('Date of Hire'))
+	marital_status = models.CharField(verbose_name=_('Marital Status'), max_length=3, choices=MARITAL_CHOICES)	
 	is_active = models.BooleanField()
-	division = models.ForeignKey(Division)
-	job_title = models.ForeignKey(JobTitle)
-	marital_status = models.CharField(verbose_name=_('Status Pernikahan'), max_length=3, choices=MARITAL_CHOICES)
-	salary_information = models.ManyToManyField('SalaryItem', through='SalaryInformation')
 
 	class Meta:
 		verbose_name = 'Employee'
@@ -75,6 +71,17 @@ class Employee(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class EmployeeAddress(models.Model):
+	employee = models.ForeignKey(Employee)
+	address = models.CharField(verbose_name=_('Address'), max_length=255)
+	district = models.CharField(verbose_name=_('District'), max_length=255)
+	city = models.CharField(verbose_name=_('City'), max_length=255)
+	province = models.CharField(verbose_name=_('province'), max_length=255)
+	address_status = models.CharField(verbose_name=_('Description'), max_length=8, choices=(('KTP', 'KTP'), ('ASAL', 'ASAL'), ('DOMISILI', 'DOMISILI')))
+
+	def __str__(self):
+		return self.address
 
 class FamilyOfEmployee(models.Model):
 	GENDER_CHOICES = (
@@ -91,9 +98,10 @@ class FamilyOfEmployee(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
 	birth_date = models.DateField()
+	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
 	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
 	relationship = models.CharField(verbose_name=_('Relationship'), max_length=1, choices=RELATIONSHIP_CHOICES)
-	current_activity = models.CharField(verbose_name=_('Current Activity'), max_length=50, null=True, blank=True)
+	activity = models.CharField(verbose_name=_('Current Activity'), max_length=50, null=True, blank=True)
 
 	class Meta:
 		verbose_name = 'Family Information'
@@ -117,20 +125,62 @@ class Education(models.Model):
 		('10', 'Akademi/Pelatihan'),
 	)
 
+	employee = models.ForeignKey(Employee)
 	grade = models.CharField(verbose_name=_('Grade'), max_length=2, choices=GRADE_CHOICES)
 	name = models.CharField(verbose_name=_('Institution Name'), max_length=50)
 	address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
 	city = models.CharField(verbose_name=_('City'), max_length=25, blank=True)
 	graduation_date = models.DateField()
+	certificate = models.BooleanField()
 	certificate_number = models.CharField(verbose_name=_('Certificate Number'), max_length=30, blank=True)
-	description = models.CharField(verbose_name=_('Short Description'), max_length=255, blank=True)
-	employee = models.ForeignKey(Employee)
+	description = models.CharField(verbose_name=_('Short Description'), max_length=255, blank=True)	
 
 	class Meta:
 		verbose_name = 'Education'
 
 	def __str__(self):
 		return ": " + Education.GRADE_CHOICES[int(self.grade)-1][1]
+
+# Leave Module
+class LeaveType(models.Model):
+	name = models.CharField(verbose_name=_('Leave Type'), max_length=50, help_text="Ex: Medical, Holliday etc")
+
+	def __str__(self):
+		return self.name
+
+class AnnualLeave(models.Model):
+	employee = models.ForeignKey(Employee)
+	leave_type = models.ForeignKey(LeaveType)
+	year = models.DateField(verbose_name=_('Year'));
+	day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
+	remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
+	last_update = models.DateField(auto_now_add=True)
+	
+	class Meta:
+		verbose_name = 'Employee Annual Leave'
+		verbose_name_plural = 'Employee Annual Leaves'
+
+	def __str__(self):
+		return self.employee.name
+
+class LeaveTaken(models.Model):
+	employee = models.ForeignKey(Employee)
+	leave_type = models.ForeignKey(LeaveType)
+	from_date = models.DateField()
+	to_date = models.DateField()
+	day = models.SmallIntegerField()
+
+	class Meta:
+		verbose_name = 'Annual Leave Taken'
+		verbose_name_plural = 'Annual Leave Taken Lists'
+
+	def __str__(self):
+		return self.employee.name
+
+	def save(self, *args, **kwargs):
+		diff = self.to_date - self.from_date
+		self.day = diff.days
+		super(LeaveType, self).save(*args, **kwargs)
 
 # Evaluation Module
 class EvaluationPeriod(models.Model):
@@ -143,48 +193,25 @@ class EvaluationPeriod(models.Model):
 	def __str__(self):
 		return str(self.evaluation_date)
 
+	def save(self, *args, **kwargs):
+		if self.id == None:
+			self.period = str(self.evaluation_date.month) + "-" + str(self.evaluation_date.year)
+		super(EvaluationPeriod, self).save(*args, **kwargs)
+
 class EvaluationItem(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	description = models.TextField(blank=True)
-	evaluation = models.ManyToManyField(Employee, through='Evaluation')
 
 	def __str__(self):
 		return self.name
 
 class Evaluation(models.Model):
-	item = models.ForeignKey(EvaluationItem, related_name='evaluated_item')
 	employee = models.ForeignKey(Employee)
-	value = models.CharField(verbose_name=_('Value'), max_length=3)
-	period = models.ForeignKey(EvaluationPeriod)
-
-	def __str__(self):
-		return self.employee.name
-
-# Leave Module
-class LeaveRecord(models.Model):
-	date_taken = models.DateField(verbose_name=_('Leave Date Taken'))
-	employee = models.ForeignKey(Employee)
-	customer = models.ForeignKey(Customer)
-	description = models.TextField(blank=True)
-
-	def __str__(self):
-		return self.employee.name
-
-class SalaryItem(models.Model):
-	name = models.CharField(verbose_name=_('Salary Component Name'), max_length=25)
-	description = models.CharField(max_length=255, blank=True)
-
-	def __str__(self):
-		return self.name
+	eval_period = models.ForeignKey(EvaluationPeriod)
+	date_created = models.DateField()
 
 
-class SalaryInformation(models.Model):
-	salary_item = models.ForeignKey(SalaryItem, on_delete=models.CASCADE)
-	employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-	value = models.DecimalField(max_digits=15, decimal_places=2)
-
-	class Meta:
-		unique_together = (('salary_item', 'employee'))
-
-	def __str__(self):
-		return self.salary_item.name
+class EvaluationDetail(models.Model):
+	evaluation = models.ForeignKey(Evaluation)
+	eval_item = models.ForeignKey(EvaluationItem)
+	eval_value = models.TextField()

@@ -38,13 +38,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'address_data',
     'import_export',
-    'utils',
+    #'utils',
     'hrm',
     'crm',
-    'mp_supply',
-    'operation',
-    'payroll',
+    #'mp_supply',
+    #'operation',
+    #'payroll',
 )
 
 MIDDLEWARE_CLASSES = (
