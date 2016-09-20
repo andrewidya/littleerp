@@ -29,15 +29,15 @@ class SalesOrder(models.Model):
 		('BASIC', 'Basic Salary'),
 		('TOTAL', 'Grand Total')
 	)
-	number = models.CharField(verbose_name=_('SO Number'), max_length=50)
+	number = models.CharField(verbose_name=_('SO Number'), max_length=50, blank=True)
 	date_create = models.DateField(verbose_name=_('Date Issued'))
 	date_start = models.DateField(verbose_name=_('Contract Start Date'))
 	date_end = models.DateField(verbose_name=_('Contract End Date'))
 	customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
-	reference = models.CharField(verbose_name=_('Reference'), max_length=255)
-	note = models.TextField()
+	reference = models.CharField(verbose_name=_('Reference'), max_length=255, blank=True)
+	note = models.TextField(blank=True)
 	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'), help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12'))
-	fee = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Management Fee'))
+	fee = models.DecimalField(max_digits=12, decimal_places=3, verbose_name=_('Management Fee'))
 	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'), help_text=_('Set to basic if the fee will be calculated \
 		from basic salary, otherwise set to grand total'), max_length=5, choices=FEE_CONDITION_CHOICES)
 
@@ -47,3 +47,63 @@ class SalesOrder(models.Model):
 
 	def __str__(self):
 		return self.number
+
+	def save(self, *args, **kwargs):
+		if self.id == None:
+			from datetime import datetime
+			date = datetime.now().strftime("%Y%m%d")
+			self.number = "SO" + date
+		super(SalesOrder, self).save(*args, **kwargs)
+
+class SalesOrderDetail(models.Model):
+	SERVICE_CHOICES = (
+		('SCR', 'Security'),
+		('OFB', 'Office Boy'),
+		('ADM', 'Administration')
+	)
+
+	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))
+	service = models.CharField(verbose_name=_('Service Type'), choices=SERVICE_CHOICES, max_length=3)
+	quantity = models.SmallIntegerField(verbose_name=_('Unit Quantity'))
+	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+	other_salary_detail = models.ManyToManyField('ServiceSalaryItem', through='ServiceSalaryDetail', related_name='other_salary_detail')
+
+	class Meta:
+		verbose_name = 'Sales Order Detail'
+		verbose_name_plural = 'Sales Order Details'
+
+	def __str__(self):
+		return self.sales_order.number + ":" + self.service
+
+class ItemCategory(models.Model):
+	name = models.CharField(verbose_name=_('Item Category'), max_length=255)
+
+	class Meta:
+		verbose_name = 'Item Category'
+		verbose_name_plural = 'Item Categories'
+
+	def __str__(self):
+		return self.name
+
+class ServiceSalaryItem(models.Model):
+	name = models.CharField(verbose_name=_('Price Item Component'), max_length=255)
+	category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE, verbose_name=_('Category'), related_name='service_price_item')
+
+	class Meta:
+		verbose_name = 'Service Salary Item'
+		verbose_name_plural = 'Service Salary Items'
+
+	def __str__(self):
+		return self.name
+
+class ServiceSalaryDetail(models.Model):
+	service_order_detail = models.ForeignKey(SalesOrderDetail, verbose_name=_('Service Order Detail'), on_delete=models.CASCADE)
+	service_salary_item = models.ForeignKey(ServiceSalaryItem, verbose_name=_('Salary Item'), on_delete=models.CASCADE)
+	price = models.DecimalField(verbose_name=_('Price'), max_digits=12, decimal_places=2)
+
+	class Meta:
+		verbose_name = 'Service Salary Detail'
+		verbose_name_plural = 'Service Salary Details'
+
+	def __str__(self):
+		return self.service_salary_item.name + ":" + self.service_order_detail.sales_order.number
