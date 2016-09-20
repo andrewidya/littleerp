@@ -145,6 +145,10 @@ class Education(models.Model):
 class LeaveType(models.Model):
 	name = models.CharField(verbose_name=_('Leave Type'), max_length=50, help_text="Ex: Medical, Holliday etc")
 
+	class Meta:
+		verbose_name = 'Leave Type'
+		verbose_name_plural = 'Leave Types'
+
 	def __str__(self):
 		return self.name
 

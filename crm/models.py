@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import ugettext as _
-from data_importer.importers import XLSImporter, CSVImporter
 
 # Create your models here.
 class Customer(models.Model):
@@ -19,19 +18,32 @@ class Customer(models.Model):
 		verbose_name = 'Customer List'
 		verbose_name_plural = 'Customer Information'
 		permissions = (
-			('view_customer', 'Can view available customer'),
+			('view_only_customer', 'Can view only available customer'),
 		)
 
 	def __str__(self):
 		return self.name
 
-class CustomerImporterXLS(XLSImporter):
-	fields = ['code', 'name', 'phone_number', 'address', 'city', 'field', 'tax_id_number', 'join_date']
-	class Meta:
-		model = Customer
+class SalesOrder(models.Model):
+	FEE_CONDITION_CHOICES = (
+		('BASIC', 'Basic Salary'),
+		('TOTAL', 'Grand Total')
+	)
+	number = models.CharField(verbose_name=_('SO Number'), max_length=50)
+	date_create = models.DateField(verbose_name=_('Date Issued'))
+	date_start = models.DateField(verbose_name=_('Contract Start Date'))
+	date_end = models.DateField(verbose_name=_('Contract End Date'))
+	customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
+	reference = models.CharField(verbose_name=_('Reference'), max_length=255)
+	note = models.TextField()
+	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'), help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12'))
+	fee = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Management Fee'))
+	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'), help_text=_('Set to basic if the fee will be calculated \
+		from basic salary, otherwise set to grand total'), max_length=5, choices=FEE_CONDITION_CHOICES)
 
-class CustomerImporterCSV(CSVImporter):
-	fields = ['code', 'name', 'phone_number', 'address', 'city', 'field', 'tax_id_number', 'join_date']
 	class Meta:
-		model = Customer
-		delimiter = ","
+		verbose_name = 'Sales Order'
+		verbose_name_plural = 'Sales Orders'
+
+	def __str__(self):
+		return self.number
