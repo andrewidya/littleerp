@@ -13,6 +13,7 @@ class Importer(object):
 		self.file_name = file_name
 		self._file_open()
 		self._populate_dataset_header_from_obj()
+		self._data_parsing()
 
 	def _file_open(self):
 		self.excel_file = pe.get_records(file_name=self.file_name)
@@ -20,7 +21,7 @@ class Importer(object):
 	def _populate_dataset_header_from_obj(self):
 		self.dataset.headers = [field.name for field in self.model._meta.fields]
 
-	def data_parsing(self):
+	def _data_parsing(self):
 		for record in self.excel_file:
 			data = []
 			for index in self.dataset.headers:
@@ -28,7 +29,6 @@ class Importer(object):
 			self.dataset.append(data)
 
 	def import_data(self):
-		self.data_parsing()
 		model_resource = resources.modelresource_factory(model=self.model)()
 		result = model_resource.import_data(self.dataset, dry_run=True)
 		if not result.has_errors():
