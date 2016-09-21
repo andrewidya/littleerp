@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 # Create your models here.
@@ -23,6 +24,9 @@ class Customer(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def get_absolute_url(self):
+		return reverse('customer-detail', kwargs={'pk': self.pk})
 
 class SalesOrder(models.Model):
 	FEE_CONDITION_CHOICES = (
