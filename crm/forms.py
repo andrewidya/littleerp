@@ -48,4 +48,11 @@ class CustomerAddForm(ModelForm):
 					'placeholder': 'NPWP',
 				}
 			),
+			'join_date': DateInput(
+				attrs={
+					'data-provide': 'datepicker',
+					'class': 'form-control',
+					'data-date-format': 'yyyy-mm-dd',
+				}
+			),
 		}

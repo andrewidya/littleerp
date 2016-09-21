@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 # Create your models here.
 class Customer(models.Model):
 	parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('Head Office'))
-	code = models.CharField(verbose_name=_('Code'), max_length=10)
+	code = models.CharField(verbose_name=_('Code'), max_length=10, unique=True)
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
 	address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)

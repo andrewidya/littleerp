@@ -1,6 +1,9 @@
 import tablib
 import pyexcel as pe
 from import_export import resources
+from django.db.models import get_app
+
+app_list = []
 
 class Importer(object):
 	dataset = tablib.Dataset()
@@ -33,3 +36,7 @@ class Importer(object):
 		result = model_resource.import_data(self.dataset, dry_run=True)
 		if not result.has_errors():
 			result = model_resource.import_data(self.dataset, dry_run=False)
+
+def site_register(*args):
+	for app in args:
+		app_list.append(get_app(app))

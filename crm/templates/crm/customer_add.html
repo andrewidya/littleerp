@@ -1,30 +1,124 @@
 {% extends "base.html" %}
+{% load sekizai_tags %}
+{% load static from staticfiles %}
+
 {% block content %}
-<div class="box">
-	<div class="box-header with-border">
-		<h3 class="box-title">New Customer Information</h3>
-	</div>
-	<div class="box-body">
+{% addtoblock "css" %}
+	<link rel="stylesheet" href="{% static 'minierp/plugins/datepicker/datepicker3.css' %}">
+{% endaddtoblock %}
+
+<div class="col-md-8">
+	<div class="box">
 		<form action="{% url 'crm:customer-add' %}" method="post">{% csrf_token %}
-			<label for="{{ form.code.id_for_label }}">Code:</label>
-			{{ form.code }}
-			<label for="{{ form.name.id_for_label }}">Name:</label>
-			{{ form.name }}
-			<label for="{{ form.phone_number.id_for_label }}">Phone Number:</label>
-			{{ form.phone_number }}
-			<label for="{{ form.address.id_for_label }}">Addres:</label>
-			{{ form.address }}
-			<label for="{{ form.city.id_for_label }}">City:</label>
-			{{ form.city }}
-			<label for="{{ form.field.id_for_label }}">Field:</label>
-			{{ form.field }}
-			<label for="{{ form.tax_id_number.id_for_label }}">NPWP:</label>
-			{{ form.tax_id_number }}
-			<label for="{{ form.join_date.id_for_label }}">Join Date:</label>
-			{{ form.join_date }}
-			<input class="btn btn-primary" type="submit" value="Submit">
+			<div class="box-header with-border">
+				<h3 class="box-title">New Customer Information</h3>
+			</div>
+			<div class="box-body">		
+				<div class="form-group">
+					{% if form.code.errors %}
+						{% for error in form.code.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.code.id_for_label }}">Code:</label>
+					{{ form.code }}
+				</div>
+				<div class="form-group">
+					{% if form.name.errors %}
+						{% for error in form.name.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.name.id_for_label }}">Name:</label>
+					{{ form.name }}
+				</div>
+				<div class="form-group">
+					{% if form.phone_number.errors %}
+						{% for error in form.phone_number.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.phone_number.id_for_label }}">Phone Number:</label>
+					{{ form.phone_number }}
+				</div>
+				<div class="form-group">
+					{% if form.address.errors %}
+						{% for error in form.address.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.address.id_for_label }}">Addres:</label>
+					{{ form.address }}
+				</div>
+				<div class="form-group">
+					{% if form.city.errors %}
+						{% for error in form.city.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.city.id_for_label }}">City:</label>
+					{{ form.city }}
+				</div>
+				<div class="form-group">
+					{% if form.field.errors %}
+						{% for error in form.field.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.field.id_for_label }}">Field:</label>
+					{{ form.field }}
+				</div>
+				<div class="form-group">
+					{% if form.tax_id_number.errors %}
+						{% for error in form.tax_id_number.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.tax_id_number.id_for_label }}">NPWP:</label>
+					{{ form.tax_id_number }}
+				</div>
+				<div class="form-group">
+					{% if form.join_date.errors %}
+						{% for error in form.join_date.errors %}
+							<div class="alert alert-danger">
+  								<strong>Info!</i></strong> {{ error|escape }}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<label for="{{ form.join_date.id_for_label }}">Join Date:</label>
+					<div class="input-group date">
+						<div class="input-group-addon">
+							<i class="fa fa-calendar"></i>
+						</div>
+						{{ form.join_date }}
+					</div>
+				</div>	
+			</div>
+			<div class="box-footer">
+				<input class="btn btn-primary" type="submit" value="Submit">	
+			</div>
 		</form>
 	</div>
 </div>
+
+{% addtoblock "js" %}	
+	<script>
+		$('.datepicker').datepicker();
+	</script>
+{% endaddtoblock %}
 {% endblock %}
 
