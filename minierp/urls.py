@@ -11,5 +11,6 @@ urlpatterns = [
 
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^logout/', "django.contrib.auth.views.logout", {'next_page': '/'}, name="logout"),
     url(r'^crm/', include('crm.urls', namespace='crm', app_name='crm')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

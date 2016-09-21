@@ -2,18 +2,23 @@
 {% load sekizai_tags %}
 {% load static from staticfiles %}
 
+{% block content_header %}
+	<h1>Customer
+		<small>Creation Page</small>
+	</h1>
+{% endblock %}
+
 {% block content %}
 {% addtoblock "css" %}
 	<link rel="stylesheet" href="{% static 'minierp/plugins/datepicker/datepicker3.css' %}">
 {% endaddtoblock %}
-
 <div class="col-md-8">
 	<div class="box">
 		<form action="{% url 'crm:customer-add' %}" method="post">{% csrf_token %}
 			<div class="box-header with-border">
 				<h3 class="box-title">New Customer Information</h3>
 			</div>
-			<div class="box-body">		
+			<div class="box-body">
 				<div class="form-group">
 					{% if form.code.errors %}
 						{% for error in form.code.errors %}
@@ -106,19 +111,22 @@
 						</div>
 						{{ form.join_date }}
 					</div>
-				</div>	
+				</div>
 			</div>
 			<div class="box-footer">
-				<input class="btn btn-primary" type="submit" value="Submit">	
+				<input class="btn btn-primary" type="submit" value="Submit">
 			</div>
 		</form>
 	</div>
 </div>
 
-{% addtoblock "js" %}	
-	<script>
-		$('.datepicker').datepicker();
-	</script>
-{% endaddtoblock %}
 {% endblock %}
 
+{% block js %}
+	{% addtoblock "js" %}
+		<script src="{% static 'minierp/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
+		<script>
+			$('.datepicker').datepicker();
+		</script>
+	{% endaddtoblock %}
+{% endblock%}
