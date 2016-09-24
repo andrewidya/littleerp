@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     #'utils',
     'hrm',
     'crm',
+    'adminlte',
     #'mp_supply',
     #'operation',
     #'payroll',
@@ -126,3 +127,5 @@ STATICFILES_FINDERS = (
 
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
+
+GRAPPELLI_ADMIN_TITLE = "PT Commercial Servisindo Prima"

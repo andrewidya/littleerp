@@ -28,6 +28,16 @@ class Customer(models.Model):
 	def get_absolute_url(self):
 		return reverse('customer-detail', kwargs={'pk': self.pk})
 
+class Service(models.Model):
+	name = models.CharField(verbose_name=_('Service Provided'), max_length=255)
+
+	class Meta:
+		verbose_name = 'Service Provided'
+		verbose_name = 'Service Provided List'
+
+	def __str__(self):
+		return self.name
+
 class SalesOrder(models.Model):
 	FEE_CONDITION_CHOICES = (
 		('BASIC', 'Basic Salary'),
@@ -60,14 +70,8 @@ class SalesOrder(models.Model):
 		super(SalesOrder, self).save(*args, **kwargs)
 
 class SalesOrderDetail(models.Model):
-	SERVICE_CHOICES = (
-		('SCR', 'Security'),
-		('OFB', 'Office Boy'),
-		('ADM', 'Administration')
-	)
-
 	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))
-	service = models.CharField(verbose_name=_('Service Type'), choices=SERVICE_CHOICES, max_length=3)
+	service = models.ForeignKey(Service, verbose_name=_('Service Demand'))
 	quantity = models.SmallIntegerField(verbose_name=_('Unit Quantity'))
 	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
 	other_salary_detail = models.ManyToManyField('ServiceSalaryItem', through='ServiceSalaryDetail', related_name='other_salary_detail')
@@ -77,7 +81,7 @@ class SalesOrderDetail(models.Model):
 		verbose_name_plural = 'Sales Order Details'
 
 	def __str__(self):
-		return self.sales_order.number + ":" + self.service
+		return self.sales_order.number + ":" + self.service.name
 
 class ItemCategory(models.Model):
 	name = models.CharField(verbose_name=_('Item Category'), max_length=255)
@@ -106,8 +110,9 @@ class ServiceSalaryDetail(models.Model):
 	price = models.DecimalField(verbose_name=_('Price'), max_digits=12, decimal_places=2)
 
 	class Meta:
-		verbose_name = 'Service Salary Detail'
-		verbose_name_plural = 'Service Salary Details'
+		verbose_name = 'Detail Salary on Service'
+		verbose_name_plural = 'Detail Salary on Service'
+		unique_together = (('service_order_detail', 'service_salary_item'),)
 
 	def __str__(self):
 		return self.service_salary_item.name + ":" + self.service_order_detail.sales_order.number
