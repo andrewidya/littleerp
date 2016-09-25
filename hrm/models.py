@@ -4,6 +4,16 @@ from crm.models import SalesOrderDetail
 
 # Create your models here.
 
+class BankName(models.Model):
+	name = models.CharField(verbose_name=_('Bank Name'), max_length=50)
+
+	def __str__(self):
+		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ("name__icontains",)
+
 class Division(models.Model):
 	name = models.CharField(verbose_name=_('Division Name'), max_length=20)
 	description = models.TextField(blank=True)
@@ -15,6 +25,10 @@ class Division(models.Model):
 	def __str__(self):
 		return self.name
 
+	@staticmethod
+	def autocomplete_search_fields():
+		return ("name__icontains",)
+
 class JobTitle(models.Model):
 	name = models.CharField(verbose_name=_('Job Title'), max_length=20)
 	description = models.TextField(blank=True)
@@ -25,6 +39,10 @@ class JobTitle(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ("name__icontains",)
 
 class Employee(models.Model):
 	BLODD_TYPE_CHOICES = (
@@ -54,6 +72,7 @@ class Employee(models.Model):
 	birth_date = models.DateField(verbose_name=_('Birth Date'))
 	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
 	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
+	bank = models.ForeignKey(BankName, verbose_name=_('Bank'))
 	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
 	religion = models.CharField(verbose_name=_('Religion'), max_length=10, blank=True)
 	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
@@ -77,6 +96,10 @@ class Employee(models.Model):
 
 	get_full_name.short_description = 'Name'
 	get_full_name.allow_tags = True
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('first_name__icontains', 'last_name__icontains', 'reg_number__icontains')
 
 class EmployeeAddress(models.Model):
 	employee = models.ForeignKey(Employee)
@@ -157,6 +180,10 @@ class LeaveType(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('name__icontains',)
 
 class AnnualLeave(models.Model):
 	employee = models.ForeignKey(Employee)
@@ -269,13 +296,20 @@ class EmployeeContract(models.Model):
 		verbose_name_plural = 'Employee Contracts'
 
 	def __str__(self):
-		return str(self.employee) + ":" + self.contract_status
+		return str(self.employee) + " " + str(self.service_related) + " " + self.contract_status
 
 	@property
 	def get_basic_salary(self):
 		return 'IDR{:,.2f}'.format(self.basic_salary)
 
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('employee__first_name__icontains', 'reference__icontains', 'service_related__sales_order__number__icontains')
+
 class OtherSalary(models.Model):
 	employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='employee_contract')
 	salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'), related_name='salary_name')
 	value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Value'))
+
+	class Meta:
+		verbose_name_plural = 'Other Salaries'
