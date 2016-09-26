@@ -1,1 +1,0 @@
-default_app_config = 'mp_supply.apps.ManPowerSupplyConfig'
