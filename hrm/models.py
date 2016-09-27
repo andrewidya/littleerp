@@ -1,11 +1,16 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from crm.models import SalesOrderDetail
+from django.utils.safestring import mark_safe
 
 # Create your models here.
 
 class BankName(models.Model):
 	name = models.CharField(verbose_name=_('Bank Name'), max_length=50)
+
+	class Meta:
+		verbose_name = 'Bank'
+		verbose_name_plural = 'Bank Name Lists'
 
 	def __str__(self):
 		return self.name
@@ -65,27 +70,27 @@ class Employee(models.Model):
 		('K/3', 'Menikah Anak 3')
 	)
 
-	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=6, unique=True)
+	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=15, unique=True)
 	first_name = models.CharField(verbose_name=_('First Name'), max_length=50)
-	last_name = models.CharField(verbose_name=_('Last Name'), max_length=50)
+	last_name = models.CharField(verbose_name=_('Last Name'), max_length=50, blank=True)
 	birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
 	birth_date = models.DateField(verbose_name=_('Birth Date'))
 	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
-	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
-	bank = models.ForeignKey(BankName, verbose_name=_('Bank'))
+	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES, blank=True)
+	bank = models.ForeignKey(BankName, verbose_name=_('Bank'), blank=True, null=True)
 	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
 	religion = models.CharField(verbose_name=_('Religion'), max_length=10, blank=True)
 	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
-	job_title = models.ForeignKey(JobTitle, verbose_name=_('Job Tittle'), blank=True)
-	division = models.ForeignKey(Division, verbose_name=_('Division'), blank=True)
-	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30)
-	blood_type = models.CharField(verbose_name=_('Blood Type'), max_length=2, choices=BLODD_TYPE_CHOICES)
+	job_title = models.ForeignKey(JobTitle, verbose_name=_('Job Tittle'), blank=True, null=True)
+	division = models.ForeignKey(Division, verbose_name=_('Division'), blank=True, null=True)
+	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30, blank=True)
+	blood_type = models.CharField(verbose_name=_('Blood Type'), max_length=2, choices=BLODD_TYPE_CHOICES, blank=True)
 	date_of_hire = models.DateField(verbose_name=_('Date of Hire'))
 	marital_status = models.CharField(verbose_name=_('Marital Status'), max_length=3, choices=MARITAL_CHOICES)
-	is_active = models.BooleanField()
+	is_active = models.BooleanField(default=True, verbose_name=_('Active'))
 
 	class Meta:
-		verbose_name = 'Employee Information'
+		verbose_name = 'Employee'
 		verbose_name_plural = 'Employee Lists'
 		permissions = (
 			('hrm_employee_view', 'Can view only'),
@@ -299,22 +304,43 @@ class EmployeeContract(models.Model):
 	reference = models.CharField(blank=True, max_length=255)
 
 	class Meta:
-		verbose_name = 'Employee Contract'
-		verbose_name_plural = 'Employee Contracts'
+		verbose_name = 'Contract'
+		verbose_name_plural = 'Employee Contracts List'
 
 	def __str__(self):
 		return str(self.employee) + " " + str(self.service_related) + " " + self.contract_status
 
-	@property
 	def get_basic_salary(self):
 		return 'IDR{:,.2f}'.format(self.basic_salary)
+	get_basic_salary.short_description = 'Basic Salary'
 
 	@staticmethod
 	def autocomplete_search_fields():
 		return ('employee__first_name__icontains', 'reference__icontains', 'service_related__sales_order__number__icontains')
 
+	def get_contract_salary(self):
+		salaries = 0
+		if not self.contract_status == "ACTIVE":
+			return "IDR{:,.2f}".format(salaries)
+		for other in self.other_salary.all():
+			if other.salary_name.calculate_condition == "+":
+				salaries += other.value
+			else:
+				salaries -= other.value
+		return 'IDR{:,.2f}'.format(salaries)
+	get_contract_salary.short_description = 'Other Salaries in Contract'
+
+	def get_salaries_in_contract(self):
+		list_salaries = ""
+		for other in self.other_salary.all():
+			list_salaries += "<li>- {0}</li>".format(other.salary_name)
+		return mark_safe("<ol>{0}</ol>".format(list_salaries))
+
+	get_salaries_in_contract.short_description = 'Other Salaries Detials'
+	get_salaries_in_contract.allow_tags = True
+
 class OtherSalary(models.Model):
-	employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='employee_contract')
+	employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='other_salary')
 	salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'), related_name='salary_name')
 	value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Value'))
 

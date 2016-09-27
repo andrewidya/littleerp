@@ -74,6 +74,10 @@ class SatisficationDetailInline(admin.TabularInline):
 	fields = ('satisfication', 'point_rate_item', 'value')
 	form = SatisficationDetailForm
 	extra = 1
+	raw_id_fields = ('point_rate_item',)
+	autocomplete_lookup_fields = {
+		'fk': ['point_rate_item'],
+	}
 
 @admin.register(SatisficationPointCategory)
 class SatisficationPointCategoryAdmin(ImportMixin, admin.ModelAdmin):
