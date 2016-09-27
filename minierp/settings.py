@@ -31,23 +31,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.admindocs',
+    'django.contrib.contenttypes',
+    'grappelli.dashboard',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sekizai',
-    #'address_data',
     'import_export',
-    #'utils',
     'hrm',
     'crm',
+    'operational',
     'adminlte',
-    #'mp_supply',
-    #'operation',
-    #'payroll',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -68,8 +66,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             'minierp/templates',
+            'admin_tools/templates',
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -78,6 +77,14 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
                 'sekizai.context_processors.sekizai',
+            ],
+            'loaders': [
+                'admin_tools.template_loaders.Loader',
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    ]
+                )
             ],
         },
     },
@@ -129,3 +136,5 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
 GRAPPELLI_ADMIN_TITLE = "PT Commercial Servisindo Prima"
+GRAPPELLI_SWITCH_USER = True
+GRAPPELLI_INDEX_DASHBOARD = "minierp.dashboard.CustomIndexDashboard"

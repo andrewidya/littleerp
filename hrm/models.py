@@ -87,6 +87,9 @@ class Employee(models.Model):
 	class Meta:
 		verbose_name = 'Employee Information'
 		verbose_name_plural = 'Employee Lists'
+		permissions = (
+			('hrm_employee_view', 'Can view only'),
+		)
 
 	def __str__(self):
 		return self.first_name + " " + self.last_name
@@ -250,7 +253,7 @@ class Evaluation(models.Model):
 class EvaluationDetail(models.Model):
 	evaluation = models.ForeignKey(Evaluation)
 	eval_item = models.ForeignKey(EvaluationItem)
-	eval_value = models.TextField()
+	eval_value = models.PositiveIntegerField(verbose_name=_('Value'))
 
 # model for dealing with salary of employee related to
 # detail of sales order created by sales (CRM Application)
@@ -281,6 +284,10 @@ class SalaryName(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('name__icontains', 'salary_category__name__icontains')
 
 class EmployeeContract(models.Model):
 	start_date = models.DateField(verbose_name=_('Start Date'))

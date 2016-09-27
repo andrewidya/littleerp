@@ -81,14 +81,30 @@ class OtherSalaryAdmin(admin.ModelAdmin):
 		'fk': ['employee_contract']
 	}
 
+class OtherSalaryInline(admin.TabularInline):
+	model = OtherSalary
+	fields = ('salary_name', 'value')
+	raw_id_fields = ('salary_name',)
+	autocomplete_lookup_fields = {
+		'fk': ['salary_name'],
+	}
+	classes = ('grp-collapse grp-closed',)
+
+
 @admin.register(EmployeeContract)
 class EmployeeContract(admin.ModelAdmin):
 	list_display = ('employee', 'service_related', 'start_date', 'end_date', 'contract_status', 'get_basic_salary', 'reference')
-	fields = (('employee', 'service_related'), ('start_date', 'end_date', 'reference'), ('basic_salary', 'contract_status'))
+	#fields = (('employee', 'service_related'), ('start_date', 'end_date', 'reference'), ('basic_salary', 'contract_status'))
+	fieldsets = (
+		('Contract Details', {
+			'fields': (('employee', 'service_related'), ('start_date', 'end_date', 'reference'), ('basic_salary', 'contract_status'))
+		}),
+	)
 	raw_id_fields = ('employee', 'service_related',)
 	autocomplete_lookup_fields = {
 		'fk': ['employee', 'service_related'],
 	}
+	inlines = [OtherSalaryInline]
 
 @admin.register(BankName)
 class BankAdmin(ImportMixin, admin.ModelAdmin):

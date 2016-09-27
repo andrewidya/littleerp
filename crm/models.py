@@ -24,10 +24,14 @@ class Customer(models.Model):
 		)
 
 	def __str__(self):
-		return self.name
+		return '{0} {1}'.format(self.code, self.name)
 
 	def get_absolute_url(self):
 		return reverse('customer-detail', kwargs={'pk': self.pk})
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('code__icontains', 'name__icontains')
 
 class Service(models.Model):
 	name = models.CharField(verbose_name=_('Service Provided'), max_length=255)
@@ -76,34 +80,29 @@ class SalesOrder(models.Model):
 		for s in sales_order_detail:
 			service.append(s.service.name)
 		return str(service)
+	service_demand_list.short_description = 'Service Demand'
 
-	@property
 	def total_price(self):
 		total = 0
 		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
 		for service in sales_order_detail:
 			service_price = 0
 			salary = 0
-			print("Beginning")
-			print("Salary: --------" + str(salary))
-			print("After calculated:")
 			for service_salary in service.servicesalarydetail_set.all():
 				salary += service_salary.price
-				print("Salary: " + str(salary))
-				print("Service Price: " +  str(service_price))
 			service_price = salary + service.basic_salary
-			print("Total:")
-			print("Service Price: " + str(service_price))
 			total += service_price * service.quantity
 
 		return 'IDR{:,.2f}'.format(total)
+	total_price.short_description = 'Total Price'
 
 	def sales_order_detail_page(self):
 		return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>' % (reverse('admin:app_list', kwargs={'app_label': 'crm'}), self.number))
+	sales_order_detail_page.short_description = 'Order Detail Link'
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ("number__icontains",)
+		return ('number__icontains', 'customer__name__icontains')
 
 class SalesOrderDetail(models.Model):
 	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))
@@ -121,6 +120,7 @@ class SalesOrderDetail(models.Model):
 
 	def get_service(self):
 		return self.service.name
+	get_service.short_description = 'Service'
 
 	@staticmethod
 	def autocomplete_search_fields():
@@ -159,3 +159,62 @@ class ServiceSalaryDetail(models.Model):
 
 	def __str__(self):
 		return self.service_salary_item.name + ":" + self.service_order_detail.sales_order.number
+
+class SatisficationPointCategory(models.Model):
+	name = models.CharField(verbose_name=_('Satisfication Point Category'), max_length=255)
+	description = models.TextField(verbose_name=_('Description'), blank=True)
+
+	class Meta:
+		verbose_name = 'Satisfication Point Category'
+		verbose_name_plural = 'Satisfication Point Categories'
+
+	def __str__(self):
+		return self.name
+
+	description.allow_tags = True
+
+class SatisficationPointRateItem(models.Model):
+	category = models.ForeignKey(SatisficationPointCategory, verbose_name=_('Point Category'))
+	name = models.CharField(verbose_name=_('Satisfication Point Rate'), max_length=255, help_text=_('Point rate question for polling'))
+	description = models.TextField(verbose_name=_('Description'), blank=True)
+
+	class Meta:
+		verbose_name = 'Satisfication Point Rate Item'
+		verbose_name_plural = 'Satisfication Point Rate Item'
+
+	def __str__(self):
+		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('name__icontains', 'category__name__icontains')
+
+class Satisfication(models.Model):
+	create_date = models.DateField(verbose_name=_('Date Created'))
+	name = models.CharField(verbose_name=_('Subject'), max_length=255)
+	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Related Sales Order'))
+	respondent = models.CharField(verbose_name=_('Person Interviewed'), max_length=50, blank=True)
+
+	class Meta:
+		verbose_name = 'Satisfication'
+		verbose_name_plural = 'Satisfication Interview'
+
+	def __str__(self):
+		return self.name
+
+class SatisficationDetail(models.Model):
+	satisfication = models.ForeignKey(Satisfication, verbose_name=_('Satisfication Subject'))
+	point_rate_item = models.ForeignKey(SatisficationPointRateItem, verbose_name=_('Point Rate Item'))
+	value = models.PositiveIntegerField(verbose_name=_('Point Value'), help_text=_('Value must be betwen 2 to 5'))
+
+	class Meta:
+		verbose_name = 'Satisfication Interview Detail'
+		verbose_name_plural = 'Satisfication Interview Details'
+		unique_together = ('satisfication', 'point_rate_item')
+
+	def __str__(self):
+		return '{0} {1}'.format(self.satisfication.sales_order.number, self.satisfication.sales_order.customer.name)
+
+	def get_satisfication_point_rate_desc(self):
+		return self.point_rate_item.description
+
