@@ -67,6 +67,15 @@ class CustomIndexDashboard(Dashboard):
                     )
                 ),
                 modules.ModelList(
+                    _('Performance & Evaluation'),
+                    column = 1,
+                    collapsible = True,
+                    models = ('hrm.models.Evaluation',
+                        'hrm.models.EvaluationPeriod',
+                        'hrm.models.EvaluationItem',
+                    )
+                ),
+                modules.ModelList(
                     _('Others Information'),
                     column = 1,
                     collapsible = True,

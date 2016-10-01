@@ -1,6 +1,6 @@
 from django.contrib import admin
-from hrm.models import Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education, AnnualLeave, LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName
-from hrm.forms import EmployeeAddForm
+from hrm.models import Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education, AnnualLeave, LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, EvaluationDetail, EvaluationPeriod, EvaluationItem, Evaluation
+from hrm.forms import EmployeeAddForm, EvaluationDetailForm, EmployeeContractForm
 from import_export.admin import ImportExportMixin, ImportMixin
 
 @admin.register(Division)
@@ -14,17 +14,20 @@ class JobTitle(ImportExportMixin, admin.ModelAdmin):
 # Employee Inline Formset
 class FamilyInline(admin.TabularInline):
 	model = FamilyOfEmployee
-	extra = 3
+	extra = 2
 	fields = ('name', 'birth_place', 'birth_date', 'gender', 'relationship')
+	classes = ('grp-collapse grp-closed',)
 
 class AddressInline(admin.TabularInline):
 	model = EmployeeAddress
 	extra = 2
 	fields = ('address', 'city', 'province', 'address_status')
+	classes = ('grp-collapse grp-closed',)
 
 class EducationInline(admin.TabularInline):
 	model = Education
 	fields = ('grade', 'name', 'city', 'graduation_date')
+	classes = ('grp-collapse grp-closed',)
 
 @admin.register(Employee)
 class EmployeeAdmin(ImportExportMixin, admin.ModelAdmin):
@@ -36,7 +39,7 @@ class EmployeeAdmin(ImportExportMixin, admin.ModelAdmin):
 			'fields': (('id_number', 'first_name'), ('phone_number', 'last_name',), ('birth_place', 'religion'), ('birth_date', 'gender', 'blood_type'), ('mother_name', 'marital_status'))
 		}),
 		('Employemnt Info', {
-			'fields': (('job_title', 'division', 'date_of_hire'), ('reg_number', 'bank'), ('bank_account', 'is_active'))
+			'fields': (('job_title', 'division'), ('reg_number', 'date_of_hire'), 'is_active', ('bank', 'bank_account'))
 		}),
 	)
 	raw_id_fields = ('bank', 'job_title', 'division')
@@ -44,18 +47,23 @@ class EmployeeAdmin(ImportExportMixin, admin.ModelAdmin):
 		'fk': ['bank', 'job_title', 'division'],
 	}
 	inlines = [FamilyInline, AddressInline, EducationInline]
+	list_per_page = 20
 	change_list_template = "admin/change_list_filter_sidebar.html"
 
 @admin.register(AnnualLeave)
 class AnnualLeaveAdmin(admin.ModelAdmin):
 	raw_id_fields = ('employee',)
 	autocomplete_lookup_fields = {
-		'fk': ['employee']
+		'fk': ['employee'],
 	}
 
 @admin.register(LeaveTaken)
 class LeaveTakenAdmin(admin.ModelAdmin):
 	fields = (('employee', 'leave_type'), ('from_date', 'to_date'), 'day')
+	raw_id_fields = ('employee',)
+	autocomplete_lookup_fields = {
+		'fk': ['employee'],
+	}
 
 @admin.register(LeaveType)
 class LeaveTypeAdmin(admin.ModelAdmin):
@@ -66,20 +74,20 @@ class EducationAdmin(admin.ModelAdmin):
 	list_display = ('grade', 'employee', 'name', 'address', 'city', 'graduation_date', 'certificate')
 
 @admin.register(SalaryCategory)
-class SalaryCategoryAdmin(admin.ModelAdmin):
+class SalaryCategoryAdmin(ImportExportMixin, admin.ModelAdmin):
 	pass
 
 @admin.register(SalaryName)
-class SalaryNameAdmin(admin.ModelAdmin):
+class SalaryNameAdmin(ImportExportMixin, admin.ModelAdmin):
 	list_display = ('name', 'salary_category', 'calculate_condition')
 
-@admin.register(OtherSalary)
-class OtherSalaryAdmin(admin.ModelAdmin):
-	list_display = ('employee_contract', 'salary_name', 'value')
-	raw_id_fields = ('employee_contract',)
-	autocomplete_lookup_fields = {
-		'fk': ['employee_contract']
-	}
+#@admin.register(OtherSalary)
+#class OtherSalaryAdmin(admin.ModelAdmin):
+#	list_display = ('employee_contract', 'salary_name', 'value')
+#	raw_id_fields = ('employee_contract',)
+#	autocomplete_lookup_fields = {
+#		'fk': ['employee_contract']
+#	}
 
 class OtherSalaryInline(admin.TabularInline):
 	model = OtherSalary
@@ -93,11 +101,10 @@ class OtherSalaryInline(admin.TabularInline):
 
 @admin.register(EmployeeContract)
 class EmployeeContract(admin.ModelAdmin):
-	list_display = ('employee', 'service_related', 'start_date', 'end_date', 'contract_status', 'get_basic_salary', 'get_contract_salary', 'get_salaries_in_contract', 'reference')
-	#fields = (('employee', 'service_related'), ('start_date', 'end_date', 'reference'), ('basic_salary', 'contract_status'))
+	list_display = ('employee', 'service_related', 'start_date', 'end_date', 'reference', 'contract_status')
 	fieldsets = (
 		('Contract Details', {
-			'fields': (('employee', 'service_related'), ('start_date', 'end_date', 'reference'), ('basic_salary', 'contract_status'))
+			'fields': (('employee', 'service_related'), ('start_date', 'end_date'), ('basic_salary', 'reference'))
 		}),
 	)
 	raw_id_fields = ('employee', 'service_related',)
@@ -105,7 +112,38 @@ class EmployeeContract(admin.ModelAdmin):
 		'fk': ['employee', 'service_related'],
 	}
 	inlines = [OtherSalaryInline]
+	search_fields = ('employee__first_name',)
+	list_filter = ('contract_status',)
+	form = EmployeeContractForm
 
 @admin.register(BankName)
 class BankAdmin(ImportMixin, admin.ModelAdmin):
+	list_display = ('id', 'name')
+	list_per_page = 20
+	ordering = ['id']
+
+#@admin.register(EvaluationItem)
+#class EvaluationItemAdmin(admin.ModelAdmin):
+#	pass
+
+@admin.register(EvaluationPeriod)
+class EvaluationPeriodAdmin(admin.ModelAdmin):
 	pass
+
+class EvaluationDetailInline(admin.TabularInline):
+	model = EvaluationDetail
+	form = EvaluationDetailForm
+
+#@admin.register(EvaluationDetail)
+#class EvaluationDetailAdmin(admin.ModelAdmin):
+#	form = EvaluationDetailForm
+
+@admin.register(Evaluation)
+class EvaluationAdmin(admin.ModelAdmin):
+	fields = (('eval_period', 'date_create'), 'employee')
+	list_display = ('eval_period', 'date_create', 'employee', 'ranking')
+	raw_id_fields = ('employee',)
+	autocomplete_lookup_fields = {
+		'fk': ['employee'],
+	}
+	inlines = [EvaluationDetailInline]

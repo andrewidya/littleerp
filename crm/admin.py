@@ -29,6 +29,10 @@ class SalesOrderDetailInline(admin.TabularInline):
 
 class ServiceSalaryDetailInline(admin.TabularInline):
 	model = ServiceSalaryDetail
+	raw_id_fields = ('service_salary_item',)
+	autocomplete_lookup_fields = {
+		'fk': ['service_salary_item'],
+	}
 
 @admin.register(SalesOrder)
 class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):

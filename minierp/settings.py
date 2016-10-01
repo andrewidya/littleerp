@@ -40,8 +40,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cron',
     'sekizai',
     'import_export',
+    'utils',
     'hrm',
     'crm',
     'operational',
@@ -66,7 +68,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             'minierp/templates',
-            'admin_tools/templates',
         ],
         'APP_DIRS': False,
         'OPTIONS': {
@@ -79,7 +80,6 @@ TEMPLATES = [
                 'sekizai.context_processors.sekizai',
             ],
             'loaders': [
-                'admin_tools.template_loaders.Loader',
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
@@ -109,7 +109,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jakarta'
 
 USE_I18N = True
 
@@ -138,3 +138,13 @@ FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
 GRAPPELLI_ADMIN_TITLE = "PT Commercial Servisindo Prima"
 GRAPPELLI_SWITCH_USER = True
 GRAPPELLI_INDEX_DASHBOARD = "minierp.dashboard.CustomIndexDashboard"
+
+CRON_CLASSES = [
+    "hrm.cron_job.EmployeeContractCronJob",
+]
+
+USE_THOUSAND_SEPARATOR = True
+
+FORMAT_MODULE_PATH = [
+    'minierp.formats',
+]

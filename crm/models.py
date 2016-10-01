@@ -92,8 +92,7 @@ class SalesOrder(models.Model):
 				salary += service_salary.price
 			service_price = salary + service.basic_salary
 			total += service_price * service.quantity
-
-		return 'IDR{:,.2f}'.format(total)
+		return total
 	total_price.short_description = 'Total Price'
 
 	def sales_order_detail_page(self):
@@ -146,6 +145,10 @@ class ServiceSalaryItem(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@staticmethod
+	def autocomplete_search_fields():
+		return ('name__icontains',)
 
 class ServiceSalaryDetail(models.Model):
 	service_order_detail = models.ForeignKey(SalesOrderDetail, verbose_name=_('Service Order Detail'), on_delete=models.CASCADE)

@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from adminlte.forms import Bootstrap3DatePicker, BootstrapTextInput, BootstrapRadioSelect, BootstrapNumberInput, BootstrapCheckbox
-from hrm.models import Employee
+from hrm.models import Employee, EvaluationDetail, EmployeeContract
+from django import forms
 
 class EmployeeAddForm(ModelForm):
 	class Meta:
@@ -25,3 +26,19 @@ class EmployeeAddForm(ModelForm):
 			'marital_status': BootstrapRadioSelect(),
 			'is_active': BootstrapCheckbox()
 		}
+
+class EvaluationDetailForm(ModelForm):
+	class Meta:
+		model = EvaluationDetail
+		exclude = ['id']
+
+	def clean_eval_value(self):
+		if self.cleaned_data['eval_value'] > 100:
+			raise forms.ValidationError('Unexpected value')
+		return self.cleaned_data['eval_value']
+
+class EmployeeContractForm(ModelForm):
+	class Meta:
+		model = EmployeeContract
+		exclude = ['id']
+		localize_fields = ('basic_salary',)

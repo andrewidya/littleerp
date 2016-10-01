@@ -1,3 +1,4 @@
+from __future__ import division
 from django.db import models
 from django.utils.translation import ugettext as _
 from crm.models import SalesOrderDetail
@@ -10,7 +11,7 @@ class BankName(models.Model):
 
 	class Meta:
 		verbose_name = 'Bank'
-		verbose_name_plural = 'Bank Name Lists'
+		verbose_name_plural = 'Banks'
 
 	def __str__(self):
 		return self.name
@@ -91,13 +92,13 @@ class Employee(models.Model):
 
 	class Meta:
 		verbose_name = 'Employee'
-		verbose_name_plural = 'Employee Lists'
+		verbose_name_plural = 'Employees'
 		permissions = (
 			('hrm_employee_view', 'Can view only'),
 		)
 
 	def __str__(self):
-		return self.first_name + " " + self.last_name
+		return self.reg_number + " " + self.first_name + " " + self.last_name
 
 	def get_full_name(self):
 		return self.first_name + " " + self.last_name
@@ -202,8 +203,8 @@ class AnnualLeave(models.Model):
 	last_update = models.DateField(auto_now_add=True)
 
 	class Meta:
-		verbose_name = 'Employee Annual Leave'
-		verbose_name_plural = 'Employee Annual Leaves'
+		verbose_name = 'Annual Leave'
+		verbose_name_plural = 'Annual Leaves'
 
 	def __str__(self):
 		return self.employee.name
@@ -216,8 +217,8 @@ class LeaveTaken(models.Model):
 	day = models.SmallIntegerField(null=True, blank=True)
 
 	class Meta:
-		verbose_name = 'Annual Leave Taken'
-		verbose_name_plural = 'Annual Leave Taken Lists'
+		verbose_name = 'Leave Check List'
+		verbose_name_plural = 'Leave Check Lists'
 
 	def __str__(self):
 		return self.employee.get_full_name()
@@ -236,7 +237,7 @@ class EvaluationPeriod(models.Model):
 		verbose_name = 'Evaluation Period'
 
 	def __str__(self):
-		return str(self.evaluation_date)
+		return self.period
 
 	def save(self, *args, **kwargs):
 		if self.id == None:
@@ -247,18 +248,51 @@ class EvaluationItem(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	description = models.TextField(blank=True)
 
+	class Meta:
+		verbose_name = 'Evaluating Item'
+		verbose_name_plural = 'Evaluating Items'
+
 	def __str__(self):
 		return self.name
 
 class Evaluation(models.Model):
-	employee = models.ForeignKey(Employee)
-	eval_period = models.ForeignKey(EvaluationPeriod)
-	date_created = models.DateField()
+	date_create = models.DateField(verbose_name=_('Date Created'))
+	employee = models.ForeignKey(Employee, verbose_name=_('Employee Name'))
+	eval_period = models.ForeignKey(EvaluationPeriod, verbose_name=_('Period'))
+	ranking = models.CharField(verbose_name=_('Ranking'), max_length=6)
+
+	def __str__(self):
+		return self.employee.first_name
+
+	class Meta:
+		verbose_name = 'Evaluation'
+		verbose_name_plural = 'Evaluations'
+
+	def evaluation_rate(self):
+		rate = 0
+		rate_count = 0
+		self.evaluationdetail_set.all()
+		for evaluation in self.evaluationdetail_set.all():
+			if evaluation.eval_item:
+				rate_count += (1 * 1.0)
+				rate += (evaluation.eval_value * 1.0)
+		ranking = rate / rate_count
+		if ranking <= 50:
+			self.ranking = "BURUK"
+		elif ranking <= 70:
+			self.ranking = "CUKUP"
+		else:
+			self.ranking = "BAIK"
 
 class EvaluationDetail(models.Model):
 	evaluation = models.ForeignKey(Evaluation)
-	eval_item = models.ForeignKey(EvaluationItem)
-	eval_value = models.PositiveIntegerField(verbose_name=_('Value'))
+	eval_item = models.ForeignKey(EvaluationItem, verbose_name=_('Point Item'))
+	eval_value = models.PositiveIntegerField(verbose_name=_('Point Value'))
+
+	class Meta:
+		verbose_name = 'Evaluation Detail'
+		verbose_name_plural = 'Evaluation Details'
+		unique_together = ('evaluation', 'eval_item')
 
 # model for dealing with salary of employee related to
 # detail of sales order created by sales (CRM Application)
@@ -280,7 +314,7 @@ class SalaryName(models.Model):
 	)
 
 	name = models.CharField(verbose_name=_('Salary Name'), max_length=255)
-	salary_category = models.ForeignKey(SalaryCategory, related_name='salary_category')
+	salary_category = models.ForeignKey(SalaryCategory, related_name='salary_category', on_delete=models.PROTECT)
 	calculate_condition = models.CharField(verbose_name=_('Calculating Condition'), choices=CALCULATE_CHOICES, help_text=_('Condition needed for calculate total salary'), max_length=1)
 
 	class Meta:
@@ -298,20 +332,20 @@ class EmployeeContract(models.Model):
 	start_date = models.DateField(verbose_name=_('Start Date'))
 	end_date = models.DateField(verbose_name=_('End Date'))
 	employee = models.ForeignKey(Employee, verbose_name=_('Employee'))
-	service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Relating'), help_text=_('This info related to the service needed by customer as detail of sales order'), related_name='service_order')
-	contract_status = models.CharField(blank=True, max_length=8)
+	service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'), help_text=_('This info related to the service needed by customer as detail of sales order'), related_name='service_order')
+	contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
 	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'), null=True, blank=True)
 	reference = models.CharField(blank=True, max_length=255)
 
 	class Meta:
 		verbose_name = 'Contract'
-		verbose_name_plural = 'Employee Contracts List'
+		verbose_name_plural = 'Contracts'
 
 	def __str__(self):
 		return str(self.employee) + " " + str(self.service_related) + " " + self.contract_status
 
 	def get_basic_salary(self):
-		return 'IDR{:,.2f}'.format(self.basic_salary)
+		return self.basic_salary
 	get_basic_salary.short_description = 'Basic Salary'
 
 	@staticmethod
@@ -346,3 +380,4 @@ class OtherSalary(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'Other Salaries'
+		unique_together = ('employee_contract', 'salary_name')
