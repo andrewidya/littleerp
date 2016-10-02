@@ -1,6 +1,6 @@
 from django_cron import CronJobBase, Schedule
 from django.utils import timezone
-from django.db.models import Q
+from django.conf import settings
 import datetime
 from hrm.models import EmployeeContract
 
@@ -13,15 +13,12 @@ class EmployeeContractCronJob(CronJobBase):
 	def do(self):
 		print("Checking contract")
 		print(timezone.now())
-		print(timezone.now() + datetime.timedelta(days=1))
-		today = timezone.now()
-		warning = timezone.now() + datetime.timedelta(days=10)
+		print("===========================================================")
+		warning = timezone.now() + datetime.timedelta(days=settings.MINIERP_SETTINGS['HRM']['recontract_warning'])
 		contract_list = EmployeeContract.objects.all().filter(end_date__lte=warning.date())
 		for contract in contract_list:
-			if contract.end_date < today.date():
-				contract.contract_status = "EXPIRED"
-			if contract.end_date >= today.date() <= warning.date():
-				contract.contract_status = "NEED RENEWAL"
-			print(contract.contract_status)
+			contract.contract_status = contract.check_contract_status()
 			contract.save(update_fields=['contract_status'])
-
+		print("===========================================================")
+		print("DONE")
+		print("===========================================================")

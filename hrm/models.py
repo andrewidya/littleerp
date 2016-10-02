@@ -3,6 +3,9 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from crm.models import SalesOrderDetail
 from django.utils.safestring import mark_safe
+from django.utils import timezone
+from django.conf import settings
+import datetime
 
 # Create your models here.
 
@@ -372,6 +375,15 @@ class EmployeeContract(models.Model):
 
 	get_salaries_in_contract.short_description = 'Other Salaries Detials'
 	get_salaries_in_contract.allow_tags = True
+
+	def check_contract_status(self):
+		today = timezone.now()
+		warning_level = today + datetime.timedelta(days=settings.MINIERP_SETTINGS['HRM']['recontract_warning'])
+		if self.end_date < today.date():
+			return "EXPIRED"
+		if today.date() <= self.end_date <= warning_level.date():
+			return "NEED RENEWAL"
+		return "ACTIVE"
 
 class OtherSalary(models.Model):
 	employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='other_salary')

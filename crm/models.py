@@ -55,10 +55,12 @@ class SalesOrder(models.Model):
 	customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
 	reference = models.CharField(verbose_name=_('Reference'), max_length=255, blank=True)
 	note = models.TextField(blank=True)
-	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'), help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12'))
+	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'), help_text=_('Tax value must be decimal, \
+							ex: input 12\% / as 0.12'))
 	fee = models.DecimalField(max_digits=12, decimal_places=3, verbose_name=_('Management Fee'))
-	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'), help_text=_('Set to basic if the fee will be calculated \
-		from basic salary, otherwise set to grand total'), max_length=5, choices=FEE_CONDITION_CHOICES)
+	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'), help_text=_('Set to basic if the fee \
+											 will be calculated from basic salary, otherwise set to grand total'),
+											max_length=5, choices=FEE_CONDITION_CHOICES)
 
 	class Meta:
 		verbose_name = 'Sales Order'
