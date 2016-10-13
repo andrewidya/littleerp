@@ -3,6 +3,8 @@ Django==1.8
 django-bower==5.1.0
 django-cache-utils==0.7.2
 django-classy-tags==0.8.0
+django-common-helpers==0.8.0
+django-cron==0.5.0
 django-easy-pdf==0.1.0
 django-excel==0.0.5
 django-filter==0.14.0
@@ -10,6 +12,7 @@ django-fsm==2.4.0
 django-fsm-admin==1.2.3
 django-grappelli==2.8.1
 django-import-export==0.5.0
+django-jet==1.0.2
 django-jsonfield==1.0.1
 django-nvd3==0.9.7
 django-photologue==3.5.1
@@ -41,4 +44,3 @@ webencodings==0.5
 xhtml2pdf==0.0.6
 xlrd==1.0.0
 xlwt==1.1.2
-django-cron==0.5.0
