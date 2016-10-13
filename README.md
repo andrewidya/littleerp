@@ -48,5 +48,5 @@ run development server:
 ./manage.py runserver
 ```
 
-@pochil: :+1: your server :computer: should available on http://127.0.0.1:8000/admin
+***@pochil*** :+1: your server :computer: should available on http://127.0.0.1:8000/admin
 
