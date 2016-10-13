@@ -23,28 +23,28 @@ create directory to put the source into:
 mkdir src
 ```
 your working directory should looks like this:
-```
+```sh
 workspace
 |
  --- env
  --- src
 ```
 go to source directory, then initiate this command:
-```
+```sh
 git clone htpps://github.com/andrewidya/littleerp.git
 ```
 
 activate virtual env by this command:
-```
+```sh
 source ../env/bin/activate
 ```
 install all dependency:
-```
+```sh
 pip install -r requirement.txt
 ```
 
 run development server:
-```
+```sh
 ./manage.py runserver
 ```
 your server should available on http://127.0.0.1:8000/admin
