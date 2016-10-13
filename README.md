@@ -3,15 +3,15 @@
 
 #### Installing Environtment
 firstly you need to create working directory, then enter to it
-'''sh
+```sh
 mkdir workspace
 cd workspace
-'''
+```
 
 after that isolate package dependencies needed by creating virtual environtment:
-'''sh
+```sh
 virtualenv --python=/usr/bin/python2.7 env
-'''
+```
 
 your working directory should like this:
     workspace
