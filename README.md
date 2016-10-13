@@ -47,4 +47,8 @@ run development server:
 ```sh
 ./manage.py runserver
 ```
+<<<<<<< HEAD
 your server should available on http://127.0.0.1:8000/admin
+=======
+your server should available on http://127.0.0.1:8000/admin
+>>>>>>> 01d78cc9e03642d940b9aaf9c65b27e9c5a3a020
