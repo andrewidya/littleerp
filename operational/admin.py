@@ -29,12 +29,6 @@ class VisitCustomerAdmin(admin.ModelAdmin):
 class VisitPointRateItemAdmin(admin.ModelAdmin):
 	pass
 
-@admin.register(PayrollPeriod)
-class PayrollPeriodAdmin(admin.ModelAdmin):
-	list_display = ('period', 'date_create', 'start_date', 'end_date')
-	fields = (('start_date', 'end_date'),)
-	list_filter = ('period',)
-
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
 	fields = (('work_day', 'sick_day'), ('alpha_day', 'leave_day'),
@@ -42,9 +36,12 @@ class AttendanceAdmin(admin.ModelAdmin):
 	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day',
 				   'leave_day', 'leave_left')
 	raw_id_fields = ('employee', 'period')
+	list_filter = ('period__period',)
 	autocomplete_lookup_fields = {
 		'fk': ['employee', 'period'],
 	}
+	list_editable = ('work_day', 'sick_day', 'alpha_day', 'leave_day',
+				    'leave_left')
 
 @admin.register(Payroll)
 class PayrollAdmin(admin.ModelAdmin):
@@ -52,6 +49,7 @@ class PayrollAdmin(admin.ModelAdmin):
 	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
 				   'staff', 'detail_url')
 	list_editable = ['base_salary', 'overtime', 'back_pay']
+	list_filter = ('period__period',)
 
 	def save_model(self, request, obj, form, change):
 		if getattr(obj, 'staff', None) is None:
@@ -64,3 +62,35 @@ class PayrollDetailAdmin(admin.ModelAdmin):
 				   'note')
 	list_filter = ('payroll__contract__employee',)
 	list_editable = ['value', 'note']
+
+class PayrollInline(admin.TabularInline):
+	model = Payroll
+	exclude = ('staff',)
+	classes = ('grp-collapse grp-closed',)
+	raw_id_fields = ('contract',)
+	autocomplete_lookup_fields = {
+		'fk': ['contract']
+	}
+
+class AttendanceInline(admin.TabularInline):
+	model = Attendance
+	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'),
+		     'leave_left')
+	raw_id_fields = ('employee',)
+	autocomplete_lookup_fields = {
+		'fk': ['employee']
+	}
+	classes = ('grp-collapse grp-closed',)
+
+@admin.register(PayrollPeriod)
+class PayrollPeriodAdmin(admin.ModelAdmin):
+	list_display = ('period', 'date_create', 'start_date', 'end_date',
+				   'attendance_urls', 'payroll_urls')
+	fieldsets = (
+		('Period Information', {
+			'fields': (('start_date', 'end_date'),)
+		}),
+	)
+	list_filter = ('period',)
+	inlines = [AttendanceInline, PayrollInline]
+

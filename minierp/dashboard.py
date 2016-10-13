@@ -138,7 +138,10 @@ class CustomIndexDashboard(Dashboard):
                     _('Payroll'),
                     column = 1,
                     collapsible = True,
-                    models = ('operational.models.PayrollPeriod',)
+                    models = ('operational.models.PayrollPeriod',
+                        'operational.models.Payroll',
+                        'operational.models.PayrollDetail',
+                    )
                 )
             ],
         ))

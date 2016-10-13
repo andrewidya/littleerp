@@ -121,7 +121,7 @@ class EmployeeContract(admin.ModelAdmin):
 		('Contract Details', {
 			'fields': (
 				('employee', 'service_related'), ('start_date', 'end_date'),
-				('basic_salary', 'reference')
+				('base_salary', 'reference')
 			)
 		}),
 	)

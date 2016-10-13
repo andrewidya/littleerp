@@ -74,6 +74,24 @@ class PayrollPeriod(models.Model):
 	def autocomplete_search_fields():
 		return ('period__icontains',)
 
+	def attendance_urls(self):
+		# link to attendance admin changelist
+		change_list_urls = reverse('admin:operational_attendance_changelist')
+		return format_html("<a href='{0}?period__period={1}'>\
+					      Detail</a>",
+						  change_list_urls, self.period)
+	attendance_urls.allow_tags = True
+	attendance_urls.short_description = 'Attendance'
+
+	def payroll_urls(self):
+		# link to payroll admin changelist
+		change_list_urls = reverse('admin:operational_payroll_changelist')
+		return format_html("<a href='{0}?period__period={1}'>\
+						  Detail</a>",
+						  change_list_urls, self.period)
+	payroll_urls.allow_tags = True
+	payroll_urls.short_description = 'Payroll'
+
 class Attendance(models.Model):
 	work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True,
 										  blank=True)
@@ -96,9 +114,22 @@ class Attendance(models.Model):
 	def __str__(self):
 		return "{0} - {1}".format(self.period, self.employee)
 
+	def save(self, *args, **kwargs):
+		if self.sick_day is None:
+			self.sick_day = 0
+		if self.alpha_day is None:
+			self.alpha_day = 0
+		if self.leave_day is None:
+			self.leave_day = 0
+		if self.leave_left is None:
+			self.leave_left = 0
+		super(Attendance, self).save(*args, **kwargs)
+
 class Payroll(models.Model):
-	contract = models.ForeignKey(EmployeeContract, verbose_name='Employee \
-								contract')
+	contract = models.ForeignKey(EmployeeContract, limit_choices_to={
+									'contract_status': 'ACTIVE'},
+								verbose_name='Employee \
+								Contract')
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period')
 	base_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True,
 									 blank=True, verbose_name='Base Salary')
@@ -120,8 +151,7 @@ class Payroll(models.Model):
 	def save(self, *args, **kwargs):
 		if self.base_salary is None:
 			self.base_salary = self.contract.base_salary
-		if self.overtime is None:
-			self.overtime = self.contract.base_salary / 173
+			self.overtime = self.base_salary / 173
 		super(Payroll, self).save(args, kwargs)
 
 	def detail_url(self):
@@ -129,7 +159,7 @@ class Payroll(models.Model):
 		return format_html("<a href='{0}?payroll__contract__employee__id__exact={1}'>\
 					      Detail</a>",
 					      change_list_urls, self.contract.employee.id)
-	detail_url.short_description = 'Details'
+	detail_url.short_description = 'Other Salary Detail'
 	detail_url.allow_tags = True
 
 class PayrollDetail(models.Model):
