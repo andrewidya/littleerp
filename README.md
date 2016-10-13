@@ -1,12 +1,17 @@
-install virtual for your system
-create working directory:
-    mkdir workspace
+# PT Commercial Servisindo Prima
+## MiniERP
 
-enter your created directory:
-    cd workspace
+#### Installing Environtment
+firstly you need to create working directory, then enter to it
+'''sh
+mkdir workspace
+cd workspace
+'''
 
-create virtual environtment:
-    virtualenv --python=/usr/bin/python2.7 env
+after that isolate package dependencies needed by creating virtual environtment:
+'''sh
+virtualenv --python=/usr/bin/python2.7 env
+'''
 
 your working directory should like this:
     workspace
