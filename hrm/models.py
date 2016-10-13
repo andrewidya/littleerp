@@ -74,23 +74,37 @@ class Employee(models.Model):
 		('K/3', 'Menikah Anak 3')
 	)
 
-	reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=15, unique=True)
+	reg_number = models.CharField(verbose_name=_('Registration Number'),
+								 max_length=15, unique=True)
 	first_name = models.CharField(verbose_name=_('First Name'), max_length=50)
-	last_name = models.CharField(verbose_name=_('Last Name'), max_length=50, blank=True)
-	birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
+	last_name = models.CharField(verbose_name=_('Last Name'), max_length=50,
+								blank=True)
+	birth_place = models.CharField(verbose_name=_('Birth Place'),
+								  max_length=25)
 	birth_date = models.DateField(verbose_name=_('Birth Date'))
-	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
-	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES, blank=True)
-	bank = models.ForeignKey(BankName, verbose_name=_('Bank'), blank=True, null=True)
-	bank_account = models.CharField(verbose_name=_('Bank Account'), max_length=20, null=True, blank=True)
-	religion = models.CharField(verbose_name=_('Religion'), max_length=10, blank=True)
-	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
-	job_title = models.ForeignKey(JobTitle, verbose_name=_('Job Tittle'), blank=True, null=True)
-	division = models.ForeignKey(Division, verbose_name=_('Division'), blank=True, null=True)
-	mother_name = models.CharField(verbose_name=_('Mother Name'), max_length=30, blank=True)
-	blood_type = models.CharField(verbose_name=_('Blood Type'), max_length=2, choices=BLODD_TYPE_CHOICES, blank=True)
+	phone_number = models.CharField(verbose_name=_('Phone Number'),
+								   max_length=15, null=True, blank=True)
+	gender = models.CharField(verbose_name=_('Gender'), max_length=1,
+							 choices=GENDER_CHOICES, blank=True)
+	bank = models.ForeignKey(BankName, verbose_name=_('Bank'), blank=True,
+							null=True)
+	bank_account = models.CharField(verbose_name=_('Bank Account'),
+								   max_length=20, null=True, blank=True)
+	religion = models.CharField(verbose_name=_('Religion'), max_length=10,
+							   blank=True)
+	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15,
+								null=True, blank=True)
+	job_title = models.ForeignKey(JobTitle, verbose_name=_('Job Tittle'),
+								 blank=True, null=True)
+	division = models.ForeignKey(Division, verbose_name=_('Division'),
+								blank=True, null=True)
+	mother_name = models.CharField(verbose_name=_('Mother Name'),
+								  max_length=30, blank=True)
+	blood_type = models.CharField(verbose_name=_('Blood Type'), max_length=2,
+								 choices=BLODD_TYPE_CHOICES, blank=True)
 	date_of_hire = models.DateField(verbose_name=_('Date of Hire'))
-	marital_status = models.CharField(verbose_name=_('Marital Status'), max_length=3, choices=MARITAL_CHOICES)
+	marital_status = models.CharField(verbose_name=_('Marital Status'),
+									 max_length=3, choices=MARITAL_CHOICES)
 	is_active = models.BooleanField(default=True, verbose_name=_('Active'))
 
 	class Meta:
@@ -111,7 +125,8 @@ class Employee(models.Model):
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ('first_name__icontains', 'last_name__icontains', 'reg_number__icontains')
+		return ('first_name__icontains', 'last_name__icontains',
+			   'reg_number__icontains')
 
 class EmployeeAddress(models.Model):
 	employee = models.ForeignKey(Employee)
@@ -119,7 +134,10 @@ class EmployeeAddress(models.Model):
 	district = models.CharField(verbose_name=_('District'), max_length=255)
 	city = models.CharField(verbose_name=_('City'), max_length=255)
 	province = models.CharField(verbose_name=_('province'), max_length=255)
-	address_status = models.CharField(verbose_name=_('Description'), max_length=8, choices=(('KTP', 'KTP'), ('ASAL', 'ASAL'), ('DOMISILI', 'DOMISILI')))
+	address_status = models.CharField(verbose_name=_('Description'),
+									 max_length=8,
+									 choices=(('KTP', 'KTP'), ('ASAL', 'ASAL'),
+											('DOMISILI', 'DOMISILI')))
 
 	def __str__(self):
 		return self.address
@@ -139,10 +157,14 @@ class FamilyOfEmployee(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
 	birth_date = models.DateField()
-	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
-	gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
-	relationship = models.CharField(verbose_name=_('Relationship'), max_length=1, choices=RELATIONSHIP_CHOICES)
-	activity = models.CharField(verbose_name=_('Current Activity'), max_length=50, null=True, blank=True)
+	id_number = models.CharField(verbose_name=_('ID Number'), max_length=15,
+								null=True, blank=True)
+	gender = models.CharField(verbose_name=_('Gender'), max_length=1,
+							 choices=GENDER_CHOICES)
+	relationship = models.CharField(verbose_name=_('Relationship'),
+								   max_length=1, choices=RELATIONSHIP_CHOICES)
+	activity = models.CharField(verbose_name=_('Current Activity'),
+							   max_length=50, null=True, blank=True)
 
 	class Meta:
 		verbose_name = 'Family Information'
@@ -167,14 +189,18 @@ class Education(models.Model):
 	)
 
 	employee = models.ForeignKey(Employee)
-	grade = models.CharField(verbose_name=_('Grade'), max_length=2, choices=GRADE_CHOICES)
+	grade = models.CharField(verbose_name=_('Grade'), max_length=2,
+							choices=GRADE_CHOICES)
 	name = models.CharField(verbose_name=_('Institution Name'), max_length=50)
-	address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
+	address = models.CharField(verbose_name=_('Address'), max_length=100,
+							  blank=True)
 	city = models.CharField(verbose_name=_('City'), max_length=25, blank=True)
 	graduation_date = models.DateField()
 	certificate = models.BooleanField(default=False)
-	certificate_number = models.CharField(verbose_name=_('Certificate Number'), max_length=30, blank=True)
-	description = models.CharField(verbose_name=_('Short Description'), max_length=255, blank=True)
+	certificate_number = models.CharField(verbose_name=_('Certificate Number'),
+										 max_length=30, blank=True)
+	description = models.CharField(verbose_name=_('Short Description'),
+								  max_length=255, blank=True)
 
 	class Meta:
 		verbose_name = 'Education'
@@ -184,7 +210,8 @@ class Education(models.Model):
 
 # Leave Module
 class LeaveType(models.Model):
-	name = models.CharField(verbose_name=_('Leave Type'), max_length=50, help_text="Ex: Medical, Holliday etc")
+	name = models.CharField(verbose_name=_('Leave Type'), max_length=50,
+						   help_text="Ex: Medical, Holliday etc")
 
 	class Meta:
 		verbose_name = 'Leave Type'
@@ -201,8 +228,11 @@ class AnnualLeave(models.Model):
 	employee = models.ForeignKey(Employee)
 	leave_type = models.ForeignKey(LeaveType)
 	year = models.DateField(verbose_name=_('Year'));
-	day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
-	remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
+	day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'),
+										  null=True, blank=True)
+	remaining_day_allowed = models.SmallIntegerField(
+								verbose_name=_('Remainig Days'), null=True,
+								blank=True)
 	last_update = models.DateField(auto_now_add=True)
 
 	class Meta:
@@ -317,8 +347,13 @@ class SalaryName(models.Model):
 	)
 
 	name = models.CharField(verbose_name=_('Salary Name'), max_length=255)
-	salary_category = models.ForeignKey(SalaryCategory, related_name='salary_category', on_delete=models.PROTECT)
-	calculate_condition = models.CharField(verbose_name=_('Calculating Condition'), choices=CALCULATE_CHOICES, help_text=_('Condition needed for calculate total salary'), max_length=1)
+	salary_category = models.ForeignKey(SalaryCategory, related_name='salary_category',
+									   on_delete=models.PROTECT)
+	calculate_condition = models.CharField(verbose_name=_('Calculating Condition'),
+										  choices=CALCULATE_CHOICES,
+										  help_text=_('Condition needed for \
+										  			 calculate total salary'),
+										  max_length=1)
 
 	class Meta:
 		verbose_name = 'Salary Name'
@@ -335,9 +370,16 @@ class EmployeeContract(models.Model):
 	start_date = models.DateField(verbose_name=_('Start Date'))
 	end_date = models.DateField(verbose_name=_('End Date'))
 	employee = models.ForeignKey(Employee, verbose_name=_('Employee'))
-	service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'), help_text=_('This info related to the service needed by customer as detail of sales order'), related_name='service_order')
+	service_related = models.ForeignKey(SalesOrderDetail,
+									   verbose_name=_('Customer Demand Related'),
+									   help_text=_('This info related to the \
+									   			  service needed by customer \
+									   			  as detail of sales order'),
+									   related_name='service_order')
 	contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
-	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'), null=True, blank=True)
+	base_salary = models.DecimalField(max_digits=12, decimal_places=2,
+									  verbose_name=_('Basic Salary'),
+									  null=True, blank=True)
 	reference = models.CharField(blank=True, max_length=255)
 
 	class Meta:
@@ -345,7 +387,7 @@ class EmployeeContract(models.Model):
 		verbose_name_plural = 'Contracts'
 
 	def __str__(self):
-		return str(self.employee) + " " + str(self.service_related) + " " + self.contract_status
+		return str(self.employee) + " " + str(self.service_related)
 
 	def get_basic_salary(self):
 		return self.basic_salary
@@ -353,7 +395,8 @@ class EmployeeContract(models.Model):
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ('employee__first_name__icontains', 'reference__icontains', 'service_related__sales_order__number__icontains')
+		return ('employee__first_name__icontains', 'reference__icontains',
+			   'service_related__sales_order__number__icontains')
 
 	def get_contract_salary(self):
 		salaries = 0
@@ -378,7 +421,8 @@ class EmployeeContract(models.Model):
 
 	def check_contract_status(self):
 		today = timezone.now()
-		warning_level = today + datetime.timedelta(days=settings.MINIERP_SETTINGS['HRM']['recontract_warning'])
+		warning_level = today + datetime.timedelta(
+			days=settings.MINIERP_SETTINGS['HRM']['recontract_warning'])
 		if self.end_date < today.date():
 			return "EXPIRED"
 		if today.date() <= self.end_date <= warning_level.date():
@@ -386,9 +430,13 @@ class EmployeeContract(models.Model):
 		return "ACTIVE"
 
 class OtherSalary(models.Model):
-	employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='other_salary')
-	salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'), related_name='salary_name')
-	value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Value'))
+	employee_contract = models.ForeignKey(EmployeeContract,
+										 verbose_name=_('Employee Contract'),
+										 related_name='other_salary')
+	salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'),
+								   related_name='salary_name')
+	value = models.DecimalField(max_digits=12, decimal_places=2,
+							   verbose_name=_('Value'))
 
 	class Meta:
 		verbose_name_plural = 'Other Salaries'

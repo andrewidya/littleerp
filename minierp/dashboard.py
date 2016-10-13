@@ -133,6 +133,12 @@ class CustomIndexDashboard(Dashboard):
                     models = ('operational.models.VisitCustomer',
                         'operational.models.VisitPointRateItem',
                     )
+                ),
+                modules.ModelList(
+                    _('Payroll'),
+                    column = 1,
+                    collapsible = True,
+                    models = ('operational.models.PayrollPeriod',)
                 )
             ],
         ))

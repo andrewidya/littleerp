@@ -1,12 +1,14 @@
 from django.forms import ModelForm
 from crm.models import Customer, SatisficationDetail
-from adminlte.forms import Bootstrap3DatePicker, BootstrapTextInput, BootstrapRadioSelect
+from adminlte.forms import Bootstrap3DatePicker, BootstrapTextInput, \
+	BootstrapRadioSelect
 from django import forms
 
 class CustomerAddForm(ModelForm):
 	class Meta:
 		model = Customer
-		fields = ('code', 'name', 'phone_number', 'address', 'city', 'field', 'tax_id_number', 'join_date', 'parent')
+		fields = ('code', 'name', 'phone_number', 'address', 'city', 'field',
+				 'tax_id_number', 'join_date', 'parent')
 		widgets = {
 			'code': BootstrapTextInput(),
 			'name': BootstrapTextInput(),

@@ -1,5 +1,8 @@
 from django.contrib import admin
-from crm.models import Customer, SalesOrder, SalesOrderDetail, ItemCategory, ServiceSalaryDetail, ServiceSalaryItem, Service, ServiceSalaryDetail, Satisfication, SatisficationDetail, SatisficationPointRateItem, SatisficationPointCategory
+from crm.models import Customer, SalesOrder, SalesOrderDetail, ItemCategory, \
+	ServiceSalaryDetail, ServiceSalaryItem, Service, ServiceSalaryDetail, \
+	Satisfication, SatisficationDetail, SatisficationPointRateItem, \
+	SatisficationPointCategory
 from crm import forms
 from import_export.admin import ImportExportMixin, ImportMixin
 from django.utils.translation import ugettext as _
@@ -10,13 +13,19 @@ from crm.forms import SatisficationDetailForm
 @admin.register(Customer)
 class CustomerAdmin(ImportExportMixin, admin.ModelAdmin):
 	list_filter = ('parent', 'join_date')
-	list_display = ('code', 'name', 'tax_id_number', 'phone_number', 'join_date', 'parent')
+	list_display = ('code', 'name', 'tax_id_number', 'phone_number',
+				   'join_date', 'parent')
 	fieldsets = (
 		('Customer Information', {
-			'fields': (('code', 'name'), ('address', 'city'), ('phone_number', 'tax_id_number'), ('parent', 'join_date'))
+			'fields': (
+				('code', 'name'), ('address', 'city'),
+				('phone_number', 'tax_id_number'),
+				('parent', 'join_date')
+			)
 		}),
 	)
-	search_fields = ['parent__name', 'join_date', 'phone_number', 'city', 'code']
+	search_fields = ['parent__name', 'join_date', 'phone_number',
+					'city', 'code']
 	change_list_template = "admin/change_list_filter_sidebar.html"
 	raw_id_fields = ('parent',)
 	autocomplete_lookup_fields = {
@@ -36,8 +45,16 @@ class ServiceSalaryDetailInline(admin.TabularInline):
 
 @admin.register(SalesOrder)
 class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
-	fields = ('number', ('date_create', 'date_start', 'date_end'), ('customer', 'reference'), 'tax', ('fee', 'fee_calculate_condition'), 'note')
-	list_display = ('number', 'customer', 'date_start', 'date_end', 'tax', 'fee', 'service_demand_list', 'total_price', 'sales_order_detail_page')
+	fields = (
+		'number',
+		('date_create', 'date_start', 'date_end'),
+		('customer', 'reference'), 'tax',
+		('fee', 'fee_calculate_condition'),
+		'note'
+	)
+	list_display = ('number', 'customer', 'date_start', 'date_end', 'tax',
+				   'fee', 'service_demand_list', 'total_price',
+				   'sales_order_detail_page')
 	list_filter = ('number',)
 	inlines = [SalesOrderDetailInline]
 	search_fields = ['number', 'date_create', 'date_end', 'customer__name']

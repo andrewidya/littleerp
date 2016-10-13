@@ -1,12 +1,17 @@
 from django.forms import ModelForm
-from adminlte.forms import Bootstrap3DatePicker, BootstrapTextInput, BootstrapRadioSelect, BootstrapNumberInput, BootstrapCheckbox
+from adminlte.forms import Bootstrap3DatePicker, BootstrapTextInput, \
+	BootstrapRadioSelect, BootstrapNumberInput, BootstrapCheckbox
 from hrm.models import Employee, EvaluationDetail, EmployeeContract
 from django import forms
 
 class EmployeeAddForm(ModelForm):
 	class Meta:
 		model = Employee
-		fields = ('reg_number', 'first_name', 'last_name', 'birth_place', 'birth_date', 'phone_number', 'gender', 'bank_account', 'religion', 'id_number', 'job_title', 'division', 'mother_name', 'blood_type', 'date_of_hire', 'marital_status', 'is_active')
+		fields = ('reg_number', 'first_name', 'last_name', 'birth_place',
+				 'birth_date', 'phone_number', 'gender', 'bank_account',
+				 'religion', 'id_number', 'job_title', 'division',
+				 'mother_name', 'blood_type', 'date_of_hire',
+				 'marital_status', 'is_active')
 		widgets = {
 			'reg_number': BootstrapTextInput(),
 			'first_name': BootstrapTextInput(),

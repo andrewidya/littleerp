@@ -1,6 +1,10 @@
 from django.contrib import admin
-from hrm.models import Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education, AnnualLeave, LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, EvaluationDetail, EvaluationPeriod, EvaluationItem, Evaluation
-from hrm.forms import EmployeeAddForm, EvaluationDetailForm, EmployeeContractForm
+from hrm.models import Division, JobTitle, Employee, FamilyOfEmployee, \
+	EmployeeAddress, Education, AnnualLeave, LeaveTaken, LeaveType, \
+	SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, \
+	EvaluationDetail, EvaluationPeriod, EvaluationItem, Evaluation
+from hrm.forms import EmployeeAddForm, EvaluationDetailForm, \
+	EmployeeContractForm
 from import_export.admin import ImportExportMixin, ImportMixin
 
 @admin.register(Division)
@@ -33,13 +37,22 @@ class EducationInline(admin.TabularInline):
 class EmployeeAdmin(ImportExportMixin, admin.ModelAdmin):
 	search_fields = ['first_name', 'last_name', 'reg_number']
 	list_filter = ('job_title', 'division', 'marital_status')
-	list_display = ('reg_number', 'get_full_name', 'gender', 'marital_status', 'job_title', 'is_active')
+	list_display = ('reg_number', 'get_full_name', 'gender', 'marital_status',
+				   'job_title', 'is_active')
 	fieldsets = (
 		('Personal Info', {
-			'fields': (('id_number', 'first_name'), ('phone_number', 'last_name',), ('birth_place', 'religion'), ('birth_date', 'gender', 'blood_type'), ('mother_name', 'marital_status'))
+			'fields': (
+				('id_number', 'first_name'), ('phone_number', 'last_name',),
+				('birth_place', 'religion'),
+				('birth_date', 'gender', 'blood_type'),
+				('mother_name', 'marital_status')
+			)
 		}),
 		('Employemnt Info', {
-			'fields': (('job_title', 'division'), ('reg_number', 'date_of_hire'), 'is_active', ('bank', 'bank_account'))
+			'fields': (
+				('job_title', 'division'), ('reg_number', 'date_of_hire'),
+				'is_active', ('bank', 'bank_account')
+			)
 		}),
 	)
 	raw_id_fields = ('bank', 'job_title', 'division')
@@ -71,7 +84,8 @@ class LeaveTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Education)
 class EducationAdmin(admin.ModelAdmin):
-	list_display = ('grade', 'employee', 'name', 'address', 'city', 'graduation_date', 'certificate')
+	list_display = ('grade', 'employee', 'name', 'address', 'city',
+				   'graduation_date', 'certificate')
 
 @admin.register(SalaryCategory)
 class SalaryCategoryAdmin(ImportExportMixin, admin.ModelAdmin):
@@ -101,10 +115,14 @@ class OtherSalaryInline(admin.TabularInline):
 
 @admin.register(EmployeeContract)
 class EmployeeContract(admin.ModelAdmin):
-	list_display = ('employee', 'service_related', 'start_date', 'end_date', 'reference', 'contract_status')
+	list_display = ('employee', 'service_related', 'start_date', 'end_date',
+				   'reference', 'contract_status')
 	fieldsets = (
 		('Contract Details', {
-			'fields': (('employee', 'service_related'), ('start_date', 'end_date'), ('basic_salary', 'reference'))
+			'fields': (
+				('employee', 'service_related'), ('start_date', 'end_date'),
+				('basic_salary', 'reference')
+			)
 		}),
 	)
 	raw_id_fields = ('employee', 'service_related',)
