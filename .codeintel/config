@@ -1,0 +1,6 @@
+{
+	"Python": {
+		"python": '/usr/bin/python',
+		"pythonExtraPaths": ['/home/andre/Documents/Andre/Experiment/Python/Website/outsource/env/lib/python2.7/site-packages']
+	}
+}

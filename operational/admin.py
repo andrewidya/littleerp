@@ -1,6 +1,7 @@
 from django.contrib import admin
 from operational.models import VisitCustomer, VisitPointRateItem, \
 	VisitCustomerDetail, PayrollPeriod, Attendance, Payroll, PayrollDetail
+from operational.forms import PayrollPeriodForm
 # Register your models here.
 
 class VisitCustomerDetailInline(admin.TabularInline):
@@ -56,6 +57,12 @@ class PayrollAdmin(admin.ModelAdmin):
 			obj.staff = request.user
 		obj.save()
 
+	def get_queryset(self, request):
+		queryset = super(PayrollAdmin, self).get_queryset(request)
+		if request.user.is_superuser:
+			return queryset
+		return queryset.filter(staff=request.user)
+
 @admin.register(PayrollDetail)
 class PayrollDetailAdmin(admin.ModelAdmin):
 	list_display = ('period', 'contract', 'employee',  'salary', 'value',
@@ -93,4 +100,15 @@ class PayrollPeriodAdmin(admin.ModelAdmin):
 	)
 	list_filter = ('period',)
 	inlines = [AttendanceInline, PayrollInline]
+	form = PayrollPeriodForm
+
+	def save_formset(self, request, form, formset, change):
+		instances = formset.save(commit=False)
+		for obj in formset.deleted_objects:
+			obj.delete()
+		for instance in instances:
+			if hasattr(instance, 'staff'):
+				instance.staff = request.user
+			instance.save()
+		formset.save_m2m()
 

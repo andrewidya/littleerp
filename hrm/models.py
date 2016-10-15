@@ -369,7 +369,8 @@ class SalaryName(models.Model):
 class EmployeeContract(models.Model):
 	start_date = models.DateField(verbose_name=_('Start Date'))
 	end_date = models.DateField(verbose_name=_('End Date'))
-	employee = models.ForeignKey(Employee, verbose_name=_('Employee'))
+	employee = models.ForeignKey(Employee, verbose_name=_('Employee'),
+								related_name='contract')
 	service_related = models.ForeignKey(SalesOrderDetail,
 									   verbose_name=_('Customer Demand Related'),
 									   help_text=_('This info related to the \

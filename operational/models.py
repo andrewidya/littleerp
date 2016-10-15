@@ -55,9 +55,9 @@ class VisitCustomerDetail(models.Model):
 class PayrollPeriod(models.Model):
 	period = models.CharField(verbose_name='Period', max_length=15, blank=True,
 							 null=True, unique=True)
-	date_create = models.DateField(auto_now_add=True)
-	start_date = models.DateField()
-	end_date = models.DateField()
+	date_create = models.DateField(auto_now_add=True, verbose_name='Date Created')
+	start_date = models.DateField(verbose_name='Start Date')
+	end_date = models.DateField(verbose_name='End Date')
 
 	class Meta:
 		verbose_name = 'Period'
@@ -103,7 +103,9 @@ class Attendance(models.Model):
 										   blank=True)
 	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True,
 											blank=True)
-	employee = models.ForeignKey(Employee, verbose_name='Employee')
+	employee = models.ForeignKey(Employee, verbose_name='Employee',
+							    limit_choices_to={'is_active': True,
+							    	'contract__contract_status': 'ACTIVE'})
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period')
 
 	class Meta:
@@ -127,7 +129,8 @@ class Attendance(models.Model):
 
 class Payroll(models.Model):
 	contract = models.ForeignKey(EmployeeContract, limit_choices_to={
-									'contract_status': 'ACTIVE'},
+									'contract_status': 'ACTIVE',
+									'employee__is_active': True},
 								verbose_name='Employee \
 								Contract')
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period')
@@ -155,6 +158,9 @@ class Payroll(models.Model):
 		super(Payroll, self).save(args, kwargs)
 
 	def detail_url(self):
+		"""
+		show payroll details url on admin changelist page
+		"""
 		change_list_urls = reverse('admin:operational_payrolldetail_changelist')
 		return format_html("<a href='{0}?payroll__contract__employee__id__exact={1}'>\
 					      Detail</a>",
