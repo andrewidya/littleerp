@@ -43,6 +43,8 @@ INSTALLED_APPS = (
     'django_cron',
     'sekizai',
     'import_export',
+    'fsm_admin',
+    'django_fsm',
     'utils',
     'hrm',
     'crm',

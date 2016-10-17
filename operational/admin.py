@@ -1,6 +1,10 @@
 from django.contrib import admin
+from django.forms.models import modelformset_factory
+from fsm_admin.mixins import FSMTransitionMixin
+from functools import partial
 from operational.models import VisitCustomer, VisitPointRateItem, \
-	VisitCustomerDetail, PayrollPeriod, Attendance, Payroll, PayrollDetail
+	VisitCustomerDetail, PayrollPeriod, Attendance, Payroll, PayrollDetail, \
+	State, PostProcessedPayroll
 from operational.forms import PayrollPeriodForm
 # Register your models here.
 
@@ -45,23 +49,39 @@ class AttendanceAdmin(admin.ModelAdmin):
 				    'leave_left')
 
 @admin.register(Payroll)
-class PayrollAdmin(admin.ModelAdmin):
+class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	fields = ('period', 'contract', 'base_salary')
 	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
-				   'staff', 'detail_url')
+				   'staff', 'detail_url', 'state')
 	list_editable = ['base_salary', 'overtime', 'back_pay']
 	list_filter = ('period__period',)
+	fsm_field = ['state',]
+	change_form_template = 'fsm_admin/change_form.html'
+	actions = ['make_final']
 
 	def save_model(self, request, obj, form, change):
 		if getattr(obj, 'staff', None) is None:
 			obj.staff = request.user
 		obj.save()
+		super(PayrollAdmin, self).save_model(request, obj, form, change)
 
 	def get_queryset(self, request):
-		queryset = super(PayrollAdmin, self).get_queryset(request)
+		#queryset = super(PayrollAdmin, self).get_queryset(request)
+		queryset = Payroll.draft_manager.all()
 		if request.user.is_superuser:
 			return queryset
 		return queryset.filter(staff=request.user)
+
+	def get_changelist_formset(self, request, **kwargs):
+		defaults = {
+			"formfield_callback": partial(self.formfield_for_dbfield, request=request),
+		}
+		defaults.update(kwargs)
+		return modelformset_factory(self.model, self.get_changelist_form(request),
+								   extra=0, fields=self.list_editable, **defaults)
+	def make_final(self, request, queryset):
+		queryset.update(state=State.FINAL)
+	make_final.short_description = 'Mark selected payroll as final'
 
 @admin.register(PayrollDetail)
 class PayrollDetailAdmin(admin.ModelAdmin):
@@ -78,6 +98,13 @@ class PayrollInline(admin.TabularInline):
 	autocomplete_lookup_fields = {
 		'fk': ['contract']
 	}
+
+@admin.register(PostProcessedPayroll)
+class PostProcessedPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
+	fields = ('period', 'contract', 'base_salary')
+	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
+				   'staff', 'detail_url', 'state')
+	list_filter = ('period__period',)
 
 class AttendanceInline(admin.TabularInline):
 	model = Attendance

@@ -3,9 +3,34 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
+from django_fsm import FSMField, transition
 from crm.models import SalesOrder
 from hrm.models import Employee, EmployeeContract, SalaryName
 # Create your models here.
+
+class PostProcessedManager(models.Manager):
+	def get_queryset(self):
+		return super(PostProcessedManager, self).get_queryset().filter(
+					models.Q(state=State.FINAL) | models.Q(state=State.PAID))
+
+class PayrollManager(models.Manager):
+	def get_queryset(self):
+		return super(PayrollManager, self).get_queryset().filter(
+			state=State.DRAFT)
+
+class State(object):
+    '''
+    Constants to represent the `state`s of the PublishableModel
+    '''
+    DRAFT = 'DRAFT'
+    FINAL = 'FINAL'
+    PAID = 'PAID'
+
+    CHOICES = (
+        (DRAFT, DRAFT),
+        (FINAL, FINAL),
+        (PAID, PAID),
+    )
 
 class VisitCustomer(models.Model):
 	visit_date = models.DateField(verbose_name=_('Visiting Date'))
@@ -142,6 +167,9 @@ class Payroll(models.Model):
 								  blank=True, verbose_name='Back Pay')
 	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User \
 							 Staff')
+	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
+
+	draft_manager = PayrollManager()
 
 	class Meta:
 		verbose_name = 'Payroll'
@@ -155,6 +183,8 @@ class Payroll(models.Model):
 		if self.base_salary is None:
 			self.base_salary = self.contract.base_salary
 			self.overtime = self.base_salary / 173
+		if self.back_pay is None:
+			self.back_pay = 0
 		super(Payroll, self).save(args, kwargs)
 
 	def detail_url(self):
@@ -167,6 +197,15 @@ class Payroll(models.Model):
 					      change_list_urls, self.contract.employee.id)
 	detail_url.short_description = 'Other Salary Detail'
 	detail_url.allow_tags = True
+
+	@transition(field=state, source=State.DRAFT, target=State.FINAL,
+			   custom=dict(verbose="Finalized Calculation",))
+	def finalize(self):
+		pass
+
+	@transition(field=state, source=State.FINAL, target=State.DRAFT)
+	def unfinalize(self):
+		pass
 
 class PayrollDetail(models.Model):
 	payroll = models.ForeignKey(Payroll, verbose_name='Payroll')
@@ -194,3 +233,11 @@ class PayrollDetail(models.Model):
 	@property
 	def employee(self):
 		return self.payroll.contract.employee
+
+
+class PostProcessedPayroll(Payroll):
+	objects = PostProcessedManager()
+	class Meta:
+		proxy = True
+		verbose_name = 'Post & Processed Payroll'
+		verbose_name_plural = 'Post & Processed Payroll'
