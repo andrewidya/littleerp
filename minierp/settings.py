@@ -49,7 +49,8 @@ INSTALLED_APPS = (
     'hrm',
     'crm',
     'operational',
-    'adminlte',
+    'finance',
+    #'adminlte',
 )
 
 MIDDLEWARE_CLASSES = (

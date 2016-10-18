@@ -8,10 +8,10 @@ from crm.models import SalesOrder
 from hrm.models import Employee, EmployeeContract, SalaryName
 # Create your models here.
 
-class PostProcessedManager(models.Manager):
+class FinalPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PostProcessedManager, self).get_queryset().filter(
-					models.Q(state=State.FINAL) | models.Q(state=State.PAID))
+		return super(FinalPayrollManager, self).get_queryset().filter(
+					models.Q(state=State.FINAL))
 
 class PayrollManager(models.Manager):
 	def get_queryset(self):
@@ -170,6 +170,7 @@ class Payroll(models.Model):
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
 
 	draft_manager = PayrollManager()
+	objects = models.Manager()
 
 	class Meta:
 		verbose_name = 'Payroll'
@@ -207,6 +208,10 @@ class Payroll(models.Model):
 	def unfinalize(self):
 		pass
 
+	@transition(field=state, source=State.FINAL, target=State.PAID)
+	def pay(self):
+		pass
+
 class PayrollDetail(models.Model):
 	payroll = models.ForeignKey(Payroll, verbose_name='Payroll')
 	salary = models.ForeignKey(SalaryName, verbose_name='Component')
@@ -234,10 +239,15 @@ class PayrollDetail(models.Model):
 	def employee(self):
 		return self.payroll.contract.employee
 
-
-class PostProcessedPayroll(Payroll):
-	objects = PostProcessedManager()
+class FinalPayroll(Payroll):
+	objects = FinalPayrollManager()
 	class Meta:
 		proxy = True
-		verbose_name = 'Post & Processed Payroll'
-		verbose_name_plural = 'Post & Processed Payroll'
+		verbose_name = 'Finalized Payroll'
+		verbose_name_plural = 'Finalized Payroll'
+
+class FinalPayrollDetail(PayrollDetail):
+	class Meta:
+		proxy = True
+		verbose_name = 'Finalized Payroll Detail'
+		verbose_name_plural = 'Finalized Payroll Detail'

@@ -146,6 +146,20 @@ class CustomIndexDashboard(Dashboard):
             ],
         ))
 
+        self.children.append(modules.Group(
+            _('Finance Applications'),
+            column = 2,
+            collapsible = True,
+            children = [
+                modules.ModelList(
+                    _('Payroll Expense'),
+                    column = 1,
+                    collapsible = True,
+                    models = ('finance.models.PaidPayroll',)
+                )
+            ],
+        ))
+
         """
         self.children.append(modules.Group(
             _('Group: Administration & Applications'),
