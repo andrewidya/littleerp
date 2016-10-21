@@ -3,7 +3,7 @@ from hrm.models import Division, JobTitle, Employee, FamilyOfEmployee, \
 	EmployeeAddress, Education, AnnualLeave, LeaveTaken, LeaveType, \
 	SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, \
 	EvaluationDetail, EvaluationPeriod, EvaluationItem, Evaluation
-from hrm.forms import EmployeeAddForm, EvaluationDetailForm, \
+from hrm.forms import EvaluationDetailForm, \
 	EmployeeContractForm
 from import_export.admin import ImportExportMixin, ImportMixin
 

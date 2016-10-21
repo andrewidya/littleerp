@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/', include(admin.site.urls)),
     url(r'^logout/', "django.contrib.auth.views.logout", {'next_page': '/'}, name="logout"),
+    url(r'^hrm/', include('hrm.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 grp_doc = [
