@@ -11,40 +11,41 @@
 <!-- http://www.reportlab.com/software/documentation/             -->
 
 <!DOCTYPE document SYSTEM "rml.dtd">
-<document filename="hello.pdf">
+<document filename="{{ filename }}">
 
-    <template showBoundary="0">
+    <template showBoundary="1">
         <!--define a 'frame' into which the content will flow.-->
-        <pageTemplate id="main">
-             <frame id="first" x1="50" y1="200" width="450" height="300"/>
+        <pageTemplate id="main" pagesize="a4 portrait">
+            <pageGraphics>
+                <place x="2cm" y="15cm" width="18cm" height="14cm">
+                    <blockTable>
+                       <tr>
+                            <td>Registration</td>
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                        </tr>
+                    </blockTable>
+                </place>
+            </pageGraphics>
+            <frame id="first" x1="2cm" y1="15cm" width="18cm" height="13cm"/>
         </pageTemplate>
     </template>
 
     <stylesheet>
-        <!-- define a text style -->
+        <!-- define a text style
         <paraStyle name="textstyle1" fontName="Helvetica" fontSize="12" leading="24" />
+        -->
     </stylesheet>
 
     <story>
-       <!--The elements in this section will fill up the frames -->
-       <!--defined in the <template> section above.             -->
-       <!--The text inside double hashes is replaced dynamically-->
-       <!--inside Default.aspx-->
-       {% for employee in employees %}
-        <para style="textstyle1">
-             <!-- Welcome <b>{{ employee.first_name}}</b>, to the world of RML! -->
-			 Nama Depan : {{ employee.first_name }}
-        </para>
-		<para style="textstyle1">
-             <!-- Welcome <b>{{ employee.first_name}}</b>, to the world of RML! -->
-			 Nama Belakang : {{ employee.last_name }}
-        </para>
-		<para style="textstyle1">
-             <!-- Welcome <b>{{ employee.first_name}}</b>, to the world of RML! -->
-			 ======================================================
-        </para>
-
-        {% endfor %}
-
+        <blockTable alignment="left">
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.reg_number }}</td>
+                <td>{{ employee.first_name }}</td>
+                <td>{{ employee.last_name }}</td>
+            </tr>
+            {% endfor %}
+        </blockTable>
     </story>
 </document>
