@@ -43,14 +43,24 @@
 
     <story>
         <blockTable style="tablestyle1" alignment="left" colWidths="2cm 3cm 5cm 3cm">
-            {% for employee in employees %}
             <tr>
-                <td>{{ employee.reg_number }}</td>
-                <td>{{ employee.first_name }}</td>
-                <td>{{ employee.last_name }}</td>
-                <td>{{ employee.marital_status }}</td>
+                <td>1234</td>
+                <td>Karyawan Testing</td>
+                <td>Testing tok</td>
+                <td>Robot</td>
             </tr>
-            {% endfor %}
+            <tr>
+                <td>1234</td>
+                <td>Karyawan Testing</td>
+                <td>Testing tok</td>
+                <td>Robot</td>
+            </tr>
+            <tr>
+                <td>1234</td>
+                <td>Karyawan Testing</td>
+                <td>Testing tok</td>
+                <td>Robot</td>
+            </tr>
         </blockTable>
     </story>
 </document>

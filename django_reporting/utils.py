@@ -36,12 +36,9 @@ class Reporting(object):
 		template = self.get_template()
 		rml = template.render(self.get_context_data())
 		rml.encode('utf-8')
-		#buf = StringIO()
 		data = rml2pdf.parseString(rml)
-		#buf.reset()
-		#pdf_data = buf.read()
 		response = HttpResponse(content_type='application/pdf')
 		response.write(data.read())
-		response['Content-Disposition'] = 'attachment; filename="{0}"'.format(self.output_file)
+		response['Content-Disposition'] = 'filename="{0}"'.format(self.output_file)
 		return response
 
