@@ -1,10 +1,9 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from hrm.models import Evaluation, EvaluationDetail
+from hrm.models import EvaluationDetail
+
 
 @receiver(post_save, sender=EvaluationDetail)
 def set_evaluation_ranking(sender, instance, created, **kwargs):
-	instance.evaluation.evaluation_rate()
-	instance.evaluation.save()
-
-
+    instance.evaluation.evaluation_rate()
+    instance.evaluation.save()
