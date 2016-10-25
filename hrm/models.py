@@ -59,23 +59,23 @@ class JobTitle(models.Model):
 
 class Employee(models.Model):
     BLODD_TYPE_CHOICES = (
-            ('A', 'A'),
-            ('B', 'B'),
-            ('O', 'O'),
-            ('AB', 'AB')
+        ('A', 'A'),
+        ('B', 'B'),
+        ('O', 'O'),
+        ('AB', 'AB')
     )
 
     GENDER_CHOICES = (
-            ('P', 'Perempuan'),
-            ('L', 'Laki-laki')
+        ('P', 'Perempuan'),
+        ('L', 'Laki-laki')
     )
 
     MARITAL_CHOICES = (
-            ('TK', 'Belum Menikah'),
-            ('K/0', 'Menikah Anak 0'),
-            ('K/1', 'Menikah Anak 1'),
-            ('K/2', 'Menikah Anak 2'),
-            ('K/3', 'Menikah Anak 3')
+        ('TK', 'Belum Menikah'),
+        ('K/0', 'Menikah Anak 0'),
+        ('K/1', 'Menikah Anak 1'),
+        ('K/2', 'Menikah Anak 2'),
+        ('K/3', 'Menikah Anak 3')
     )
 
     reg_number = models.CharField(verbose_name=_('Registration Number'), max_length=15, unique=True)
@@ -101,7 +101,7 @@ class Employee(models.Model):
         verbose_name = 'Employee'
         verbose_name_plural = 'Employees'
         permissions = (
-                ('hrm_employee_view', 'Can view only'),
+            ('hrm_employee_view', 'Can view only'),
         )
 
     def __str__(self):
@@ -124,10 +124,12 @@ class EmployeeAddress(models.Model):
     district = models.CharField(verbose_name=_('District'), max_length=255)
     city = models.CharField(verbose_name=_('City'), max_length=255)
     province = models.CharField(verbose_name=_('province'), max_length=255)
-    address_status = models.CharField(verbose_name=_('Description'),
-                                      max_length=8,
-                                      choices=(('KTP', 'KTP'), ('ASAL', 'ASAL'),
-                                               ('DOMISILI', 'DOMISILI')))
+    address_status = models.CharField(verbose_name=_('Description'), max_length=8,
+        choices=(
+            ('KTP', 'KTP'),
+            ('ASAL', 'ASAL'),
+            ('DOMISILI', 'DOMISILI')
+        ))
 
     def __str__(self):
         return self.address
@@ -135,27 +137,23 @@ class EmployeeAddress(models.Model):
 
 class FamilyOfEmployee(models.Model):
     GENDER_CHOICES = (
-            ('P', 'Perempuan'),
-            ('L', 'Laki-laki')
+        ('P', 'Perempuan'),
+        ('L', 'Laki-laki'),
     )
 
     RELATIONSHIP_CHOICES = (
-            ('I', 'Istri'),
-            ('S', 'Suami'),
-            ('A', 'Anak'),
+        ('I', 'Istri'),
+        ('S', 'Suami'),
+        ('A', 'Anak'),
     )
     employee = models.ForeignKey(Employee)
     name = models.CharField(verbose_name=_('Name'), max_length=50)
     birth_place = models.CharField(verbose_name=_('Birth Place'), max_length=25)
     birth_date = models.DateField()
-    id_number = models.CharField(verbose_name=_('ID Number'), max_length=15,
-                                 null=True, blank=True)
-    gender = models.CharField(verbose_name=_('Gender'), max_length=1,
-                              choices=GENDER_CHOICES)
-    relationship = models.CharField(verbose_name=_('Relationship'),
-                                    max_length=1, choices=RELATIONSHIP_CHOICES)
-    activity = models.CharField(verbose_name=_('Current Activity'),
-                                max_length=50, null=True, blank=True)
+    id_number = models.CharField(verbose_name=_('ID Number'), max_length=15, null=True, blank=True)
+    gender = models.CharField(verbose_name=_('Gender'), max_length=1, choices=GENDER_CHOICES)
+    relationship = models.CharField(verbose_name=_('Relationship'), max_length=1, choices=RELATIONSHIP_CHOICES)
+    activity = models.CharField(verbose_name=_('Current Activity'), max_length=50, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Family Information'
@@ -169,31 +167,27 @@ class FamilyOfEmployee(models.Model):
 
 class Education(models.Model):
     GRADE_CHOICES = (
-            ('1', 'SD'),
-            ('2', 'SMP'),
-            ('3', 'SMA/SMK Sederajat'),
-            ('4', 'D1'),
-            ('5', 'D2'),
-            ('6', 'D3'),
-            ('7', 'D4/S1'),
-            ('8', 'S2/Magister Sederajat'),
-            ('9', 'S3/Doktoral'),
-            ('10', 'Akademi/Pelatihan'),
+        ('1', 'SD'),
+        ('2', 'SMP'),
+        ('3', 'SMA/SMK Sederajat'),
+        ('4', 'D1'),
+        ('5', 'D2'),
+        ('6', 'D3'),
+        ('7', 'D4/S1'),
+        ('8', 'S2/Magister Sederajat'),
+        ('9', 'S3/Doktoral'),
+        ('10', 'Akademi/Pelatihan'),
     )
 
     employee = models.ForeignKey(Employee)
-    grade = models.CharField(verbose_name=_('Grade'), max_length=2,
-                             choices=GRADE_CHOICES)
+    grade = models.CharField(verbose_name=_('Grade'), max_length=2, choices=GRADE_CHOICES)
     name = models.CharField(verbose_name=_('Institution Name'), max_length=50)
-    address = models.CharField(verbose_name=_('Address'), max_length=100,
-                               blank=True)
+    address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
     city = models.CharField(verbose_name=_('City'), max_length=25, blank=True)
     graduation_date = models.DateField()
     certificate = models.BooleanField(default=False)
-    certificate_number = models.CharField(verbose_name=_('Certificate Number'),
-                                          max_length=30, blank=True)
-    description = models.CharField(verbose_name=_('Short Description'),
-                                   max_length=255, blank=True)
+    certificate_number = models.CharField(verbose_name=_('Certificate Number'), max_length=30, blank=True)
+    description = models.CharField(verbose_name=_('Short Description'), max_length=255, blank=True)
 
     class Meta:
         verbose_name = 'Education'
@@ -205,8 +199,7 @@ class Education(models.Model):
 
 
 class LeaveType(models.Model):
-    name = models.CharField(verbose_name=_('Leave Type'), max_length=50,
-                            help_text="Ex: Medical, Holliday etc")
+    name = models.CharField(verbose_name=_('Leave Type'), max_length=50, help_text="Ex: Medical, Holliday etc")
 
     class Meta:
         verbose_name = 'Leave Type'
@@ -224,11 +217,8 @@ class AnnualLeave(models.Model):
     employee = models.ForeignKey(Employee)
     leave_type = models.ForeignKey(LeaveType)
     year = models.DateField(verbose_name=_('Year'));
-    day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'),
-                                           null=True, blank=True)
-    remaining_day_allowed = models.SmallIntegerField(
-                                                            verbose_name=_('Remainig Days'), null=True,
-                                                            blank=True)
+    day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
+    remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
     last_update = models.DateField(auto_now_add=True)
 
     class Meta:
@@ -371,11 +361,12 @@ class EmployeeContract(models.Model):
     start_date = models.DateField(verbose_name=_('Start Date'))
     end_date = models.DateField(verbose_name=_('End Date'))
     employee = models.ForeignKey(Employee, verbose_name=_('Employee'), related_name='contract')
-    service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'), help_text=_('This info related to the service needed by customer as detail of sales order'), related_name='service_order')
+    service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'),
+        help_text=_('This info related to the service needed by customer as detail of sales order'),
+        related_name='service_order')
     contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
-    base_salary = models.DecimalField(max_digits=12, decimal_places=2,
-                                      verbose_name=_('Basic Salary'),
-                                      null=True, blank=True)
+    base_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'),
+        null=True, blank=True)
     reference = models.CharField(blank=True, max_length=255)
 
     class Meta:
@@ -427,13 +418,9 @@ class EmployeeContract(models.Model):
 
 
 class OtherSalary(models.Model):
-    employee_contract = models.ForeignKey(EmployeeContract,
-                                          verbose_name=_('Employee Contract'),
-                                          related_name='other_salary')
-    salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'),
-                                    related_name='salary_name')
-    value = models.DecimalField(max_digits=12, decimal_places=2,
-                                verbose_name=_('Value'))
+    employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='other_salary')
+    salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'), related_name='salary_name')
+    value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Value'))
 
     class Meta:
         verbose_name_plural = 'Other Salaries'
