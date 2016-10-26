@@ -362,8 +362,9 @@ class EmployeeContract(models.Model):
     end_date = models.DateField(verbose_name=_('End Date'))
     employee = models.ForeignKey(Employee, verbose_name=_('Employee'), related_name='contract')
     service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'),
-        help_text=_('This info related to the service needed by customer as detail of sales order'),
-        related_name='service_order')
+                                        related_name='service_order',
+                                        help_text=_('This info related to the service needed by customer as detail of \
+                                                    sales order'))
     contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
     base_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'),
         null=True, blank=True)
