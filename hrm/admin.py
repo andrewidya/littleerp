@@ -48,7 +48,7 @@ class EducationInline(admin.TabularInline):
 
 
 @admin.register(Employee)
-class EmployeeAdmin(ImportExportMixin, admin.ModelAdmin):
+class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'reg_number']
     list_filter = ('job_title', 'division', 'marital_status')
     list_display = ('reg_number', 'get_full_name', 'gender', 'marital_status',

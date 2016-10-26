@@ -1,0 +1,8 @@
+{% extends "admin/django_reporting/change_form.html" %}
+{% load i18n %}
+{% load admin_urls %}
+
+{% block object-tools-items %}
+  <li><a href="{% url opts|admin_urlname:'report' original.pk %}" class="grp-state-focus report_link">{% trans "Report" %}</a></li>
+  {{ block.super }}
+{% endblock %}

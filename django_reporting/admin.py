@@ -4,12 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.template import Context
 from django.contrib.admin.utils import unquote
 
-
-class ModelDetailReportMixin(object):
-    report_template = None
-    report_context_object_name = None
-    report_output = None
-
+class BaseReport(object):
     def get_model_info(self):
         app_label = self.model._meta.app_label
         try:
@@ -17,7 +12,17 @@ class ModelDetailReportMixin(object):
         except AttributeError:
             return (app_label, self.model._meta.module_name,)
 
+class ModelDetailReportMixin(BaseReport):
+    report_template = None
+    report_context_object_name = None
+    report_output = None
+
+    change_form_template = "admin/django_reporting/change_form_report.html"
+
     def get_urls(self):
+        """
+        Get default django admin urls then add custom url for report link
+        """
         from django.conf.urls import url
 
         def wrap(view):
@@ -45,19 +50,22 @@ class ModelDetailReportMixin(object):
         """
         Insert singgle object into context dict
         """
-        context = Context({})
-        if self.report_context_object_name is None:
-            context['object'] = obj
+        if self.report_context_object_name:
+            context = Context({
+                self.report_context_object_name: obj
+                })
         else:
-            context[self.report_context_object_name] = obj
+            context = Context({'object': obj})
         return context
 
     def get_report_template(self):
-        if self.report_template is None:
+        if self.report_template:
+            return self.report_template
+        else:
             raise ImproperlyConfigured(
-                "template is missing"
-            )
-        return self.report_template
+                "{0} attribute value is {1}, {2}'s report_template is missing".format(
+                    "report_template", self.report_template, self.__class__.__name__)
+                )
 
     def get_output_filename(self):
         if self.report_output is None:
@@ -72,6 +80,6 @@ class ModelDetailReportMixin(object):
         template = self.get_report_template()
         output_file = self.get_output_filename()
         context = self.get_context_data(obj)
-        print(context)
+
         report = Reporting(context, template_name=template, output=output_file)
         return report.render()
