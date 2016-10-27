@@ -1,1 +1,0 @@
-default_app_config = 'address_data.apps.AddressDataConfig'
