@@ -1,22 +1,24 @@
+from django_fsm import FSMField, transition
+
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
-from django_fsm import FSMField, transition
+
 from crm.models import SalesOrder
 from hrm.models import Employee, EmployeeContract, SalaryName
 # Create your models here.
 
 class FinalPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(FinalPayrollManager, self).get_queryset().filter(
-					models.Q(state=State.FINAL))
+		return super(FinalPayrollManager, self).get_queryset().filter(models.Q(state=State.FINAL))
+
 
 class PayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PayrollManager, self).get_queryset().filter(
-			state=State.DRAFT)
+		return super(PayrollManager, self).get_queryset().filter(state=State.DRAFT)
+
 
 class State(object):
     '''
@@ -25,12 +27,17 @@ class State(object):
     DRAFT = 'DRAFT'
     FINAL = 'FINAL'
     PAID = 'PAID'
+    OPEN = 'OPEN'
+    CLOSE = 'CLOSE'
 
     CHOICES = (
         (DRAFT, DRAFT),
         (FINAL, FINAL),
         (PAID, PAID),
+        (OPEN, OPEN),
+        (CLOSE, CLOSE),
     )
+
 
 class VisitCustomer(models.Model):
 	visit_date = models.DateField(verbose_name=_('Visiting Date'))
@@ -77,12 +84,13 @@ class VisitCustomerDetail(models.Model):
 	report = models.CharField(verbose_name=_('Point Rate Item'),
 							 max_length=255)
 
+
 class PayrollPeriod(models.Model):
-	period = models.CharField(verbose_name='Period', max_length=15, blank=True,
-							 null=True, unique=True)
+	period = models.CharField(verbose_name='Period', max_length=15, blank=True, null=True, unique=True)
 	date_create = models.DateField(auto_now_add=True, verbose_name='Date Created')
 	start_date = models.DateField(verbose_name='Start Date')
 	end_date = models.DateField(verbose_name='End Date')
+	state = FSMField(default=State.OPEN, choices=State.CHOICES)
 
 	class Meta:
 		verbose_name = 'Period'
@@ -108,6 +116,10 @@ class PayrollPeriod(models.Model):
 	attendance_urls.allow_tags = True
 	attendance_urls.short_description = 'Attendance'
 
+	@transition(field=state, source=State.OPEN, target=State.CLOSE)
+	def close(self):
+		pass
+
 	def payroll_urls(self):
 		# link to payroll admin changelist
 		change_list_urls = reverse('admin:operational_payroll_changelist')
@@ -116,6 +128,7 @@ class PayrollPeriod(models.Model):
 						  change_list_urls, self.period)
 	payroll_urls.allow_tags = True
 	payroll_urls.short_description = 'Payroll'
+
 
 class Attendance(models.Model):
 	work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True,

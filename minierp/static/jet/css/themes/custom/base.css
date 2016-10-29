@@ -531,7 +531,7 @@ html, body {
 
 /* line 12, ../../_base.scss */
 html {
-  font-size: 87.5%;
+  font-size: 75.5%;
 }
 @media only screen and (max-width: 960px) {
   /* line 12, ../../_base.scss */
@@ -726,7 +726,7 @@ body.non-scrollable {
 
 /* line 30, ../../jquery-ui/_jquery-ui.theme.scss */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   background: #fff;
   font-weight: bold;
   color: #8B9AA7;
@@ -929,7 +929,7 @@ body.non-scrollable {
 /* line 3, ../../select2/_multiple.scss */
 .select2-container--jet .select2-selection--multiple {
   background-color: #fff !important;
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   cursor: text;
   height: auto;
   min-height: 32px;
@@ -1006,7 +1006,7 @@ body.non-scrollable {
 /* line 8, ../../select2/_layout.scss */
 .select2-container--jet .select2-selection {
   background-color: #fff;
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   border-radius: 4px;
   outline: 0;
 }
@@ -1587,7 +1587,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="url
   margin: 0;
   background-color: #fff;
   color: #8B9AA7;
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   padding: 0 12px;
   appearance: none;
   transition: background 0.3s, box-shadow 0.3s, border 0.3s;

@@ -44,10 +44,10 @@ class ServiceSalaryDetailInline(admin.TabularInline):
 class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
 	fields = (
 		'number',
-		('date_create', 'date_start', 'date_end'),
-		'customer', 'reference', 'tax',
+		('date_create', 'date_start'), 'date_end',
+		'customer', 'tax',
 		'fee', 'fee_calculate_condition',
-		'note'
+		'reference', 'note'
 	)
 	list_display = ('number', 'customer', 'date_start', 'date_end', 'tax','fee', 'service_demand_list', 'total_price',
 				   'sales_order_detail_page')

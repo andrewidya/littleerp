@@ -552,7 +552,7 @@
 
 /* line 30, ../../jquery-ui/_jquery-ui.theme.scss */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   background: #fff;
   font-weight: bold;
   color: #8B9AA7;

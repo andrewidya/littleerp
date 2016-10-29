@@ -26,9 +26,6 @@ class Customer(models.Model):
 	def __str__(self):
 		return '{0} {1}'.format(self.code, self.name)
 
-	def get_absolute_url(self):
-		return reverse('customer-detail', kwargs={'pk': self.pk})
-
 	@staticmethod
 	def autocomplete_search_fields():
 		return ('code__icontains', 'name__icontains')
@@ -79,10 +76,13 @@ class SalesOrder(models.Model):
 
 	def service_demand_list(self):
 		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
-		service = []
+		service = ''
 		for s in sales_order_detail:
-			service.append(s.service.name)
-		return str(service)
+			# service.append(s.service.name.encode('utf-8'))
+			service += '<li>{0}</li>'.format(s.service.name.encode('utf-8'))
+		# return str(service)
+		return mark_safe('<ul>{0}</li>'.format(service))
+	service_demand_list.allow_tags = True
 	service_demand_list.short_description = 'Service Demand'
 
 	def total_price(self):
@@ -104,7 +104,7 @@ class SalesOrder(models.Model):
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ('number__icontains', 'customer__name__icontains')
+		return ('number', 'customer__name')
 
 class SalesOrderDetail(models.Model):
 	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))

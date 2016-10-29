@@ -585,7 +585,7 @@
 /* line 3, ../../select2/_multiple.scss */
 .select2-container--jet .select2-selection--multiple {
   background-color: #fff !important;
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   cursor: text;
   height: auto;
   min-height: 32px;
@@ -662,7 +662,7 @@
 /* line 8, ../../select2/_layout.scss */
 .select2-container--jet .select2-selection {
   background-color: #fff;
-  border: 1px solid #EDEDED;
+  border: 1px solid #CFCFFF;
   border-radius: 4px;
   outline: 0;
 }
