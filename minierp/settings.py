@@ -31,10 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admindocs',
+    #'django.contrib.admindocs',
     'django.contrib.contenttypes',
-    'grappelli.dashboard',
-    'grappelli',
+    # 'grappelli.dashboard',
+    # 'grappelli',
+    # 'django_adminlte',
+    # 'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
@@ -157,3 +160,5 @@ MINIERP_SETTINGS = {
         "recontract_warning": 10,
     },
 }
+
+JET_DEFAULT_THEME = 'custom'

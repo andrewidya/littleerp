@@ -1,0 +1,301 @@
+{% load i18n admin_static django_adminlte_tags %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  {% block stylesheets %}
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css"%}" type="text/css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static "ionicons/css/ionicons.min.css" %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static "adminlte/css/AdminLTE.min.css"%}">
+    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+         page. However, you can choose any other skin. Make sure you
+         apply the skin class to the body tag so the changes take effect.
+    -->
+    <link rel="stylesheet" href="{% static "adminlte/css/skins/skin-blue.min.css" %}">
+  {% endblock %}
+
+  {% block extrastyle %}{% endblock %}
+
+  <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
+  {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
+  {% block top_javascript %}
+    <script type="text/javascript">
+      window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";
+    </script>
+    <script type="text/javascript">
+      window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";
+    </script>
+  {% endblock %}
+
+  {% block extrahead %}{% endblock %}
+
+  {% block blockbots %}
+    <meta name="robots" content="NONE,NOARCHIVE" />
+  {% endblock %}
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %} hold-transition skin-blue sidebar-mini">
+  <div class="wrapper">
+    {% if not is_popup %}
+    <!-- Main Header -->
+    <header class="main-header">
+      <!-- Logo -->
+      <a href="{% url 'admin:index' %}" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><b>A</b>LT</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><b>Admin</b>LTE</span>
+      </a>
+
+      <!-- Header Navbar -->
+      <nav class="navbar navbar-static-top" role="navigation">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          {% block usertools %}
+          {% if has_permission %}
+          <ul class="nav navbar-nav">
+            {% block userlinks %}
+              {% if site_url %}
+              <li>
+                <a href="{{ site_url }}" title="{% trans 'View site' %}">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </li>
+              {% endif %}
+
+              {% if user.is_active and user.is_staff %}
+                {% url 'django-admindocs-docroot' as docsroot %}
+                {% if docsroot %}
+                <li>
+                  <a href="{{ docsroot }}">
+                    <i class="fa fa-life-saver"></i>{% trans 'Documentation' %}</a>
+                </li>
+                {% endif %}
+              {% endif %}
+
+              <!-- User Account Menu -->
+              <li class="dropdown user user-menu">
+                <!-- Menu Toggle Button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                  <span class="hidden-xs">{% firstof user.get_short_name user.get_username %}</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- The user image in the menu -->
+                  <li class="user-header">
+                    <p>{% firstof user.get_short_name user.get_username %}</p>
+                  </li>
+
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    {% if user.has_usable_password %}
+                    <div class="pull-left">
+                      <a href="{% url 'admin:password_change' %}" class="btn btn-default btn-flat">{% trans 'Change password' %}</a>
+                    </div>
+                    {% endif %}
+                    <div class="pull-right">
+                      <a href="{% url 'admin:logout' %}" class="btn btn-default btn-flat">{% trans 'Log out' %}</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <!-- Control Sidebar Toggle Button -->
+            {% endblock %}
+            <li>
+              <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+            </li>
+          </ul>
+          {% endif %}
+          {% endblock %}
+        </div>
+      </nav>
+    </header>
+    {% endif %}
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+
+        <!-- Sidebar Menu -->
+        <ul class="sidebar-menu">
+          {% block application_list %}
+
+          {% endblock %}
+        </ul>
+        <!-- /.sidebar-menu -->
+      </section>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        {% if title %}
+        <h1>
+          {{ title }}
+          <small>Optional description</small>
+        </h1>
+        {% endif %}
+
+        {% block breadcrumbs %}
+        <ol class="breadcrumb">
+          <li><a href="{% url 'admin:index' %}"><i class="fa fa-dashboard"></i> {% trans 'Home' %}</a></li>
+          {% if title %}
+          <li class="active">{{ title }}</li>
+          {% endif %}
+        </ol>
+        {% endblock %}
+      </section>
+
+      {% block messages %}
+        {% if messages %}
+        <div class="pad margin no-print">
+          {% for message in messages %}
+          <div class="callout callout-info" style="margin-bottom: 0!important;">
+            {% if message.tags %}
+            <h4>{{ message.tags }}</h4>
+            {% endif %}
+            {{ message|capfirst }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      {% endblock messages %}
+
+      <!-- Main content -->
+      <section class="content">
+
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+      <!-- To the right -->
+      <div class="pull-right hidden-xs">
+        By Shinobi Dev
+      </div>
+      <!-- Default to the left -->
+      <strong>Copyright &copy; 2016 <a href="#">{% get_admin_title %}</a>.</strong> All rights reserved.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Create the tabs -->
+      <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+        <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+        <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active" id="control-sidebar-home-tab">
+          <h3 class="control-sidebar-heading">Recent Activity</h3>
+          <ul class="control-sidebar-menu">
+            <li>
+              <a href="javascript::;">
+                <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+                <div class="menu-info">
+                  <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+                  <p>Will be 23 on April 24th</p>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <!-- /.control-sidebar-menu -->
+
+          <h3 class="control-sidebar-heading">Tasks Progress</h3>
+          <ul class="control-sidebar-menu">
+            <li>
+              <a href="javascript::;">
+                <h4 class="control-sidebar-subheading">
+                  Custom Template Design
+                  <span class="pull-right-container">
+                    <span class="label label-danger pull-right">70%</span>
+                  </span>
+                </h4>
+
+                <div class="progress progress-xxs">
+                  <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <!-- /.control-sidebar-menu -->
+
+        </div>
+        <!-- /.tab-pane -->
+        <!-- Stats tab content -->
+        <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+        <!-- /.tab-pane -->
+        <!-- Settings tab content -->
+        <div class="tab-pane" id="control-sidebar-settings-tab">
+          <form method="post">
+            <h3 class="control-sidebar-heading">General Settings</h3>
+
+            <div class="form-group">
+              <label class="control-sidebar-subheading">
+                Report panel usage
+                <input type="checkbox" class="pull-right" checked>
+              </label>
+
+              <p>
+                Some information about this general settings option
+              </p>
+            </div>
+            <!-- /.form-group -->
+          </form>
+        </div>
+        <!-- /.tab-pane -->
+      </div>
+    </aside>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+  </div>
+
+
+  {% block bottom_javascript %}
+    <!-- jQuery 2.2.3 -->
+    <script src="{% static "plugins/jQuery/jquery-2.2.3.min.js" %}"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static "adminlte/js/app.min.js" %}"></script>
+
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+  {% endblock %}
+</body>
+</html>

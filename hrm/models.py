@@ -115,7 +115,7 @@ class Employee(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ('first_name__icontains', 'last_name__icontains', 'reg_number__icontains')
+        return ('first_name', 'last_name', 'reg_number')
 
 
 class EmployeeAddress(models.Model):

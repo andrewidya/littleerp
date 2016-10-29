@@ -5,20 +5,15 @@ from django.utils.safestring import mark_safe
 
 # Create your models here.
 class Customer(models.Model):
-	parent = models.ForeignKey('self', null=True, blank=True,
-							  verbose_name=_('Head Office'))
+	parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('Head Office'))
 	code = models.CharField(verbose_name=_('Code'), max_length=10, unique=True)
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
-	phone_number = models.CharField(verbose_name=_('Phone Number'),
-								   max_length=15, null=True, blank=True)
-	address = models.CharField(verbose_name=_('Address'), max_length=100,
-							  blank=True)
+	phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
+	address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
 	city = models.CharField(verbose_name=_('City'), max_length=50, blank=True)
-	field = models.CharField(verbose_name=_('Field'), max_length=20,
-							blank=True)
+	field = models.CharField(verbose_name=_('Field'), max_length=20, blank=True)
 	# logo = models.ImageField()
-	tax_id_number = models.CharField(verbose_name=_('NPWP'), max_length=30,
-									blank=True)
+	tax_id_number = models.CharField(verbose_name=_('NPWP'), max_length=30,	blank=True)
 	join_date = models.DateField()
 
 	class Meta:
@@ -53,31 +48,20 @@ class SalesOrder(models.Model):
 		('BASIC', 'Basic Salary'),
 		('TOTAL', 'Grand Total')
 	)
-	number = models.CharField(verbose_name=_('SO Number'), max_length=50,
-							 blank=True)
+	number = models.CharField(verbose_name=_('SO Number'), max_length=50, blank=True)
 	date_create = models.DateField(verbose_name=_('Date Issued'))
 	date_start = models.DateField(verbose_name=_('Contract Start Date'))
 	date_end = models.DateField(verbose_name=_('Contract End Date'))
 	customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
-	reference = models.CharField(verbose_name=_('Reference'), max_length=255,
-								blank=True)
+	reference = models.CharField(verbose_name=_('Reference'), max_length=255, blank=True)
 	note = models.TextField(blank=True)
-	tax = models.DecimalField(max_digits=12, decimal_places=2,
-							 verbose_name=_('Tax'),
-							 help_text=_('Tax value must be decimal, \
-							 			ex: input 12\% / as 0.12'))
-	fee = models.DecimalField(max_digits=12, decimal_places=3,
-							 verbose_name=_('Management Fee'))
-	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated \
-															 Condition'),
-											  help_text=_('Set to basic if \
-											  			 the fee will be \
-											  			 calculated from \
-											  			 basic salary, \
-											  			 otherwise set \
-											  			 to grand total'),
-											  max_length=5,
-											  choices=FEE_CONDITION_CHOICES)
+	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'),
+							 help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12'))
+	fee = models.DecimalField(max_digits=12, decimal_places=3, verbose_name=_('Management Fee'))
+	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'),
+											  help_text=_('Set to basic if the fee will be calculated from basic\
+											  	         salary, otherwise set to grand total'),
+											  max_length=5, choices=FEE_CONDITION_CHOICES)
 
 	class Meta:
 		verbose_name = 'Sales Order'
@@ -123,14 +107,11 @@ class SalesOrder(models.Model):
 		return ('number__icontains', 'customer__name__icontains')
 
 class SalesOrderDetail(models.Model):
-	sales_order = models.ForeignKey(SalesOrder,
-								   verbose_name=_('Sales Order Number'))
+	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))
 	service = models.ForeignKey(Service, verbose_name=_('Service Demand'))
 	quantity = models.SmallIntegerField(verbose_name=_('Unit Quantity'))
-	basic_salary = models.DecimalField(max_digits=12, decimal_places=2,
-									  null=True, blank=True)
-	other_salary_detail = models.ManyToManyField('ServiceSalaryItem',
-												through='ServiceSalaryDetail',
+	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+	other_salary_detail = models.ManyToManyField('ServiceSalaryItem', through='ServiceSalaryDetail',
 												related_name='other_salary_detail')
 
 	class Meta:
@@ -159,10 +140,8 @@ class ItemCategory(models.Model):
 		return self.name
 
 class ServiceSalaryItem(models.Model):
-	name = models.CharField(verbose_name=_('Price Item Component'),
-						   max_length=255)
-	category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE,
-								verbose_name=_('Category'),
+	name = models.CharField(verbose_name=_('Price Item Component'), max_length=255)
+	category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE, verbose_name=_('Category'),
 								related_name='service_price_item')
 
 	class Meta:
@@ -177,14 +156,10 @@ class ServiceSalaryItem(models.Model):
 		return ('name__icontains',)
 
 class ServiceSalaryDetail(models.Model):
-	service_order_detail = models.ForeignKey(SalesOrderDetail,
-											verbose_name=_('Service Order Detail'),
+	service_order_detail = models.ForeignKey(SalesOrderDetail, verbose_name=_('Service Order Detail'),
 											on_delete=models.CASCADE)
-	service_salary_item = models.ForeignKey(ServiceSalaryItem,
-										   verbose_name=_('Salary Item'),
-										   on_delete=models.CASCADE)
-	price = models.DecimalField(verbose_name=_('Price'), max_digits=12,
-							   decimal_places=2)
+	service_salary_item = models.ForeignKey(ServiceSalaryItem, verbose_name=_('Salary Item'), on_delete=models.CASCADE)
+	price = models.DecimalField(verbose_name=_('Price'), max_digits=12, decimal_places=2)
 
 	class Meta:
 		verbose_name = 'Detail Salary Per Service'
@@ -210,10 +185,8 @@ class SatisficationPointCategory(models.Model):
 	description.allow_tags = True
 
 class SatisficationPointRateItem(models.Model):
-	category = models.ForeignKey(SatisficationPointCategory,
-								verbose_name=_('Point Category'))
-	name = models.CharField(verbose_name=_('Satisfication Point Rate'),
-						   max_length=255,
+	category = models.ForeignKey(SatisficationPointCategory, verbose_name=_('Point Category'))
+	name = models.CharField(verbose_name=_('Satisfication Point Rate'), max_length=255,
 						   help_text=_('Point rate question for polling'))
 	description = models.TextField(verbose_name=_('Description'), blank=True)
 
@@ -231,10 +204,8 @@ class SatisficationPointRateItem(models.Model):
 class Satisfication(models.Model):
 	create_date = models.DateField(verbose_name=_('Date Created'))
 	name = models.CharField(verbose_name=_('Subject'), max_length=255)
-	sales_order = models.ForeignKey(SalesOrder,
-									verbose_name=_('Related Sales Order'))
-	respondent = models.CharField(verbose_name=_('Person Interviewed'),
-								 max_length=50, blank=True)
+	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Related Sales Order'))
+	respondent = models.CharField(verbose_name=_('Person Interviewed'), max_length=50, blank=True)
 
 	class Meta:
 		verbose_name = 'Satisfication'
@@ -244,10 +215,8 @@ class Satisfication(models.Model):
 		return self.name
 
 class SatisficationDetail(models.Model):
-	satisfication = models.ForeignKey(Satisfication,
-									 verbose_name=_('Satisfication Subject'))
-	point_rate_item = models.ForeignKey(SatisficationPointRateItem,
-									   verbose_name=_('Point Rate Item'))
+	satisfication = models.ForeignKey(Satisfication, verbose_name=_('Satisfication Subject'))
+	point_rate_item = models.ForeignKey(SatisficationPointRateItem, verbose_name=_('Point Rate Item'))
 	value = models.PositiveIntegerField(verbose_name=_('Point Value'),
 									   help_text=_('Value must be betwen 2 to 5'))
 

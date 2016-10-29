@@ -8,7 +8,9 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'minierp.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    #url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^logout/', "django.contrib.auth.views.logout", {'next_page': '/'}, name="logout"),
     url(r'^hrm/', include('hrm.urls')),

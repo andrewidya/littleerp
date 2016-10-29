@@ -53,21 +53,20 @@ class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin)
     list_filter = ('job_title', 'division', 'marital_status')
     list_display = ('reg_number', 'get_full_name', 'gender', 'marital_status',
                     'job_title', 'is_active')
+    report_template = 'hrm/report/test.rml'
     fieldsets = (
-            ('Personal Info', {
-                    'fields': (
-                            ('id_number', 'first_name'), ('phone_number', 'last_name',),
-                            ('birth_place', 'religion'),
-                            ('birth_date', 'gender', 'blood_type'),
-                            ('mother_name', 'marital_status')
-                    )
-            }),
-            ('Employemnt Info', {
-                    'fields': (
-                            ('job_title', 'division'), ('reg_number', 'date_of_hire'),
-                            'is_active', ('bank', 'bank_account')
-                    )
-            }),
+        ('Personal Info', {
+            'fields': (
+                ('id_number', 'first_name'), ('phone_number', 'last_name',), ('birth_place', 'religion'),
+                ('birth_date', 'gender'), 'blood_type', ('mother_name', 'marital_status')
+            )
+        }),
+        ('Employemnt Info', {
+            'fields': (
+                ('job_title', 'division'), ('reg_number', 'date_of_hire'),
+                'is_active', ('bank', 'bank_account')
+            )
+        }),
     )
     raw_id_fields = ('bank', 'job_title', 'division')
     autocomplete_lookup_fields = {
@@ -75,7 +74,7 @@ class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin)
     }
     inlines = [FamilyInline, AddressInline, EducationInline]
     list_per_page = 20
-    change_list_template = "admin/change_list_filter_sidebar.html"
+    # change_list_template = "admin/change_list_filter_sidebar.html"
 
 
 @admin.register(AnnualLeave)
@@ -119,11 +118,11 @@ class SalaryNameAdmin(ImportExportMixin, admin.ModelAdmin):
 class OtherSalaryInline(admin.TabularInline):
     model = OtherSalary
     fields = ('salary_name', 'value')
-    raw_id_fields = ('salary_name',)
-    autocomplete_lookup_fields = {
-            'fk': ['salary_name'],
-    }
-    classes = ('grp-collapse grp-open',)
+    # raw_id_fields = ('salary_name',)
+    # autocomplete_lookup_fields = {
+    #        'fk': ['salary_name'],
+    # }
+    # classes = ('grp-collapse grp-open',)
 
 
 @admin.register(EmployeeContract)
@@ -131,12 +130,12 @@ class EmployeeContract(admin.ModelAdmin):
     list_display = ('employee', 'service_related', 'start_date', 'end_date',
                     'reference', 'contract_status')
     fieldsets = (
-            ('Contract Details', {
-                    'fields': (
-                            ('employee', 'service_related'), ('start_date', 'end_date'),
-                            ('base_salary', 'reference')
-                    )
-            }),
+        ('Contract Details', {
+            'fields': (
+                'employee', 'service_related', ('start_date', 'end_date'),
+                ('base_salary', 'reference')
+            )
+        }),
     )
     raw_id_fields = ('employee', 'service_related',)
     autocomplete_lookup_fields = {
