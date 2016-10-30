@@ -1,19 +1,22 @@
+from functools import partial
+
+from fsm_admin.mixins import FSMTransitionMixin
+
 from django.contrib import admin
 from django.forms.models import modelformset_factory
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from fsm_admin.mixins import FSMTransitionMixin
-from functools import partial
-from operational.models import VisitCustomer, VisitPointRateItem, \
-	VisitCustomerDetail, PayrollPeriod, Attendance, Payroll, PayrollDetail, \
-	State, FinalPayroll, FinalPayrollDetail
+
+from operational.models import (VisitCustomer, VisitPointRateItem, VisitCustomerDetail, PayrollPeriod, Attendance,
+	Payroll, PayrollDetail, State, FinalPayroll, FinalPayrollDetail, CourseType, Course, TrainingSchedule, TrainingClass)
 from operational.forms import PayrollPeriodForm, PayrollForm
-# Register your models here.
+
 
 class VisitCustomerDetailInline(admin.TabularInline):
 	model = VisitCustomerDetail
 	extra = 1
+
 
 @admin.register(VisitCustomer)
 class VisitCustomerAdmin(admin.ModelAdmin):
@@ -33,33 +36,56 @@ class VisitCustomerAdmin(admin.ModelAdmin):
 	inlines = [VisitCustomerDetailInline]
 	filter_horizontal = ('employee',)
 
+
 @admin.register(VisitPointRateItem)
 class VisitPointRateItemAdmin(admin.ModelAdmin):
 	pass
 
+
+'''
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-	fields = (('work_day', 'sick_day'), ('alpha_day', 'leave_day'),
-		     'leave_left', ('employee', 'period'))
-	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day',
-				   'leave_day', 'leave_left')
-	raw_id_fields = ('employee', 'period')
+	fields = (
+		('work_day', 'sick_day'),
+		('alpha_day', 'leave_day'),
+		'leave_left',
+		('employee', 'period')
+	)
+	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
+	# raw_id_fields = ('employee', 'period')
 	list_filter = ('period__period',)
-	autocomplete_lookup_fields = {
-		'fk': ['employee', 'period'],
-	}
-	list_editable = ('work_day', 'sick_day', 'alpha_day', 'leave_day',
-				    'leave_left')
+	# autocomplete_lookup_fields = {
+	#	'fk': ['employee', 'period'],
+	# }
+	list_editable = ('work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
+
+	def get_readonly_fields(self, request, obj=None):
+		if obj.period.state == State.CLOSE:
+			self.list_editable = ''
+			return ('work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left', 'employee', 'period')
+
+	def has_change_permission(self, request, obj=None):
+		if obj is not None:
+			if obj.period.state == State.CLOSE:
+				return False
+		return True
+
+	def has_delete_permission(self, request, obj=None):
+		if obj is not None:
+			if obj.period.state == State.CLOSE:
+				return False
+		return True
+'''
+
 
 @admin.register(Payroll)
 class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	fields = ('period', 'contract', 'base_salary')
-	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
-				   'staff', 'detail_url', 'state')
+	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay', 'calculate_total', 'staff', 'detail_url', 'state')
 	list_editable = ['base_salary', 'overtime', 'back_pay']
 	list_filter = ('period__period',)
 	fsm_field = ['state',]
-	change_form_template = 'fsm_admin/change_form.html'
+	# change_form_template = 'fsm_admin/change_form.html'
 	actions = ['make_final']
 	form = PayrollForm
 
@@ -84,7 +110,11 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 		return modelformset_factory(self.model, self.get_changelist_form(request),
 								   extra=0, fields=self.list_editable, **defaults)
 	def make_final(self, request, queryset):
-		queryset.update(state=State.FINAL)
+		# queryset.update(state=State.FINAL)
+		for obj in queryset:
+			obj.total = obj.calculate_total()
+			obj.state = State.FINAL
+			obj.save()
 	make_final.short_description = 'Mark selected payroll as final'
 
 	def response_change(self, request, obj):
@@ -92,22 +122,33 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 		changelist_url = reverse('admin:operational_payroll_changelist')
 		return redirect(changelist_url)
 
+
 @admin.register(PayrollDetail)
 class PayrollDetailAdmin(admin.ModelAdmin):
-	list_display = ('period', 'contract', 'employee',  'salary', 'value',
-				   'note')
+	list_display = ('period', 'contract', 'employee',  'salary', 'value', 'note')
 	list_filter = ('payroll__contract__employee',)
 	list_editable = ['value', 'note']
+
 
 class PayrollInline(admin.TabularInline):
 	model = Payroll
 	exclude = ('staff', 'state')
-	classes = ('grp-collapse grp-closed',)
-	raw_id_fields = ('contract',)
-	autocomplete_lookup_fields = {
-		'fk': ['contract']
-	}
 	form = PayrollForm
+
+	def get_readonly_fields(self, request, obj=None):
+		if obj is not None and obj.state == State.CLOSE:
+			return ('contract', 'base_salary', 'overtime', 'back_pay')
+		return super(PayrollInline, self).get_readonly_fields(request, obj=obj)
+
+	def get_max_num(self, request, obj=None, **kwargs):
+		if obj is not None and obj.state == State.CLOSE:
+			return 0
+		return super(PayrollInline, self).get_max_num(request, obj=obj)
+
+	def has_delete_permission(self, request, obj=None):
+		if obj is not None and obj.state == State.CLOSE:
+			return False
+		return True
 
 class FinalPayrollDetailInline(admin.TabularInline):
 	model = FinalPayrollDetail
@@ -115,6 +156,7 @@ class FinalPayrollDetailInline(admin.TabularInline):
 	readonly_fields = ('salary', 'value', 'note')
 	max_num = 0
 	can_delete = False
+
 
 @admin.register(FinalPayroll)
 class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
@@ -125,7 +167,7 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			)
 		}),
 	)
-	list_display = ('period', 'contract', 'staff', 'state')
+	list_display = ('period', 'contract', 'total', 'staff', 'state')
 	list_filter = ('period__period',)
 	readonly_fields = ('period', 'contract', 'base_salary', 'overtime', 'back_pay')
 	inlines = [FinalPayrollDetailInline]
@@ -154,20 +196,38 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			del actions['delete_selected']
 		return actions
 
+
 class AttendanceInline(admin.TabularInline):
 	model = Attendance
-	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'),
-		     'leave_left')
-	raw_id_fields = ('employee',)
-	autocomplete_lookup_fields = {
-		'fk': ['employee']
-	}
-	classes = ('grp-collapse grp-closed',)
+	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'), 'leave_left')
+	# raw_id_fields = ('employee',)
+	# autocomplete_lookup_fields = {
+	#	'fk': ['employee']
+	# }
+	# classes = ('grp-collapse grp-closed',)
+
+	def get_readonly_fields(self, request, obj=None):
+		if obj is not None:
+			if obj.state == State.CLOSE:
+				return ('employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
+		return super(AttendanceInline, self).get_readonly_fields(request, obj=obj)
+
+	def get_max_num(self, request, obj=None, **kwargs):
+		if obj is not None:
+			if obj.state ==State.CLOSE:
+				return 0
+		return super(AttendanceInline, self).get_max_num(request, obj=obj)
+
+	def has_delete_permission(self, request, obj=None):
+		if obj is not None:
+			if obj.state == State.CLOSE:
+				return False
+		return True
+
 
 @admin.register(PayrollPeriod)
 class PayrollPeriodAdmin(admin.ModelAdmin):
-	list_display = ('period', 'date_create', 'start_date', 'end_date',
-				   'attendance_urls', 'payroll_urls')
+	list_display = ('period', 'date_create', 'start_date', 'end_date', 'payroll_urls')
 	fieldsets = (
 		('Period Information', {
 			'fields': (('start_date', 'end_date'),)
@@ -186,3 +246,29 @@ class PayrollPeriodAdmin(admin.ModelAdmin):
 			instance.save()
 		formset.save_m2m()
 
+	def get_readonly_fields(self, request, obj=None):
+		readonly_fields = super(PayrollPeriodAdmin, self).get_readonly_fields(request, obj=obj)
+		if obj is not None:
+			if obj.state == State.CLOSE:
+				return ('start_date', 'end_date')
+		return readonly_fields
+
+
+@admin.register(CourseType)
+class CourseTypeAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(TrainingSchedule)
+class TrainingScheduleAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(TrainingClass)
+class TrainingClassAdmin(admin.ModelAdmin):
+	pass

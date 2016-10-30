@@ -1,3 +1,5 @@
+from __future__ import division
+
 from django_fsm import FSMField, transition
 
 from django.db import models
@@ -41,16 +43,11 @@ class State(object):
 
 class VisitCustomer(models.Model):
 	visit_date = models.DateField(verbose_name=_('Visiting Date'))
-	sales_order_reference = models.ForeignKey(SalesOrder,
-											 verbose_name=_('Sales Order'),
-											 help_text=_('Sales Order number \
-											 	for referencing to customer'))
-	employee = models.ManyToManyField(Employee,
-									 verbose_name=_('Personnels at Location'),
-									 help_text=_('Personnels in the field when\
-									 			these visits'))
-	subject = models.CharField(verbose_name=_('Visit Subject Title'),
-							  max_length=255)
+	sales_order_reference = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order'),
+											 help_text=_('Sales Order number for referencing to customer'))
+	employee = models.ManyToManyField(Employee, verbose_name=_('Personnels at Location'), help_text=_('Personnels in \
+															  the field when these visits'))
+	subject = models.CharField(verbose_name=_('Visit Subject Title'), max_length=255)
 
 	class Meta:
 		verbose_name = 'Visit Customer Information'
@@ -66,8 +63,7 @@ class VisitCustomer(models.Model):
 
 class VisitPointRateItem(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
-	description = models.CharField(verbose_name=_('Description'),
-								  max_length=255)
+	description = models.CharField(verbose_name=_('Description'), max_length=255)
 
 	class Meta:
 		verbose_name = 'Point Rated Item'
@@ -77,12 +73,9 @@ class VisitPointRateItem(models.Model):
 		return self.name
 
 class VisitCustomerDetail(models.Model):
-	visit_point_rate_item = models.ForeignKey(VisitPointRateItem,
-											 verbose_name=_('Point Rate Item'))
-	visit_customer = models.ForeignKey(VisitCustomer,
-									  verbose_name=_('Customer'))
-	report = models.CharField(verbose_name=_('Point Rate Item'),
-							 max_length=255)
+	visit_point_rate_item = models.ForeignKey(VisitPointRateItem, verbose_name=_('Point Rate Item'))
+	visit_customer = models.ForeignKey(VisitCustomer, verbose_name=_('Customer'))
+	report = models.CharField(verbose_name=_('Point Rate Item'), max_length=255)
 
 
 class PayrollPeriod(models.Model):
@@ -131,20 +124,14 @@ class PayrollPeriod(models.Model):
 
 
 class Attendance(models.Model):
-	work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True,
-										  blank=True)
-	sick_day = models.PositiveIntegerField(verbose_name='Day Sick', null=True,
-										  blank=True)
-	alpha_day = models.PositiveIntegerField(verbose_name='Day Alpha', null=True,
-										   blank=True)
-	leave_day = models.PositiveIntegerField(verbose_name='Leave Taken', null=True,
-										   blank=True)
-	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True,
-											blank=True)
-	employee = models.ForeignKey(Employee, verbose_name='Employee',
-							    limit_choices_to={'is_active': True,
+	work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True, blank=True)
+	sick_day = models.PositiveIntegerField(verbose_name='Day Sick', null=True, blank=True)
+	alpha_day = models.PositiveIntegerField(verbose_name='Day Alpha', null=True, blank=True)
+	leave_day = models.PositiveIntegerField(verbose_name='Leave Taken', null=True, blank=True)
+	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True, blank=True)
+	employee = models.ForeignKey(Employee, verbose_name='Employee', limit_choices_to={'is_active': True,
 							    	'contract__contract_status': 'ACTIVE'})
-	period = models.ForeignKey(PayrollPeriod, verbose_name='Period')
+	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
 
 	class Meta:
 		verbose_name = 'Attendance Summary'
@@ -166,21 +153,16 @@ class Attendance(models.Model):
 		super(Attendance, self).save(*args, **kwargs)
 
 class Payroll(models.Model):
-	contract = models.ForeignKey(EmployeeContract, limit_choices_to={
-									'contract_status': 'ACTIVE',
-									'employee__is_active': True},
-								verbose_name='Employee \
-								Contract')
-	period = models.ForeignKey(PayrollPeriod, verbose_name='Period')
-	base_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True,
-									 blank=True, verbose_name='Base Salary')
-	overtime = models.DecimalField(max_digits=12, decimal_places=2, null=True,
-								  blank=True, verbose_name='Overtime/Hrs')
-	back_pay = models.DecimalField(max_digits=12, decimal_places=2, null=True,
-								  blank=True, verbose_name='Back Pay')
-	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User \
-							 Staff')
+	contract = models.ForeignKey(EmployeeContract,
+								limit_choices_to={'contract_status': 'ACTIVE', 'employee__is_active': True},
+								verbose_name='Employee Contract')
+	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
+	base_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Base Salary')
+	overtime = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Overtime/Hrs')
+	back_pay = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Back Pay')
+	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
+	total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Total')
 
 	draft_manager = PayrollManager()
 	objects = models.Manager()
@@ -199,6 +181,8 @@ class Payroll(models.Model):
 			self.overtime = self.base_salary / 173
 		if self.back_pay is None:
 			self.back_pay = 0
+		if self.total is None:
+			self.total = 0
 		super(Payroll, self).save(args, kwargs)
 
 	def detail_url(self):
@@ -215,7 +199,8 @@ class Payroll(models.Model):
 	@transition(field=state, source=State.DRAFT, target=State.FINAL,
 			   custom=dict(verbose="Finalized Calculation",))
 	def finalize(self):
-		pass
+		self.total = self.calculate_total()
+		self.save(update='total')
 
 	@transition(field=state, source=State.FINAL, target=State.DRAFT)
 	def unfinalize(self):
@@ -225,11 +210,23 @@ class Payroll(models.Model):
 	def pay(self):
 		pass
 
+	def calculate_total(self):
+		total = self.base_salary + self.back_pay
+		salary_per_day = self.base_salary / 30
+		other_salaries = self.payrolldetail_set.all()
+		for other_salariy in other_salaries:
+			total += other_salariy.value
+		attendance = Attendance.objects.filter(period=self.period, employee=self.contract.employee)
+		if attendance:
+			total -= ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day)
+		return total
+	calculate_total.short_description = 'Total'
+
+
 class PayrollDetail(models.Model):
 	payroll = models.ForeignKey(Payroll, verbose_name='Payroll')
 	salary = models.ForeignKey(SalaryName, verbose_name='Component')
-	value = models.DecimalField(max_digits=12, decimal_places=2, null=True,
-		                       blank=True, verbose_name='Value')
+	value = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Value')
 	note = models.CharField(max_length=255, blank=True, verbose_name='Note')
 
 	class Meta:
@@ -264,3 +261,52 @@ class FinalPayrollDetail(PayrollDetail):
 		proxy = True
 		verbose_name = 'Finalized Payroll Detail'
 		verbose_name_plural = 'Finalized Payroll Detail'
+
+
+class CourseType(models.Model):
+	name = models.CharField(verbose_name='Name', max_length=255)
+
+	class Meta:
+		verbose_name = 'Courses Type'
+		verbose_name_plural = 'Courses Type'
+
+	def __str__(self):
+		return self.name
+
+
+class Course(models.Model):
+	name = models.CharField(verbose_name='Name', max_length=255)
+	course_type = models.ForeignKey(CourseType, verbose_name='Course Type')
+
+	class Meta:
+		verbose_name = 'Course'
+		verbose_name_plural = 'Courses'
+
+	def __str__(self):
+		return self.name
+
+
+class TrainingSchedule(models.Model):
+	date = models.DateField(verbose_name='Date')
+	course = models.ForeignKey(Course, verbose_name='Courses')
+	has_certificate = models.BooleanField(default=True, verbose_name='Certificate')
+	presenter = models.CharField(verbose_name='Presenter', max_length=45)
+
+	class Meta:
+		verbose_name = 'Training Schedule'
+		verbose_name_plural = 'Training Schedule'
+
+	def __str__(self):
+		return str(self.date)
+
+
+class TrainingClass(models.Model):
+	employee = models.ForeignKey(Employee, verbose_name='Employee')
+	schedule = models.ForeignKey(TrainingSchedule, verbose_name='Schedule')
+
+	class Meta:
+		verbose_name = 'Training Class'
+		verbose_name_plural = 'Training Classes'
+
+	def __str__(self):
+		return self.employee
