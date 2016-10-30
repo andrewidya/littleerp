@@ -1,6 +1,8 @@
-from django import template
 from fsm_admin.templatetags.fsm_admin import fsm_submit_row
+
+from django import template
 from django.conf import settings
+
 register = template.Library()
 
 

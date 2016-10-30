@@ -3,6 +3,7 @@ from __future__ import division
 from django_fsm import FSMField, transition
 
 from django.db import models
+from django.db.models import Sum, Q
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from django.utils.html import format_html
@@ -19,7 +20,7 @@ class FinalPayrollManager(models.Manager):
 
 class PayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PayrollManager, self).get_queryset().filter(state=State.DRAFT)
+		return super(PayrollManager, self).get_queryset().filter(state=State.DRAFT).select_related('contract__employee')
 
 
 class State(object):
@@ -61,6 +62,7 @@ class VisitCustomer(models.Model):
 
 	get_customer_name.short_description = 'Customer'
 
+
 class VisitPointRateItem(models.Model):
 	name = models.CharField(verbose_name=_('Name'), max_length=50)
 	description = models.CharField(verbose_name=_('Description'), max_length=255)
@@ -71,6 +73,7 @@ class VisitPointRateItem(models.Model):
 
 	def __str__(self):
 		return self.name
+
 
 class VisitCustomerDetail(models.Model):
 	visit_point_rate_item = models.ForeignKey(VisitPointRateItem, verbose_name=_('Point Rate Item'))
@@ -129,8 +132,9 @@ class Attendance(models.Model):
 	alpha_day = models.PositiveIntegerField(verbose_name='Day Alpha', null=True, blank=True)
 	leave_day = models.PositiveIntegerField(verbose_name='Leave Taken', null=True, blank=True)
 	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True, blank=True)
-	employee = models.ForeignKey(Employee, verbose_name='Employee', limit_choices_to={'is_active': True,
-							    	'contract__contract_status': 'ACTIVE'})
+	employee = models.ForeignKey(Employee, verbose_name='Employee',
+								limit_choices_to=Q(is_active=True) & (Q(contract__contract_status='ACTIVE') | Q(contract__contract_status='NEED RENEWAL')))
+								# {'is_active': True, 'contract__contract_status': 'ACTIVE'})
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
 
 	class Meta:
@@ -152,9 +156,11 @@ class Attendance(models.Model):
 			self.leave_left = 0
 		super(Attendance, self).save(*args, **kwargs)
 
+
 class Payroll(models.Model):
 	contract = models.ForeignKey(EmployeeContract,
-								limit_choices_to={'contract_status': 'ACTIVE', 'employee__is_active': True},
+								limit_choices_to=Q(contract_status='ACTIVE') | Q(contract_status='NEED RENEWAL'),
+								# {'contract_status': 'ACTIVE', 'employee__is_active': True},
 								verbose_name='Employee Contract')
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
 	base_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Base Salary')
@@ -162,7 +168,7 @@ class Payroll(models.Model):
 	back_pay = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Back Pay')
 	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
-	total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Total')
+	total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Total Salary')
 
 	draft_manager = PayrollManager()
 	objects = models.Manager()
@@ -196,6 +202,10 @@ class Payroll(models.Model):
 	detail_url.short_description = 'Other Salary Detail'
 	detail_url.allow_tags = True
 
+	def bank_account(self):
+		return self.contract.employee.bank_account
+	bank_account.short_description = 'Bank Account'
+
 	@transition(field=state, source=State.DRAFT, target=State.FINAL,
 			   custom=dict(verbose="Finalized Calculation",))
 	def finalize(self):
@@ -210,16 +220,26 @@ class Payroll(models.Model):
 	def pay(self):
 		pass
 
+	def calculate_decrease(self):
+		salary_per_day = self.base_salary / 30
+		# checking attenande for total salary adjustment
+		attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
+		if attendance:
+			total = ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day)
+		return total
+	calculate_decrease.short_description = 'Decrease'
+
 	def calculate_total(self):
 		total = self.base_salary + self.back_pay
-		salary_per_day = self.base_salary / 30
-		other_salaries = self.payrolldetail_set.all()
-		for other_salariy in other_salaries:
-			total += other_salariy.value
-		attendance = Attendance.objects.filter(period=self.period, employee=self.contract.employee)
-		if attendance:
-			total -= ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day)
-		return total
+		# adding other salary details
+		other_salaries = self.payrolldetail_set.select_related('salary').all()
+		for detail in other_salaries:
+			if detail.salary.calculate_condition == '+':
+				total += detail.value
+			else:
+				total -= detail.value
+		decrease = self.calculate_decrease()
+		return total - decrease
 	calculate_total.short_description = 'Total'
 
 
@@ -249,12 +269,14 @@ class PayrollDetail(models.Model):
 	def employee(self):
 		return self.payroll.contract.employee
 
+
 class FinalPayroll(Payroll):
 	objects = FinalPayrollManager()
 	class Meta:
 		proxy = True
 		verbose_name = 'Finalized Payroll'
 		verbose_name_plural = 'Finalized Payroll'
+
 
 class FinalPayrollDetail(PayrollDetail):
 	class Meta:

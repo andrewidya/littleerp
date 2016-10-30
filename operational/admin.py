@@ -81,7 +81,8 @@ class AttendanceAdmin(admin.ModelAdmin):
 @admin.register(Payroll)
 class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	fields = ('period', 'contract', 'base_salary')
-	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay', 'calculate_total', 'staff', 'detail_url', 'state')
+	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay', 'calculate_decrease',
+				   'calculate_total', 'staff', 'detail_url', 'state')
 	list_editable = ['base_salary', 'overtime', 'back_pay']
 	list_filter = ('period__period',)
 	fsm_field = ['state',]
@@ -135,6 +136,13 @@ class PayrollInline(admin.TabularInline):
 	exclude = ('staff', 'state')
 	form = PayrollForm
 
+	def get_queryset(self, request):
+		#queryset = super(PayrollAdmin, self).get_queryset(request)
+		queryset = Payroll.draft_manager.all()
+		if request.user.is_superuser:
+			return queryset
+		return queryset.filter(staff=request.user)
+
 	def get_readonly_fields(self, request, obj=None):
 		if obj is not None and obj.state == State.CLOSE:
 			return ('contract', 'base_salary', 'overtime', 'back_pay')
@@ -149,6 +157,7 @@ class PayrollInline(admin.TabularInline):
 		if obj is not None and obj.state == State.CLOSE:
 			return False
 		return True
+
 
 class FinalPayrollDetailInline(admin.TabularInline):
 	model = FinalPayrollDetail
@@ -167,10 +176,11 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			)
 		}),
 	)
-	list_display = ('period', 'contract', 'total', 'staff', 'state')
+	list_display = ('period', 'contract', 'total', 'bank_account', 'staff', 'state')
 	list_filter = ('period__period',)
 	readonly_fields = ('period', 'contract', 'base_salary', 'overtime', 'back_pay')
 	inlines = [FinalPayrollDetailInline]
+	actions = ['make_paid']
 	change_form_template = 'admin/operational/finalpayroll/change_form.html'
 
 	def get_queryset(self, request):
@@ -196,6 +206,9 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			del actions['delete_selected']
 		return actions
 
+	def make_paid(self, request, queryset):
+		queryset.update(state=State.PAID)
+	make_paid.short_description = 'Mark selected payroll item as paid'
 
 class AttendanceInline(admin.TabularInline):
 	model = Attendance

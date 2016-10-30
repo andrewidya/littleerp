@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% load minierp_tags %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">PT Comercial Servisindo Prima</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
