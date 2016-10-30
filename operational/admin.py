@@ -42,16 +42,15 @@ class VisitPointRateItemAdmin(admin.ModelAdmin):
 	pass
 
 
-'''
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
 	fields = (
+		('employee', 'period'),
 		('work_day', 'sick_day'),
 		('alpha_day', 'leave_day'),
 		'leave_left',
-		('employee', 'period')
 	)
-	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
+	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left', 'staff')
 	# raw_id_fields = ('employee', 'period')
 	list_filter = ('period__period',)
 	# autocomplete_lookup_fields = {
@@ -59,10 +58,17 @@ class AttendanceAdmin(admin.ModelAdmin):
 	# }
 	list_editable = ('work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
 
+	def save_model(self, request, obj, form, change):
+		if getattr(obj, 'staff', None) is None:
+			obj.staff = request.user
+		obj.save()
+		super(AttendanceAdmin, self).save_model(request, obj, form, change)
+
 	def get_readonly_fields(self, request, obj=None):
-		if obj.period.state == State.CLOSE:
+		if obj is not None and obj.period.state == State.CLOSE:
 			self.list_editable = ''
 			return ('work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left', 'employee', 'period')
+		return super(AttendanceAdmin, self).get_readonly_fields(request, obj=obj)
 
 	def has_change_permission(self, request, obj=None):
 		if obj is not None:
@@ -75,7 +81,6 @@ class AttendanceAdmin(admin.ModelAdmin):
 			if obj.period.state == State.CLOSE:
 				return False
 		return True
-'''
 
 
 @admin.register(Payroll)

@@ -1,5 +1,7 @@
 from __future__ import division
 
+from decimal import Decimal
+
 from django_fsm import FSMField, transition
 
 from django.db import models
@@ -136,6 +138,7 @@ class Attendance(models.Model):
 								limit_choices_to=Q(is_active=True) & (Q(contract__contract_status='ACTIVE') | Q(contract__contract_status='NEED RENEWAL')))
 								# {'is_active': True, 'contract__contract_status': 'ACTIVE'})
 	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
+	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 
 	class Meta:
 		verbose_name = 'Attendance Summary'
@@ -225,7 +228,7 @@ class Payroll(models.Model):
 		# checking attenande for total salary adjustment
 		attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
 		if attendance:
-			total = ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day)
+			total = ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day.quantize(Decimal("0.00")))
 		return total
 	calculate_decrease.short_description = 'Decrease'
 
