@@ -86,7 +86,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 @admin.register(Payroll)
 class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	fields = ('period', 'contract', 'base_salary')
-	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay', 'calculate_decrease',
+	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
 				   'calculate_total', 'staff', 'detail_url', 'state')
 	list_editable = ['base_salary', 'overtime', 'back_pay']
 	list_filter = ('period__period',)
@@ -104,7 +104,7 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	def get_queryset(self, request):
 		#queryset = super(PayrollAdmin, self).get_queryset(request)
 		queryset = Payroll.draft_manager.all()
-		if request.user.is_superuser:
+		if request.user.is_superuser or request.user.has_perm('operational.audit_payroll'):
 			return queryset
 		return queryset.filter(staff=request.user)
 
@@ -138,7 +138,7 @@ class PayrollDetailAdmin(admin.ModelAdmin):
 
 class PayrollInline(admin.TabularInline):
 	model = Payroll
-	exclude = ('staff', 'state')
+	exclude = ('staff', 'state', 'total')
 	form = PayrollForm
 
 	def get_queryset(self, request):
@@ -190,7 +190,7 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
 	def get_queryset(self, request):
 		queryset = super(FinalPayrollAdmin, self).get_queryset(request)
-		if request.user.is_superuser:
+		if request.user.is_superuser or request.user.has_perm('operational.audit_payroll'):
 			return queryset
 		return queryset.filter(staff=request.user)
 
@@ -217,7 +217,8 @@ class FinalPayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
 class AttendanceInline(admin.TabularInline):
 	model = Attendance
-	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'), 'leave_left')
+	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'), 'leave_left', 'ln', 'lp', 'lk', 'l1',
+			 'l2', 'l3', 'l4')
 	# raw_id_fields = ('employee',)
 	# autocomplete_lookup_fields = {
 	#	'fk': ['employee']
@@ -227,7 +228,8 @@ class AttendanceInline(admin.TabularInline):
 	def get_readonly_fields(self, request, obj=None):
 		if obj is not None:
 			if obj.state == State.CLOSE:
-				return ('employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
+				return ('employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left', 'ln', 'lp', 'lk',
+					   'l1', 'l2', 'l3', 'l4')
 		return super(AttendanceInline, self).get_readonly_fields(request, obj=obj)
 
 	def get_max_num(self, request, obj=None, **kwargs):

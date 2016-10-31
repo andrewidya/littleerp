@@ -119,7 +119,7 @@ class SalesOrderDetail(models.Model):
 		verbose_name_plural = 'Order Details'
 
 	def __str__(self):
-		return self.sales_order.number + ":" + self.service.name
+		return self.sales_order.number + " : " + self.service.name
 
 	def get_service(self):
 		return self.service.name
