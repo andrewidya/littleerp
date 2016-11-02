@@ -3,6 +3,10 @@
 {% load admin_urls %}
 
 {% block object-tools-items %}
-  <li><a href="{% url opts|admin_urlname:'report' original.pk %}" class="grp-state-focus report_link">{% trans "Report" %}</a></li>
+	{% if original %}
+  <li>
+  	<a href="{% url opts|admin_urlname:'report' original.pk %}" class="grp-state-focus report_link">{% trans "Report" %}</a>
+  </li>
+  {% endif %}
   {{ block.super }}
 {% endblock %}
