@@ -86,9 +86,9 @@ class AttendanceAdmin(admin.ModelAdmin):
 @admin.register(Payroll)
 class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 	fields = ('period', 'contract', 'base_salary')
-	list_display = ('period', 'contract', 'base_salary', 'overtime', 'back_pay',
+	list_display = ('period', 'contract', 'base_salary', 'base_salary_per_day', 'overtime', 'back_pay', 'normal_overtime',
 				   'calculate_total', 'staff', 'detail_url', 'state')
-	list_editable = ['base_salary', 'overtime', 'back_pay']
+	list_editable = ['base_salary', 'overtime', 'back_pay', 'base_salary_per_day', 'normal_overtime']
 	list_filter = ('period__period',)
 	fsm_field = ['state',]
 	# change_form_template = 'fsm_admin/change_form.html'
