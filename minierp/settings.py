@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     # 'grappelli.dashboard',
     # 'grappelli',
     # 'django_adminlte',
-    # 'jet.dashboard',
+    'jet.dashboard',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',

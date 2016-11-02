@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^hrm/', include('hrm.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+'''
 grp_doc = [
 	# GRAPPELLI DOM DOCUMENTATION
     url(r'^grp-doc/change-form/', TemplateView.as_view(template_name='grp_doc/change_form.html'), name="grp_doc_change_form"),
@@ -53,3 +54,4 @@ grp_doc = [
 ]
 
 urlpatterns += grp_doc
+'''
