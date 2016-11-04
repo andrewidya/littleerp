@@ -226,7 +226,7 @@ class AnnualLeave(models.Model):
         verbose_name_plural = 'Annual Leaves'
 
     def __str__(self):
-        return self.employee.name
+        return self.employee.get_full_name()
 
 
 class LeaveTaken(models.Model):

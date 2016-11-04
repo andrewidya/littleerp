@@ -79,10 +79,11 @@ class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin)
 
 @admin.register(AnnualLeave)
 class AnnualLeaveAdmin(admin.ModelAdmin):
-    raw_id_fields = ('employee',)
-    autocomplete_lookup_fields = {
-            'fk': ['employee'],
-    }
+    list_display = ('employee', 'leave_type', 'year', 'remaining_day_allowed', 'last_update')
+    # raw_id_fields = ('employee',)
+    # autocomplete_lookup_fields = {
+    #        'fk': ['employee'],
+    #}
 
 
 @admin.register(LeaveTaken)
