@@ -28,7 +28,7 @@ class Customer(models.Model):
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ('code__icontains', 'name__icontains')
+		return ('code', 'name')
 
 class Service(models.Model):
 	name = models.CharField(verbose_name=_('Service Provided'), max_length=255)
@@ -52,13 +52,19 @@ class SalesOrder(models.Model):
 	customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
 	reference = models.CharField(verbose_name=_('Reference'), max_length=255, blank=True)
 	note = models.TextField(blank=True)
-	tax = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Tax'),
-							 help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12'))
+	tax = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		verbose_name=_('Tax'),
+		help_text=_('Tax value must be decimal, ex: input 12\% / as 0.12')
+	)
 	fee = models.DecimalField(max_digits=12, decimal_places=3, verbose_name=_('Management Fee'))
-	fee_calculate_condition = models.CharField(verbose_name=_('Fee Calculated Condition'),
-											  help_text=_('Set to basic if the fee will be calculated from basic\
-											  	         salary, otherwise set to grand total'),
-											  max_length=5, choices=FEE_CONDITION_CHOICES)
+	fee_calculate_condition = models.CharField(
+		verbose_name=_('Fee Calculated Condition'),
+		help_text=_('Set to basic if the fee will be calculated from basic salary, otherwise set to grand total'),
+		max_length=5,
+		choices=FEE_CONDITION_CHOICES
+	)
 
 	class Meta:
 		verbose_name = 'Sales Order'
@@ -78,9 +84,7 @@ class SalesOrder(models.Model):
 		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
 		service = ''
 		for s in sales_order_detail:
-			# service.append(s.service.name.encode('utf-8'))
 			service += '<li>{0}</li>'.format(s.service.name.encode('utf-8'))
-		# return str(service)
 		return mark_safe('<ul>{0}</li>'.format(service))
 	service_demand_list.allow_tags = True
 	service_demand_list.short_description = 'Service Demand'
@@ -99,7 +103,9 @@ class SalesOrder(models.Model):
 	total_price.short_description = 'Total Price'
 
 	def sales_order_detail_page(self):
-		return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>' % (reverse('admin:app_list', kwargs={'app_label': 'crm'}), self.number))
+		return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>'
+			% (reverse('admin:app_list', kwargs={'app_label': 'crm'}), self.number)
+		)
 	sales_order_detail_page.short_description = 'Order Detail Link'
 
 	@staticmethod
@@ -111,8 +117,11 @@ class SalesOrderDetail(models.Model):
 	service = models.ForeignKey(Service, verbose_name=_('Service Demand'))
 	quantity = models.SmallIntegerField(verbose_name=_('Unit Quantity'))
 	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-	other_salary_detail = models.ManyToManyField('ServiceSalaryItem', through='ServiceSalaryDetail',
-												related_name='other_salary_detail')
+	other_salary_detail = models.ManyToManyField(
+		'ServiceSalaryItem',
+		through='ServiceSalaryDetail',
+		related_name='other_salary_detail'
+	)
 
 	class Meta:
 		verbose_name = 'Order Detail'
@@ -127,7 +136,7 @@ class SalesOrderDetail(models.Model):
 
 	@staticmethod
 	def autocomplete_search_fields():
-		return ('sales_order__number__icontains', 'service__name__icontains')
+		return ('sales_order__number', 'service__name')
 
 class ItemCategory(models.Model):
 	name = models.CharField(verbose_name=_('Item Category'), max_length=255)
@@ -141,8 +150,12 @@ class ItemCategory(models.Model):
 
 class ServiceSalaryItem(models.Model):
 	name = models.CharField(verbose_name=_('Price Item Component'), max_length=255)
-	category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE, verbose_name=_('Category'),
-								related_name='service_price_item')
+	category = models.ForeignKey(
+		ItemCategory,
+		on_delete=models.CASCADE,
+		verbose_name=_('Category'),
+		related_name='service_price_item'
+	)
 
 	class Meta:
 		verbose_name = 'Service Salary Item'
@@ -156,9 +169,15 @@ class ServiceSalaryItem(models.Model):
 		return ('name__icontains',)
 
 class ServiceSalaryDetail(models.Model):
-	service_order_detail = models.ForeignKey(SalesOrderDetail, verbose_name=_('Service Order Detail'),
-											on_delete=models.CASCADE)
-	service_salary_item = models.ForeignKey(ServiceSalaryItem, verbose_name=_('Salary Item'), on_delete=models.CASCADE)
+	service_order_detail = models.ForeignKey(
+		SalesOrderDetail,
+		verbose_name=_('Service Order Detail'),
+		on_delete=models.CASCADE
+	)
+	service_salary_item = models.ForeignKey(
+		ServiceSalaryItem,
+		verbose_name=_('Salary Item'),
+		on_delete=models.CASCADE)
 	price = models.DecimalField(verbose_name=_('Price'), max_digits=12, decimal_places=2)
 
 	class Meta:
@@ -186,8 +205,11 @@ class SatisficationPointCategory(models.Model):
 
 class SatisficationPointRateItem(models.Model):
 	category = models.ForeignKey(SatisficationPointCategory, verbose_name=_('Point Category'))
-	name = models.CharField(verbose_name=_('Satisfication Point Rate'), max_length=255,
-						   help_text=_('Point rate question for polling'))
+	name = models.CharField(
+		verbose_name=_('Satisfication Point Rate'),
+		max_length=255,
+		help_text=_('Point rate question for polling')
+	)
 	description = models.TextField(verbose_name=_('Description'), blank=True)
 
 	class Meta:
@@ -217,8 +239,10 @@ class Satisfication(models.Model):
 class SatisficationDetail(models.Model):
 	satisfication = models.ForeignKey(Satisfication, verbose_name=_('Satisfication Subject'))
 	point_rate_item = models.ForeignKey(SatisficationPointRateItem, verbose_name=_('Point Rate Item'))
-	value = models.PositiveIntegerField(verbose_name=_('Point Value'),
-									   help_text=_('Value must be betwen 2 to 5'))
+	value = models.PositiveIntegerField(
+		verbose_name=_('Point Value'),
+		help_text=_('Value must be betwen 2 to 5')
+	)
 
 	class Meta:
 		verbose_name = 'Satisfication Interview Detail'
@@ -226,8 +250,10 @@ class SatisficationDetail(models.Model):
 		unique_together = ('satisfication', 'point_rate_item')
 
 	def __str__(self):
-		return '{0} {1}'.format(self.satisfication.sales_order.number,
-							   self.satisfication.sales_order.customer.name)
+		return '{0} {1}'.format(
+			self.satisfication.sales_order.number,
+			self.satisfication.sales_order.customer.name
+		)
 
 	def get_satisfication_point_rate_desc(self):
 		return self.point_rate_item.description
