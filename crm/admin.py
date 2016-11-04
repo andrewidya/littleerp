@@ -1,28 +1,36 @@
 from django.contrib import admin
-from crm.models import (Customer, SalesOrder, SalesOrderDetail, ItemCategory, ServiceSalaryDetail, ServiceSalaryItem,
-	Service, ServiceSalaryDetail, Satisfication, SatisficationDetail, SatisficationPointRateItem,
-	SatisficationPointCategory)
-from crm import forms
 from import_export.admin import ImportExportMixin, ImportMixin
 from django.utils.translation import ugettext as _
 from django.contrib import messages
-from crm.forms import SatisficationDetailForm
+from django.utils.safestring import mark_safe
+from django.db import models
+from django.contrib.admin.views import main
 
-# Register your models here.
-@admin.register(Customer)
+from crm import forms
+from crm.forms import SatisficationDetailForm
+from crm.widgets import AdminImageWidget
+from crm.models import (
+	Customer, SalesOrder, SalesOrderDetail, ItemCategory, ServiceSalaryDetail, ServiceSalaryItem,
+	Service, ServiceSalaryDetail, Satisfication, SatisficationDetail, SatisficationPointRateItem,
+	SatisficationPointCategory
+)
+
+
 class CustomerAdmin(ImportExportMixin, admin.ModelAdmin):
 	list_filter = ('parent', 'join_date')
 	list_display = (
+		'logo_tag',
 		'code',
 		'name',
 		'tax_id_number',
 		'phone_number',
 		'join_date',
-		'parent'
+		'parent',
 	)
 	fieldsets = (
 		('Customer Information', {
 			'fields': (
+				'logo',
 				('code', 'name'), ('address', 'city'),
 				('phone_number', 'tax_id_number'),
 				'parent', 'join_date'
@@ -36,6 +44,15 @@ class CustomerAdmin(ImportExportMixin, admin.ModelAdmin):
 		'city',
 		'code'
 	]
+	formfield_overrides = {
+		models.ImageField: {'widget': AdminImageWidget}
+	}
+
+	def __init__(self, *args, **kwargs):
+		super(CustomerAdmin, self).__init__(*args, **kwargs)
+		main.EMPTY_CHANGELIST_VALUE = '-'
+
+admin.site.register(Customer, CustomerAdmin)
 
 
 class SalesOrderDetailInline(admin.TabularInline):

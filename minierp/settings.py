@@ -80,6 +80,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
@@ -132,6 +133,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'minierp/static/'),
 )
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -140,10 +143,6 @@ STATICFILES_FINDERS = (
 
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
-
-GRAPPELLI_ADMIN_TITLE = "PT Commercial Servisindo Prima"
-GRAPPELLI_SWITCH_USER = True
-GRAPPELLI_INDEX_DASHBOARD = "minierp.dashboard.CustomIndexDashboard"
 
 CRON_CLASSES = [
     "hrm.cron_job.EmployeeContractCronJob",

@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 
-# Create your models here.
+
 class Customer(models.Model):
 	parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('Head Office'))
 	code = models.CharField(verbose_name=_('Code'), max_length=10, unique=True)
@@ -12,7 +12,7 @@ class Customer(models.Model):
 	address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
 	city = models.CharField(verbose_name=_('City'), max_length=50, blank=True)
 	field = models.CharField(verbose_name=_('Field'), max_length=20, blank=True)
-	# logo = models.ImageField()
+	logo = models.ImageField(upload_to='crm/customer/logo/%Y/%m/%d', verbose_name='Logo', null=True, blank=True)
 	tax_id_number = models.CharField(verbose_name=_('NPWP'), max_length=30,	blank=True)
 	join_date = models.DateField()
 
@@ -30,6 +30,13 @@ class Customer(models.Model):
 	def autocomplete_search_fields():
 		return ('code', 'name')
 
+	def logo_tag(self):
+		if self.logo and hasattr(self.logo, 'url'):
+			return mark_safe('<img src="{0}" width="35" height="35"'.format(self.logo.url))
+		return mark_safe('<img src="/static/crm/img/unknown.jpg" width="35" height="35"')
+	logo_tag.short_description = 'Logo'
+
+
 class Service(models.Model):
 	name = models.CharField(verbose_name=_('Service Provided'), max_length=255)
 
@@ -39,6 +46,7 @@ class Service(models.Model):
 
 	def __str__(self):
 		return self.name
+
 
 class SalesOrder(models.Model):
 	FEE_CONDITION_CHOICES = (
@@ -91,7 +99,7 @@ class SalesOrder(models.Model):
 
 	def total_price(self):
 		total = 0
-		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
+		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self).prefetch_related('servicesalarydetail_set')
 		for service in sales_order_detail:
 			service_price = 0
 			salary = 0
