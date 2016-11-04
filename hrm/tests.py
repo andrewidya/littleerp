@@ -4,7 +4,6 @@ from django.conf import settings
 import datetime
 from minierp.global_test_component import MiniErp
 
-
 class EmployeeContractTest(TestCase):
     def setUp(self):
         super(EmployeeContractTest, self).setUp()

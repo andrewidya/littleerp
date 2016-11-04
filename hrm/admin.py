@@ -7,7 +7,8 @@ from hrm.models import (
     LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, EvaluationDetail,
     EvaluationPeriod, Evaluation
 )
-from hrm.forms import (EvaluationDetailForm, EmployeeContractForm )
+from hrm.forms import EvaluationDetailForm, EmployeeContractForm
+
 from django_reporting.admin import ModelDetailReportMixin
 
 
@@ -30,69 +31,91 @@ class FamilyAdmin(ModelDetailReportMixin, admin.ModelAdmin):
 class FamilyInline(admin.TabularInline):
     model = FamilyOfEmployee
     extra = 2
-    fields = ('name', 'birth_place', 'birth_date', 'gender', 'relationship')
-    classes = ('grp-collapse grp-closed',)
+    fields = (
+        'name',
+        'gender',
+        'relationship',
+        'birth_place',
+        'birth_date'
+    )
 
 
 class AddressInline(admin.TabularInline):
     model = EmployeeAddress
     extra = 2
-    fields = ('address', 'city', 'province', 'address_status')
-    classes = ('grp-collapse grp-closed',)
+    fields = (
+        'address',
+        'city',
+        'province',
+        'address_status'
+    )
 
 
 class EducationInline(admin.TabularInline):
     model = Education
-    fields = ('grade', 'name', 'city', 'graduation_date')
-    classes = ('grp-collapse grp-closed',)
+    fields = (
+        'grade',
+        'name',
+        'city',
+        'graduation_date'
+    )
 
 
 @admin.register(Employee)
 class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'reg_number']
     list_filter = ('job_title', 'division', 'marital_status')
-    list_display = ('reg_number', 'get_full_name', 'gender', 'marital_status',
-                    'job_title', 'is_active')
+    list_display = (
+        'reg_number',
+        'get_full_name',
+        'gender',
+        'marital_status',
+        'job_title',
+        'is_active'
+    )
     report_template = 'hrm/report/test.rml'
     fieldsets = (
         ('Personal Info', {
             'fields': (
-                ('id_number', 'first_name'), ('phone_number', 'last_name',), ('birth_place', 'religion'),
-                ('birth_date', 'gender'), 'blood_type', ('mother_name', 'marital_status')
+                ('id_number', 'first_name'),
+                ('phone_number', 'last_name',),
+                ('birth_place', 'religion'),
+                ('birth_date', 'gender'),
+                'blood_type',
+                ('mother_name', 'marital_status')
             )
         }),
         ('Employemnt Info', {
             'fields': (
-                ('job_title', 'division'), ('reg_number', 'date_of_hire'),
-                'is_active', ('bank', 'bank_account')
+                ('job_title', 'division'),
+                ('reg_number', 'date_of_hire'),
+                'is_active',
+                ('bank', 'bank_account')
             )
         }),
     )
-    raw_id_fields = ('bank', 'job_title', 'division')
-    autocomplete_lookup_fields = {
-            'fk': ['bank', 'job_title', 'division'],
-    }
     inlines = [FamilyInline, AddressInline, EducationInline]
     list_per_page = 20
-    # change_list_template = "admin/change_list_filter_sidebar.html"
 
 
 @admin.register(AnnualLeave)
 class AnnualLeaveAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'leave_type', 'year', 'remaining_day_allowed', 'last_update')
-    # raw_id_fields = ('employee',)
-    # autocomplete_lookup_fields = {
-    #        'fk': ['employee'],
-    #}
+    list_display = (
+        'employee',
+        'leave_type',
+        'year',
+        'remaining_day_allowed',
+        'last_update'
+    )
 
 
 @admin.register(LeaveTaken)
 class LeaveTakenAdmin(admin.ModelAdmin):
-    fields = (('employee', 'leave_type'), ('from_date', 'to_date'), 'day')
-    raw_id_fields = ('employee',)
-    autocomplete_lookup_fields = {
-            'fk': ['employee'],
-    }
+    fields = (
+        ('employee', 'leave_type'),
+        ('from_date', 'to_date'),
+        'day'
+    )
 
 
 @admin.register(LeaveType)
@@ -102,8 +125,15 @@ class LeaveTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Education)
 class EducationAdmin(admin.ModelAdmin):
-    list_display = ('grade', 'employee', 'name', 'address', 'city',
-                    'graduation_date', 'certificate')
+    list_display = (
+        'grade',
+        'employee',
+        'name',
+        'address',
+        'city',
+        'graduation_date',
+        'certificate'
+    )
 
 
 @admin.register(SalaryCategory)
@@ -119,17 +149,18 @@ class SalaryNameAdmin(ImportExportMixin, admin.ModelAdmin):
 class OtherSalaryInline(admin.TabularInline):
     model = OtherSalary
     fields = ('salary_name', 'value')
-    # raw_id_fields = ('salary_name',)
-    # autocomplete_lookup_fields = {
-    #        'fk': ['salary_name'],
-    # }
-    # classes = ('grp-collapse grp-open',)
 
 
 @admin.register(EmployeeContract)
 class EmployeeContract(admin.ModelAdmin):
-    list_display = ('employee', 'service_related', 'start_date', 'end_date',
-                    'reference', 'contract_status')
+    list_display = (
+        'employee',
+        'service_related',
+        'start_date',
+        'end_date',
+        'reference',
+        'contract_status'
+    )
     fieldsets = (
         ('Contract Details', {
             'fields': (
@@ -138,13 +169,9 @@ class EmployeeContract(admin.ModelAdmin):
             )
         }),
     )
-    raw_id_fields = ('employee', 'service_related',)
-    autocomplete_lookup_fields = {
-            'fk': ['employee', 'service_related'],
-    }
-    inlines = [OtherSalaryInline]
     search_fields = ('employee__first_name',)
     list_filter = ('contract_status',)
+    inlines = [OtherSalaryInline]
     form = EmployeeContractForm
 
 
@@ -168,9 +195,10 @@ class EvaluationDetailInline(admin.TabularInline):
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
     fields = (('eval_period', 'date_create'), 'employee')
-    list_display = ('eval_period', 'date_create', 'employee', 'ranking')
-    raw_id_fields = ('employee',)
-    autocomplete_lookup_fields = {
-            'fk': ['employee'],
-    }
+    list_display = (
+        'eval_period',
+        'date_create',
+        'employee',
+        'ranking'
+    )
     inlines = [EvaluationDetailInline]

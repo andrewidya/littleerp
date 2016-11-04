@@ -7,8 +7,6 @@ from django.utils import timezone
 from django.conf import settings
 import datetime
 
-# Create your models here.
-
 
 class BankName(models.Model):
     name = models.CharField(verbose_name=_('Bank Name'), max_length=50)
@@ -22,7 +20,7 @@ class BankName(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("name__icontains",)
+        return ("name",)
 
 
 class Division(models.Model):
@@ -38,7 +36,7 @@ class Division(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("name__icontains",)
+        return ("name",)
 
 
 class JobTitle(models.Model):
@@ -54,7 +52,7 @@ class JobTitle(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("name__icontains",)
+        return ("name",)
 
 
 class Employee(models.Model):
@@ -131,6 +129,10 @@ class EmployeeAddress(models.Model):
             ('DOMISILI', 'DOMISILI')
         ))
 
+    class Meta:
+        verbose_name = 'Address Information'
+        verbose_name_plural = 'Address Information'
+
     def __str__(self):
         return self.address
 
@@ -161,8 +163,6 @@ class FamilyOfEmployee(models.Model):
 
     def __str__(self):
         return self.employee.get_full_name()
-
-# Education Module
 
 
 class Education(models.Model):
@@ -195,8 +195,6 @@ class Education(models.Model):
     def __str__(self):
         return Education.GRADE_CHOICES[int(self.grade)-1][1]
 
-# Leave Module
-
 
 class LeaveType(models.Model):
     name = models.CharField(verbose_name=_('Leave Type'), max_length=50, help_text="Ex: Medical, Holliday etc")
@@ -210,7 +208,7 @@ class LeaveType(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ('name__icontains',)
+        return ('name',)
 
 
 class AnnualLeave(models.Model):
@@ -247,8 +245,6 @@ class LeaveTaken(models.Model):
         diff = self.to_date - self.from_date
         self.day = diff.days
         super(LeaveTaken, self).save(*args, **kwargs)
-
-# Evaluation Module
 
 
 class EvaluationPeriod(models.Model):
@@ -319,9 +315,6 @@ class EvaluationDetail(models.Model):
         verbose_name_plural = 'Evaluation Details'
         unique_together = ('evaluation', 'eval_item')
 
-# model for dealing with salary of employee related to
-# detail of sales order created by sales (CRM Application)
-
 
 class SalaryCategory(models.Model):
     name = models.CharField(verbose_name=_('Salary Category'), max_length=255)
@@ -342,8 +335,12 @@ class SalaryName(models.Model):
 
     name = models.CharField(verbose_name=_('Salary Name'), max_length=255)
     salary_category = models.ForeignKey(SalaryCategory, related_name='salary_category', on_delete=models.PROTECT)
-    calculate_condition = models.CharField(verbose_name=_('Calculating Condition'), choices=CALCULATE_CHOICES,
-                                           help_text=_('Condition needed for calculate total salary'), max_length=1)
+    calculate_condition = models.CharField(
+        verbose_name=_('Calculating Condition'),
+        choices=CALCULATE_CHOICES,
+        help_text=_('Condition needed for calculate total salary'),
+        max_length=1
+    )
 
     class Meta:
         verbose_name = 'Salary Name'
@@ -354,17 +351,19 @@ class SalaryName(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ('name__icontains', 'salary_category__name__icontains')
+        return ('name', 'salary_category__name')
 
 
 class EmployeeContract(models.Model):
     start_date = models.DateField(verbose_name=_('Start Date'))
     end_date = models.DateField(verbose_name=_('End Date'))
     employee = models.ForeignKey(Employee, verbose_name=_('Employee'), related_name='contract')
-    service_related = models.ForeignKey(SalesOrderDetail, verbose_name=_('Customer Demand Related'),
-                                        related_name='service_order',
-                                        help_text=_('This info related to the service needed by customer as detail of \
-                                                    sales order'))
+    service_related = models.ForeignKey(
+        SalesOrderDetail,
+        verbose_name=_('Customer Demand Related'),
+        related_name='service_order',
+        help_text=_('This info related to the service needed by customer as detail sales order')
+    )
     contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
     base_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'),
         null=True, blank=True)
@@ -383,8 +382,7 @@ class EmployeeContract(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ('employee__first_name__icontains', 'reference__icontains',
-                'service_related__sales_order__number__icontains')
+        return ('employee__first_name', 'reference', 'service_related__sales_order__number')
 
     def get_contract_salary(self):
         salaries = 0
@@ -403,7 +401,6 @@ class EmployeeContract(models.Model):
         for other in self.other_salary.all():
             list_salaries += "<li>- {0}</li>".format(other.salary_name)
         return mark_safe("<ol>{0}</ol>".format(list_salaries))
-
     get_salaries_in_contract.short_description = 'Other Salaries Detials'
     get_salaries_in_contract.allow_tags = True
 
@@ -419,7 +416,11 @@ class EmployeeContract(models.Model):
 
 
 class OtherSalary(models.Model):
-    employee_contract = models.ForeignKey(EmployeeContract, verbose_name=_('Employee Contract'), related_name='other_salary')
+    employee_contract = models.ForeignKey(
+        EmployeeContract,
+        verbose_name=_('Employee Contract'),
+        related_name='other_salary'
+    )
     salary_name = models.ForeignKey(SalaryName, verbose_name=_('Salary Name'), related_name='salary_name')
     value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Value'))
 
