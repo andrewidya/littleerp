@@ -86,7 +86,13 @@ class VisitCustomerDetail(models.Model):
 
 
 class PayrollPeriod(models.Model):
-	period = models.CharField(verbose_name='Period', max_length=15, blank=True, null=True, unique=True)
+	period = models.CharField(
+		verbose_name='Period',
+		max_length=15,
+		blank=True,
+		null=True,
+		unique=True,
+	)
 	date_create = models.DateField(auto_now_add=True, verbose_name='Date Created')
 	start_date = models.DateField(verbose_name='Start Date')
 	end_date = models.DateField(verbose_name='End Date')
@@ -131,17 +137,17 @@ class PayrollPeriod(models.Model):
 
 class Attendance(models.Model):
 	work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True, blank=True)
-	sick_day = models.PositiveIntegerField(verbose_name='Day Sick', null=True, blank=True)
-	alpha_day = models.PositiveIntegerField(verbose_name='Day Alpha', null=True, blank=True)
-	leave_day = models.PositiveIntegerField(verbose_name='Leave Taken', null=True, blank=True)
-	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True, blank=True)
-	ln = models.PositiveIntegerField(verbose_name='LN', null=True, blank=True)
-	lp = models.PositiveIntegerField(verbose_name='LP', null=True, blank=True)
-	lk = models.PositiveIntegerField(verbose_name='LK', null=True, blank=True)
-	l1 = models.PositiveIntegerField(verbose_name='L1', null=True, blank=True)
-	l2 = models.PositiveIntegerField(verbose_name='L2', null=True, blank=True)
-	l3 = models.PositiveIntegerField(verbose_name='L3', null=True, blank=True)
-	l4 = models.PositiveIntegerField(verbose_name='L4', null=True, blank=True)
+	sick_day = models.PositiveIntegerField(verbose_name='Day Sick', null=True, blank=True, default=0)
+	alpha_day = models.PositiveIntegerField(verbose_name='Day Alpha', null=True, blank=True, default=0)
+	leave_day = models.PositiveIntegerField(verbose_name='Leave Taken', null=True, blank=True, default=0)
+	leave_left = models.PositiveIntegerField(verbose_name='Leave Left', null=True, blank=True, default=0)
+	ln = models.PositiveIntegerField(verbose_name='LN', null=True, blank=True, default=0)
+	lp = models.PositiveIntegerField(verbose_name='LP', null=True, blank=True, default=0)
+	lk = models.PositiveIntegerField(verbose_name='LK', null=True, blank=True, default=0)
+	l1 = models.PositiveIntegerField(verbose_name='L1', null=True, blank=True, default=0)
+	l2 = models.PositiveIntegerField(verbose_name='L2', null=True, blank=True, default=0)
+	l3 = models.PositiveIntegerField(verbose_name='L3', null=True, blank=True, default=0)
+	l4 = models.PositiveIntegerField(verbose_name='L4', null=True, blank=True, default=0)
 	employee = models.ForeignKey(
 		Employee,
 		verbose_name='Employee',
@@ -161,6 +167,9 @@ class Attendance(models.Model):
 		return "{0} - {1}".format(self.period, self.employee)
 
 	def save(self, *args, **kwargs):
+		'''
+		Always save attendance attribute value with 0 instead of None
+		'''
 		if self.sick_day is None:
 			self.sick_day = 0
 		if self.alpha_day is None:
@@ -191,12 +200,45 @@ class Payroll(models.Model):
 		EmployeeContract,
 		limit_choices_to=Q(contract_status='ACTIVE') | Q(contract_status='NEED RENEWAL'),
 		verbose_name='Employee Contract')
-	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
-	base_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Base Salary')
-	overtime = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Overtime/Hrs')
-	back_pay = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Back Pay')
-	base_salary_per_day = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Salary/Day')
-	normal_overtime = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='LN Rate')
+	period = models.ForeignKey(
+		PayrollPeriod,
+		verbose_name='Period',
+		on_delete=models.PROTECT
+	)
+	base_salary = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='Base Salary'
+	)
+	overtime = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='Overtime/Hrs')
+	back_pay = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='Back Pay'
+	)
+	base_salary_per_day = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='Salary/Day'
+	)
+	normal_overtime = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='LN Rate'
+	)
 	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
 	total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Total Salary')
@@ -233,8 +275,10 @@ class Payroll(models.Model):
 		show payroll details url on admin changelist page
 		"""
 		change_list_urls = reverse('admin:operational_payrolldetail_changelist')
-		return format_html("<a href='{0}?payroll__contract__employee__id__exact={1}'>Detail</a>",
-						  change_list_urls, self.contract.employee.id)
+		return format_html(
+			"<a href='{0}?payroll__contract__employee__id__exact={1}'>Detail</a>",
+			change_list_urls, self.contract.employee.id
+		)
 	detail_url.short_description = 'Other Salary Detail'
 	detail_url.allow_tags = True
 
@@ -263,25 +307,21 @@ class Payroll(models.Model):
 	def calculate_overtime(self, attendance, salary_per_day):
 		rate = self.overtime
 		ln = self.normal_overtime * attendance.ln
-		print("ln rate {0}".format(ln))
 		lp = attendance.lp * Decimal(salary_per_day)
-		print("lp rate {0}".format(lp))
 		lk = attendance.lk * Decimal(salary_per_day)
-		print("lk rate {0}".format(lk))
 		l1 = attendance.l1 * rate * Decimal(1.50)
-		print("l1 rate {0}".format(l1))
 		l2 = attendance.l2 * rate * Decimal(2.00)
-		print("l2 rate {0}".format(l2))
 		l3 = attendance.l3 * rate * Decimal(3.00)
-		print("l3 rate {0}".format(l3))
 		l4 = attendance.l4 * rate * Decimal(4.00)
-		print("l4 rate {0}".format(l4))
 		return ln + lp + lk + l1 + l2 + l3 + l4
 	calculate_overtime.short_description = 'Total Overtime'
 
 	def calculate_decrease(self, attendance, salary_per_day):
 		if attendance:
-			total = ((attendance.alpha_day + attendance.sick_day + attendance.leave_day) * salary_per_day.quantize(Decimal("0.00")))
+			total = (
+				(attendance.alpha_day + attendance.sick_day + attendance.leave_day)
+				* salary_per_day.quantize(Decimal("0.00"))
+			)
 		return total
 	calculate_decrease.short_description = 'Decrease'
 
@@ -294,18 +334,13 @@ class Payroll(models.Model):
 		other_salaries = self.payrolldetail_set.select_related('salary').all()
 		for detail in other_salaries:
 			detail.salary.name
-			print("total before : {0}".format(total))
 			if detail.salary.calculate_condition == '+':
 				total += detail.value
 			else:
 				total -= detail.value
-			print("total after : {0}".format(total))
 
 		decrease = self.calculate_decrease(attendance, salary_per_day)
-		print("decrease is {0}".format(decrease))
 		overtime = self.calculate_overtime(attendance, salary_per_day.quantize(Decimal("0.00")))
-		print("overtime is {0}".format(overtime))
-		print("total is {0}".format(total))
 		return (total + overtime - decrease).quantize(Decimal("0.00"))
 	calculate_total.short_description = 'Total'
 
