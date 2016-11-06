@@ -23,8 +23,8 @@ class JobTitle(ImportExportMixin, admin.ModelAdmin):
 
 
 @admin.register(FamilyOfEmployee)
-class FamilyAdmin(ModelDetailReportMixin, admin.ModelAdmin):
-    report_template = "hrm/report/test.rml"
+class FamilyAdmin(admin.ModelAdmin):
+    report_template = "hrm/report/family.html"
     report_context_object_name = "Families"
 
 
