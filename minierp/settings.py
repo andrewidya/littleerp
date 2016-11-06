@@ -31,11 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    #'django.contrib.admindocs',
     'django.contrib.contenttypes',
-    # 'grappelli.dashboard',
-    # 'grappelli',
-    # 'django_adminlte',
     'jet.dashboard',
     'jet',
     'django.contrib.admin',
