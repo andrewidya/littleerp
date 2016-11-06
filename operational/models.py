@@ -1,5 +1,4 @@
 from __future__ import division
-
 from decimal import Decimal
 
 from django_fsm import FSMField, transition

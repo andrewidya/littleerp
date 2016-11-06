@@ -2,7 +2,10 @@ from fsm_admin.mixins import FSMTransitionMixin
 
 from django.contrib import admin
 
-from finance.models import PaidPayroll, FinalPayrollPeriod, ProcessedPayroll, PayrollDetail
+from finance.models import (
+	PaidPayroll, FinalPayrollPeriod, ProcessedPayroll, PayrollDetail, Invoice, InvoicedItemType, InvoiceDetail,
+	InvoiceTransaction, State
+)
 
 
 class PaidPayrollDetailInline(admin.TabularInline):
@@ -78,3 +81,57 @@ class FinalPayrollPeriodAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			del actions['delete_selected']
 		return actions
 
+
+class InvoiceDetailInline(admin.TabularInline):
+	model = InvoiceDetail
+
+	def get_readonly_fields(self, request, obj=None):
+		if obj is not None and obj.state != State.DRAFT:
+			return ('invoiced_item', 'period', 'amount')
+		return super(InvoiceDetailInline, self).get_readonly_fields(request, obj=obj)
+
+	def get_max_num(self, request, obj=None, **kwargs):
+		if obj is not None and obj.state != State.DRAFT:
+			return 0
+		return super(InvoiceDetailInline, self).get_max_num(request, obj=obj, **kwargs)
+
+	def has_delete_permission(self, request, obj=None):
+		if obj is not None and obj.state != State.DRAFT:
+			return False
+		return super(InvoiceDetailInline, self).has_delete_permission(request, obj=obj)
+
+@admin.register(Invoice)
+class InvoiceAdmin(FSMTransitionMixin, admin.ModelAdmin):
+	list_display = ('sales_order', 'formated_invoice_number', 'date_create', 'state')
+	fieldsets = (
+		('General Information', {
+			'fields': ('invoice_number', 'sales_order')
+		}),
+	)
+	fsm_field = ['state',]
+	inlines = [InvoiceDetailInline]
+
+	def get_readonly_fields(self, request, obj=None):
+		if obj is not None and obj.state != State.DRAFT:
+			return ('sales_order', 'invoice_number')
+		return super(InvoiceAdmin, self).get_readonly_fields(request, obj=obj)
+
+	def has_delete_permission(self, request, obj=None):
+		if obj is not None and obj.state != State.DRAFT:
+			return False
+		return super(InvoiceAdmin, self).has_delete_permission(request, obj=obj)
+
+
+@admin.register(InvoiceDetail)
+class InvoicdDetailAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(InvoicedItemType)
+class InvoiceItemTypeAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(InvoiceTransaction)
+class InvoiceTransactionAdmin(admin.ModelAdmin):
+	pass

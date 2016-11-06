@@ -1,11 +1,12 @@
 from __future__ import division
+import datetime
+
 from django.db import models
 from django.utils.translation import ugettext as _
 from crm.models import SalesOrderDetail
 from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.conf import settings
-import datetime
 
 
 class BankName(models.Model):
