@@ -8,8 +8,7 @@ from hrm.models import (
     EvaluationPeriod, Evaluation
 )
 from hrm.forms import EvaluationDetailForm, EmployeeContractForm
-
-from django_reporting.admin import ModelDetailReportMixin
+from django_reporting.admin import ModelDetailReportMixin, HTMLModelReportMixin
 
 
 @admin.register(Division)
@@ -62,7 +61,7 @@ class EducationInline(admin.TabularInline):
 
 
 @admin.register(Employee)
-class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin):
+class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'reg_number']
     list_filter = ('job_title', 'division', 'marital_status')
     list_display = (
@@ -73,7 +72,7 @@ class EmployeeAdmin(ModelDetailReportMixin, ImportExportMixin, admin.ModelAdmin)
         'job_title',
         'is_active'
     )
-    report_template = 'hrm/report/test.rml'
+    report_template = 'hrm/report/invoice.html'
     fieldsets = (
         ('Personal Info', {
             'fields': (
