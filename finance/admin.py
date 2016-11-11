@@ -1,11 +1,15 @@
 from fsm_admin.mixins import FSMTransitionMixin
+from jet.admin import CompactInline
 
 from django.contrib import admin
+from django.template.loader import get_template
+from django.template import Context
 
 from finance.models import (
 	PaidPayroll, FinalPayrollPeriod, ProcessedPayroll, PayrollDetail, Invoice, InvoicedItemType, InvoiceDetail,
 	InvoiceTransaction, State
 )
+from django_reporting.admin import HTMLModelReportMixin
 
 
 class PaidPayrollDetailInline(admin.TabularInline):
@@ -27,9 +31,8 @@ class PaidPayrollAdmin(admin.ModelAdmin):
 	list_display = ('period', 'contract', 'total', 'bank_account', 'state')
 	list_filter = ('period__period',)
 	readonly_fields = ('period', 'contract', 'overtime', 'back_pay', 'base_salary', 'total')
-
 	change_form_template = 'admin/finance/paidpayroll/change_form.html'
-
+	actions = ['print_payslip']
 	inlines = [PaidPayrollDetailInline]
 
 	def has_add_permission(self, request):
@@ -43,6 +46,35 @@ class PaidPayrollAdmin(admin.ModelAdmin):
 		if 'delete_selected' in actions:
 			del actions['delete_selected']
 		return actions
+
+	def print_payslip(self, request, queryset):
+		from django_reporting.utils import HTML2PDF
+
+		payroll_list = queryset.select_related('contract', 'contract__employee').prefetch_related('payrolldetail_set')
+		container = []
+
+		for payroll in payroll_list:
+			payroll_item = {}
+			payroll_item['payroll'] = payroll
+			payroll_item['detail'] = {
+				'potongan': [],
+				'tunjangan': [],
+				'lain': []
+			}
+			for detail in payroll.payrolldetail_set.select_related('salary', 'salary__salary_category').all().order_by('salary__salary_category'):
+				if detail.salary.salary_category.name == "Potongan":
+					payroll_item['detail']['potongan'].append(detail)
+				elif detail.salary.salary_category.name == "Tunjangan":
+					payroll_item['detail']['tunjangan'].append(detail)
+				elif detail.salary.salary_category.name == "Lain-lain":
+					payroll_item['detail']['lain'].append(detail)
+			container.append(payroll_item)
+
+		context = Context({'container': container})
+		html_pdf = HTML2PDF(context, template_name='finance/report/payslip.html', output='payslip.pdf')
+		return html_pdf.render(request)
+
+	print_payslip.short_description = 'Print payslip for selected payroll'
 
 
 class ProcessedPayrollInline(admin.TabularInline):
@@ -82,12 +114,13 @@ class FinalPayrollPeriodAdmin(FSMTransitionMixin, admin.ModelAdmin):
 		return actions
 
 
-class InvoiceDetailInline(admin.TabularInline):
+class InvoiceDetailInline(CompactInline):
 	model = InvoiceDetail
+	extra = 0
 
 	def get_readonly_fields(self, request, obj=None):
 		if obj is not None and obj.state != State.DRAFT:
-			return ('invoiced_item', 'period', 'amount')
+			return ('invoiced_item', 'period', 'amount', 'notes')
 		return super(InvoiceDetailInline, self).get_readonly_fields(request, obj=obj)
 
 	def get_max_num(self, request, obj=None, **kwargs):
@@ -100,8 +133,9 @@ class InvoiceDetailInline(admin.TabularInline):
 			return False
 		return super(InvoiceDetailInline, self).has_delete_permission(request, obj=obj)
 
+
 @admin.register(Invoice)
-class InvoiceAdmin(FSMTransitionMixin, admin.ModelAdmin):
+class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
 	list_display = ('sales_order', 'formated_invoice_number', 'date_create', 'state')
 	fieldsets = (
 		('General Information', {
@@ -109,6 +143,9 @@ class InvoiceAdmin(FSMTransitionMixin, admin.ModelAdmin):
 		}),
 	)
 	fsm_field = ['state',]
+	report_context_object_name = 'invoice'
+	report_template = 'finance/report/invoice.html'
+	change_form_template = "admin/finance/change_form.html"
 	inlines = [InvoiceDetailInline]
 
 	def get_readonly_fields(self, request, obj=None):
@@ -121,10 +158,13 @@ class InvoiceAdmin(FSMTransitionMixin, admin.ModelAdmin):
 			return False
 		return super(InvoiceAdmin, self).has_delete_permission(request, obj=obj)
 
-
-@admin.register(InvoiceDetail)
-class InvoicdDetailAdmin(admin.ModelAdmin):
-	pass
+	def get_context_data(self, obj):
+		invoice_item = obj.invoicedetail_set.all()
+		customer = obj.sales_order.customer
+		context = super(InvoiceAdmin, self).get_context_data(obj)
+		context['invoice_item'] = invoice_item
+		context['customer'] = customer
+		return context
 
 
 @admin.register(InvoicedItemType)

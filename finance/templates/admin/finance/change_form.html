@@ -1,0 +1,20 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls fsm_admin %}
+
+{# Original template renders object-tools only when has_add_permission is True. #}
+{# This hack allows sub templates to add to object-tools #}
+{% block object-tools-items %}
+	{% if original %}
+  <li>
+  	<a href="{% url opts|admin_urlname:'report' original.pk %}" class="grp-state-focus report_link">{% trans "Report" %}</a>
+  </li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block submit_buttons_bottom %}{% fsm_submit_row %}{% endblock %}
+
+{% block after_field_sets %}
+    {{ block.super }}
+    {% fsm_transition_hints %}
+{% endblock %}

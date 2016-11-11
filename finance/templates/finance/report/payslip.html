@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Payslip</title>
+	<link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.css' %}">
+	<style>
+		html, body {
+			font-family: "PT Sans";
+			font-size: 75%;
+		}
+		hr {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+		.table {
+			margin-bottom: 5px;
+		}
+		.table-condensed > thead > tr > th,
+		.table-condensed > tbody > tr > th,
+		.table-condensed > tfoot > tr > th,
+		.table-condensed > thead > tr > td,
+		.table-condensed > tbody > tr > td,
+		.table-condensed > tfoot > tr > td  {
+			padding: 2px;
+		}
+		.borderless > thead > tr > th,
+		.borderless > tbody > tr > th,
+		.borderless > tfoot > tr > th,
+		.borderless > thead > tr > td,
+		.borderless > tbody > tr > td,
+		.borderless > tfoot > tr > td {
+			border: none;
+		}
+		.table > thead > tr.top-bordered > th,
+		.table > tbody > tr.top-bordered > th,
+		.table > tfoot > tr.top-bordered > th,
+		.table > thead > tr.top-bordered > td,
+		.table > tbody > tr.top-bordered > td,
+		.table > tfoot > tr.top-bordered > td {
+			border-top: 1px solid #DDD;
+			border-bottom: none;
+		}
+		.table > thead > tr.bottom-bordered > th,
+		.table > tbody > tr.bottom-bordered > th,
+		.table > tfoot > tr.bottom-bordered > th,
+		.table > thead > tr.bottom-bordered > td,
+		.table > tbody > tr.bottom-bordered > td,
+		.table > tfoot > tr.bottom-bordered > td {
+			border-top: none;
+			border-bottom: 1px solid #DDD;
+		}
+		.payslip {
+			margin-bottom: 5mm;
+			min-height: 125.5mm;
+			border-bottom: 1px dashed #DDD;
+		}
+		.payslip:nth-child(2n) {
+			page-break-after: always;
+		}
+		.payslip:nth-last-child(1) {
+			page-break-after: avoid;
+		}
+		@page {
+			size: A4;
+			margin: 0.5cm 1cm;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		{% if container %}
+		{% for payslip in container %}
+		{% with employee=payslip.payroll.contract.employee payroll=payslip.payroll customer=payslip.payroll.contract.service_related.sales_order.customer payroll_detail=payslip.detail %}
+		<div class="payslip">
+			<div class="header">
+				<div class="row">
+					<div class="logo col-sm-2"></div>
+					<div class="header-title col-sm-8 text-center">
+						<span class="text-center"><b>SLIP PEMBAYARAN GAJI</b><br /></span>
+						<span class="text-center">PT. COMMERCIAL PRIMA SERVISINDO<br /></span>
+						<span class="text-center">BULAN : AGUSTUS 2016</span>
+					</div>
+					<div class="emp-number col-sm-2"></div>
+				</div>
+				<table class="table table-condensed">
+					<tbody>
+						<tr class="top-bordered">
+							<td>Nama Pegawai</td>
+							<td>:</td>
+							<td>{{ employee.get_full_name }}</td>
+							<td>Jabatan</td>
+							<td>:</td>
+							<td>{{ employee.job_title }}</td>
+						</tr>
+						<tr class="bottom-bordered">
+							<td>Unit Kerja</td>
+							<td>:</td>
+							<td>
+								{% if customer.parent %} {{ customer.parent }} {% endif %}<br />
+								{{ customer.name }}
+							</td>
+							<td>NRG</td>
+							<td>:</td>
+							<td>{{ employee.reg_number }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="content">
+				<div class="row">
+					<div class="col-xs-6">
+						<span><b>Pendapatan Utama</b></span>
+						<table class="table table-condensed">
+							<tbody>
+								<tr>
+									<td>Gaji Pokok</td>
+									<td class="text-right">Rp {{ payroll.base_salary }}</td>
+								</tr>
+								<tr>
+									<td>Rapel</td>
+									<td class="text-right">Rp {{ payroll.back_pay }}</td>
+								</tr>
+								{% if payroll_detail.tunjangan %}
+								{% for tunjangan in payroll_detail.tunjangan %}
+								<tr>
+									<td>{{ tunjangan.salary }}</td>
+									<td class="text-right">Rp {{ tunjangan.value }}</td>
+								</tr>
+								{% endfor %}
+								{% endif %}
+								{% if payroll_detail.lain %}
+								{% for lain in payroll_detail.lain %}
+								<tr>
+									<td>{{ lain.salary }}</td>
+									<td class="text-right">Rp {{ lain.value }}</td>
+								</tr>
+								{% endfor %}
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+					<div class="col-xs-6">
+						<span><b>Lembur</b></span>
+						<table class="table table-condensed">
+							<tbody>
+								<tr>
+									<td>Lembur Normal</td>
+									<td class="text-right">Rp {{ payroll.normative_overtime }}</td>
+								</tr>
+								<tr>
+									<td>Lembur Khusus</td>
+									<td class="text-right">Rp {{ payroll.specific_overtime }}</td>
+								</tr>
+								<tr>
+									<td>Lembur Pengganti</td>
+									<td class="text-right">Rp {{ payroll.changing_overtime }}</td>
+								</tr>
+								<tr>
+									<td>Lembur Jam</td>
+									<td class="text-right">Rp {{ payroll.hourly_overtime }}</td>
+								</tr>
+							</tbody>
+						</table>
+						<span><b>Potongan</b></span>
+						<table class="table table-condensed">
+							<tbody>
+								{% if payroll_detail.potongan %}
+								{% for potongan in payroll_detail.potongan %}
+								<tr>
+									<td>{{ potongan.salary }}</td>
+									<td class="text-right">Rp {{ potongan.value }}</td>
+								</tr>
+								{% endfor %}
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="total col-xs-6">
+						<table class="table table-condesed borderless">
+							<tbody>
+								<tr>
+									<td><b>GAJI DITERIMA<br />(A + B - C)</b></td>
+									<td>:</td>
+									<td><b>Rp {{ payroll.calculate_total }}</b></td>
+								</tr>
+								<tr>
+									<td><b>TERBILANG</td>
+									<td>:</td>
+									<td><b>#NAME?</b></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<hr />
+				<div class="row">
+					<div class="col-xs-3 text-center">
+						DITERBITKAN OLEH<br /><br /><br /><br />
+						<b>DIV. FINANCE & ACC</b>
+					</div>
+					<div class="col-xs-6"></div>
+					<div class="col-xs-3 text-center">
+						DITERIMA OLEH<br /><br /><br /><br />
+						<b>{{ employee.get_full_name|capfirst }}</b>
+					</div>
+				</div>
+				<hr />
+			</div>
+		</div>
+		{% endwith %}
+		{% endfor %}
+		{% endif %}
+	</div>
+</body>
+</html>

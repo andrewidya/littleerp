@@ -72,7 +72,7 @@ class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
         'job_title',
         'is_active'
     )
-    report_template = 'hrm/report/invoice.html'
+    report_template = 'hrm/report/payslip.html'
     fieldsets = (
         ('Personal Info', {
             'fields': (

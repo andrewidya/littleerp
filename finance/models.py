@@ -29,13 +29,13 @@ class State(object):
 
 class PaidPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PaidPayrollManager, self).get_queryset().filter(
-					models.Q(state=State.PAID))
+		return super(PaidPayrollManager, self).get_queryset().select_related('contract__employee').filter(
+					models.Q(state=OPState.PAID))
 
 
 class ProcessedPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(ProcessedPayrollManager, self).get_queryset().filter(models.Q(state=State.FINAL) | models.Q(state=State.PAID))
+		return super(ProcessedPayrollManager, self).get_queryset().select_related('contract__employee').filter(models.Q(state=OPState.FINAL) | models.Q(state=OPState.PAID))
 
 
 class FinalPayrollManager(models.Manager):
@@ -132,6 +132,7 @@ class InvoiceDetail(models.Model):
 	invoiced_item = models.ForeignKey(InvoicedItemType, verbose_name='Invoiced Item')
 	period = models.ForeignKey(PayrollPeriod, limit_choices_to={'state': 'OPEN'}, verbose_name='Period')
 	amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')
+	note = models.TextField(verbose_name='Notes', blank=True)
 
 	class Meta:
 		verbose_name = 'Invoice Detail'
@@ -139,7 +140,7 @@ class InvoiceDetail(models.Model):
 		unique_together = ('invoiced_item', 'period')
 
 	def __str__(self):
-		return str(self.invoice.invoice_number)
+		return str(self.invoiced_item.name)
 
 
 class TransactionType(models.Model):

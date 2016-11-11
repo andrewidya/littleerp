@@ -154,4 +154,4 @@ class HTMLModelReportMixin(BaseReport):
         context = self.get_context_data(obj)
 
         report = HTML2PDF(context, template_name=template, output=output_file)
-        return report.render()
+        return report.render(request)

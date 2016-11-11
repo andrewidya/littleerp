@@ -16,12 +16,12 @@ from hrm.models import Employee, EmployeeContract, SalaryName
 
 class FinalPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(FinalPayrollManager, self).get_queryset().filter(models.Q(state=State.FINAL))
+		return super(FinalPayrollManager, self).get_queryset().select_related('contract__employee').filter(models.Q(state=State.FINAL))
 
 
 class PayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PayrollManager, self).get_queryset().filter(state=State.DRAFT).select_related('contract__employee')
+		return super(PayrollManager, self).get_queryset().select_related('contract__employee').filter(state=State.DRAFT).select_related('contract__employee')
 
 
 class State(object):
@@ -238,9 +238,14 @@ class Payroll(models.Model):
 		blank=True,
 		verbose_name='LN Rate'
 	)
+	total = models.DecimalField(
+		max_digits=12,
+		decimal_places=2,
+		null=True,
+		blank=True,
+		verbose_name='Total Salary')
 	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
-	total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Total Salary')
 
 	draft_manager = PayrollManager()
 	objects = models.Manager()
@@ -254,7 +259,7 @@ class Payroll(models.Model):
 		)
 
 	def __str__(self):
-		return str(self.period.period)
+		return str(self.period.period) + str(self.contract.employee.get_full_name())
 
 	def save(self, *args, **kwargs):
 		if self.base_salary is None:
@@ -302,6 +307,29 @@ class Payroll(models.Model):
 	def get_attendance(self):
 		attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
 		return attendance
+
+	def normative_overtime(self):
+		attendance = self.get_attendance()
+		return self.normal_overtime * attendance.ln
+
+	def specific_overtime(self):
+		attendance = self.get_attendance()
+		salary_per_day = self.base_salary_per_day
+		return attendance.lk * Decimal(salary_per_day)
+
+	def changing_overtime(self):
+		attendance = self.get_attendance()
+		salary_per_day = self.base_salary_per_day
+		return attendance.lp * Decimal(salary_per_day)
+
+	def hourly_overtime(self):
+		attendance = self.get_attendance()
+		rate = self.overtime
+		l1 = attendance.l1 * rate * Decimal(1.50)
+		l2 = attendance.l2 * rate * Decimal(2.00)
+		l3 = attendance.l3 * rate * Decimal(3.00)
+		l4 = attendance.l4 * rate * Decimal(4.00)
+		return l1 + l2 + l3 + l4
 
 	def calculate_overtime(self, attendance, salary_per_day):
 		rate = self.overtime

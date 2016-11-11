@@ -81,11 +81,11 @@ class HTML2PDF(object):
     def get_output_file(self):
         return self.output_file
 
-    def render(self):
+    def render(self, request):
         template = self.get_template()
         html_string = template.render(self.get_context_data()).encode('utf-8')
 
-        pdf_data = HTML(string=html_string).write_pdf()
+        pdf_data = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
         response = HttpResponse(pdf_data, content_type='application/pdf')
         response['Content-Disposition'] = 'filename="{0}"'.format(self.output_file)
 
