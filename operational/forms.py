@@ -22,12 +22,10 @@ class PayrollForm(forms.ModelForm):
 		cleaned_data = super(PayrollForm, self).clean()
 		if self.is_valid():
 			period = cleaned_data['period']
-			print(period)
-			payroll = Payroll.objects.filter(period=period).filter(Q(state=State.FINAL) \
-																  | Q(state=State.PAID))
-			print(payroll)
+			payroll = Payroll.objects.filter(period=period).filter(
+				Q(state=State.FINAL) | Q(state=State.PAID)
+			)
 			contracts = [ obj.contract for obj in payroll ]
-			print(contracts)
 			if cleaned_data['contract'] in contracts:
 				#raise forms.ValidationError('Payroll with this Employee Contract \
 				#						   and Period already exists')

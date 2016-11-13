@@ -6,4 +6,4 @@ class HRMConfig(AppConfig):
     verbose_name = 'HRM Application'
 
     def ready(self):
-        pass
+        import hrm.signals

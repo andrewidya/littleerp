@@ -5,9 +5,9 @@ from django.contrib import admin
 from hrm.models import (
     Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education, AnnualLeave,
     LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, EvaluationDetail,
-    EvaluationPeriod, Evaluation
+    EvaluationPeriod, Evaluation, EvaluationItem
 )
-from hrm.forms import EvaluationDetailForm, EmployeeContractForm
+from hrm.forms import EvaluationDetailForm, EmployeeContractForm, LeaveTakenForm, AnnualLeaveForm
 from django_reporting.admin import ModelDetailReportMixin, HTMLModelReportMixin
 
 
@@ -96,6 +96,9 @@ class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
     inlines = [FamilyInline, AddressInline, EducationInline]
     list_per_page = 20
 
+    def has_add_permission(self, request):
+        return False
+
 
 @admin.register(AnnualLeave)
 class AnnualLeaveAdmin(admin.ModelAdmin):
@@ -106,15 +109,42 @@ class AnnualLeaveAdmin(admin.ModelAdmin):
         'remaining_day_allowed',
         'last_update'
     )
+    fields = (
+        'employee',
+        'leave_type',
+        'year',
+        'day_allowed'
+    )
+    list_filter = ('leave_type',)
+    search_fields = (
+        'employee__first_name',
+        'employee__last_name',
+        'employee__reg_number'
+    )
+    form = AnnualLeaveForm
 
 
 @admin.register(LeaveTaken)
 class LeaveTakenAdmin(admin.ModelAdmin):
+    list_display = (
+        'employee',
+        'leave_type',
+        'from_date',
+        'to_date',
+        'day')
     fields = (
-        ('employee', 'leave_type'),
-        ('from_date', 'to_date'),
-        'day'
+        'employee',
+        'leave_type',
+        'from_date',
+        'to_date',
     )
+    list_filter = ('leave_type',)
+    search_fields = (
+        'employee__first_name',
+        'employee__last_name',
+        'employee__reg_number'
+    )
+    form = LeaveTakenForm
 
 
 @admin.register(LeaveType)
@@ -168,7 +198,11 @@ class EmployeeContract(admin.ModelAdmin):
             )
         }),
     )
-    search_fields = ('employee__first_name',)
+    search_fields = (
+        'employee__first_name',
+        'employee__last_name',
+        'employee__reg_number'
+    )
     list_filter = ('contract_status',)
     inlines = [OtherSalaryInline]
     form = EmployeeContractForm
@@ -183,8 +217,12 @@ class BankAdmin(ImportMixin, admin.ModelAdmin):
 
 @admin.register(EvaluationPeriod)
 class EvaluationPeriodAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('evaluation_date', 'period')
 
+
+@admin.register(EvaluationItem)
+class EvaluationItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
 
 class EvaluationDetailInline(admin.TabularInline):
     model = EvaluationDetail
@@ -193,11 +231,18 @@ class EvaluationDetailInline(admin.TabularInline):
 
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
-    fields = (('eval_period', 'date_create'), 'employee')
+    fields = ('eval_period', 'date_create', 'employee', 'evaluated_location')
     list_display = (
+        'employee',
+        'evaluated_location',
         'eval_period',
         'date_create',
-        'employee',
         'ranking'
+    )
+    list_filter = ('eval_period__period', 'ranking')
+    search_fields = (
+        'employee__first_name',
+        'employee__last_name',
+        'employee__reg_number'
     )
     inlines = [EvaluationDetailInline]

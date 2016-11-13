@@ -212,10 +212,19 @@ class LeaveType(models.Model):
         return ('name',)
 
 
+def year_generator():
+    start_year = 1990
+    choices = ()
+    for i in range(101):
+        choices += ((start_year + i, start_year + i),)
+    return choices
+
 class AnnualLeave(models.Model):
+    CHOICES = year_generator()
+
     employee = models.ForeignKey(Employee)
     leave_type = models.ForeignKey(LeaveType)
-    year = models.DateField(verbose_name=_('Year'));
+    year = models.IntegerField(verbose_name=_('Year'), choices=CHOICES);
     day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
     remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
     last_update = models.DateField(auto_now_add=True)
@@ -223,6 +232,11 @@ class AnnualLeave(models.Model):
     class Meta:
         verbose_name = 'Annual Leave'
         verbose_name_plural = 'Annual Leaves'
+
+    def save(self, *args, **kwargs):
+        if self.remaining_day_allowed is None:
+            self.remaining_day_allowed = self.day_allowed
+        super(AnnualLeave, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.employee.get_full_name()
@@ -244,13 +258,13 @@ class LeaveTaken(models.Model):
 
     def save(self, *args, **kwargs):
         diff = self.to_date - self.from_date
-        self.day = diff.days
+        self.day = diff.days + 1
         super(LeaveTaken, self).save(*args, **kwargs)
 
 
 class EvaluationPeriod(models.Model):
-    evaluation_date = models.DateField()
-    period = models.CharField(max_length=50, blank=True, null=True)
+    evaluation_date = models.DateField(verbose_name=_('Evaluation Date'))
+    period = models.CharField(verbose_name=_('Period'), max_length=50, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Evaluation Period'
@@ -280,6 +294,7 @@ class Evaluation(models.Model):
     date_create = models.DateField(verbose_name=_('Date Created'))
     employee = models.ForeignKey(Employee, verbose_name=_('Employee Name'))
     eval_period = models.ForeignKey(EvaluationPeriod, verbose_name=_('Period'))
+    evaluated_location = models.CharField(verbose_name=_('Location'), max_length=255, blank=True)
     ranking = models.CharField(verbose_name=_('Ranking'), max_length=6)
 
     def __str__(self):

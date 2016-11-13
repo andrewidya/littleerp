@@ -5,6 +5,7 @@ from django_fsm import FSMField, transition
 from django.db import models
 from django.db.models import Q
 from django.db.models import Sum
+from django.utils.translation import ugettext as _
 
 from operational.models import (Payroll, State, PayrollPeriod, PayrollDetail)
 from operational.models import State as OPState
@@ -83,10 +84,10 @@ class FinalPayrollPeriod(PayrollPeriod):
 
 
 class Invoice(models.Model):
-	sales_order = models.ForeignKey(SalesOrder, verbose_name='Sales Order')
-	invoice_number = models.PositiveIntegerField(verbose_name='Invoice Number')
+	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order'))
+	invoice_number = models.PositiveIntegerField(verbose_name=_('Invoice Number'))
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
-	date_create = models.DateField(auto_now_add=True, verbose_name='Date Created')
+	date_create = models.DateField(auto_now_add=True, verbose_name=_('Date Created'))
 	invoice_detail = models.ManyToManyField(
 		'InvoicedItemType',
 		through='InvoiceDetail',
@@ -122,7 +123,7 @@ class Invoice(models.Model):
 
 
 class InvoicedItemType(models.Model):
-	name = models.CharField(max_length=50, verbose_name='Name')
+	name = models.CharField(max_length=50, verbose_name=_('Name'))
 
 	class Meta:
 		verbose_name = 'Invoiced Item Type'
@@ -133,10 +134,10 @@ class InvoicedItemType(models.Model):
 
 
 class InvoiceDetail(models.Model):
-	invoice = models.ForeignKey(Invoice, verbose_name='Invoice')
-	invoiced_item = models.ForeignKey(InvoicedItemType, verbose_name='Invoiced Item')
-	period = models.ForeignKey(PayrollPeriod, limit_choices_to={'state': 'OPEN'}, verbose_name='Period')
-	amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')
+	invoice = models.ForeignKey(Invoice, verbose_name=_('Invoice'))
+	invoiced_item = models.ForeignKey(InvoicedItemType, verbose_name=_('Invoiced Item'))
+	period = models.ForeignKey(PayrollPeriod, limit_choices_to={'state': 'OPEN'}, verbose_name=_('Period'))
+	amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
 	note = models.TextField(verbose_name='Notes', blank=True)
 
 	class Meta:
@@ -149,7 +150,7 @@ class InvoiceDetail(models.Model):
 
 
 class TransactionType(models.Model):
-	name = models.CharField(max_length=50, verbose_name='Name')
+	name = models.CharField(max_length=50, verbose_name=_('Name'))
 
 	class Meta:
 		verbose_name = 'Transaction Type'
@@ -160,10 +161,10 @@ class TransactionType(models.Model):
 
 
 class InvoiceTransaction(models.Model):
-	invoice = models.ForeignKey(Invoice, verbose_name='Invoice', on_delete=models.PROTECT)
-	transaction_type = models.ForeignKey(TransactionType, verbose_name='Transaction Type', on_delete=models.PROTECT)
+	invoice = models.ForeignKey(Invoice, verbose_name=_('Invoice'), on_delete=models.PROTECT)
+	transaction_type = models.ForeignKey(TransactionType, verbose_name=_('Transaction Type'), on_delete=models.PROTECT)
 	date = models.DateField()
-	amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')
+	amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
 
 	class Meta:
 		verbose_name = 'Financial Transaction'

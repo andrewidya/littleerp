@@ -51,11 +51,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 		'leave_left',
 	)
 	list_display = ('period', 'employee', 'work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left', 'staff')
-	# raw_id_fields = ('employee', 'period')
 	list_filter = ('period__period',)
-	# autocomplete_lookup_fields = {
-	#	'fk': ['employee', 'period'],
-	# }
 	list_editable = ('work_day', 'sick_day', 'alpha_day', 'leave_day', 'leave_left')
 
 	def save_model(self, request, obj, form, change):
