@@ -14,8 +14,15 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^logout/', "django.contrib.auth.views.logout", {'next_page': '/'}, name="logout"),
     url(r'^hrm/', include('hrm.urls')),
+    url(r'^report_builder/', include('report_builder.urls'))
     # url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
 
 '''
 grp_doc = [

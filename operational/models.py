@@ -198,11 +198,14 @@ class Payroll(models.Model):
 	contract = models.ForeignKey(
 		EmployeeContract,
 		limit_choices_to=Q(contract_status='ACTIVE') | Q(contract_status='NEED RENEWAL'),
-		verbose_name='Employee Contract')
+		verbose_name='Employee Contract',
+		db_index=True
+	)
 	period = models.ForeignKey(
 		PayrollPeriod,
 		verbose_name='Period',
-		on_delete=models.PROTECT
+		on_delete=models.PROTECT,
+		db_index=True
 	)
 	base_salary = models.DecimalField(
 		max_digits=12,
@@ -244,7 +247,13 @@ class Payroll(models.Model):
 		null=True,
 		blank=True,
 		verbose_name='Total Salary')
-	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
+	staff = models.ForeignKey(
+		User,
+		null=True,
+		blank=True,
+		verbose_name='User Staff',
+		db_index=True
+	)
 	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
 
 	draft_manager = PayrollManager()

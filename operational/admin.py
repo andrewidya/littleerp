@@ -219,11 +219,6 @@ class AttendanceInline(admin.TabularInline):
 	model = Attendance
 	fields = ('employee', ('work_day', 'sick_day'), ('alpha_day', 'leave_day'), 'leave_left', 'ln', 'lp', 'lk', 'l1',
 			 'l2', 'l3', 'l4')
-	# raw_id_fields = ('employee',)
-	# autocomplete_lookup_fields = {
-	#	'fk': ['employee']
-	# }
-	# classes = ('grp-collapse grp-closed',)
 
 	def get_readonly_fields(self, request, obj=None):
 		if obj is not None:

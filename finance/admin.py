@@ -1,3 +1,5 @@
+from functools import update_wrapper
+
 from fsm_admin.mixins import FSMTransitionMixin
 from jet.admin import CompactInline
 
@@ -9,7 +11,9 @@ from finance.models import (
 	PaidPayroll, FinalPayrollPeriod, ProcessedPayroll, PayrollDetail, Invoice, InvoicedItemType, InvoiceDetail,
 	InvoiceTransaction, State
 )
+from finance.options import *
 from django_reporting.admin import HTMLModelReportMixin
+from django_reporting.utils import HTML2PDF
 
 
 class PaidPayrollDetailInline(admin.TabularInline):
@@ -48,8 +52,6 @@ class PaidPayrollAdmin(admin.ModelAdmin):
 		return actions
 
 	def print_payslip(self, request, queryset):
-		from django_reporting.utils import HTML2PDF
-
 		payroll_list = queryset.select_related('contract', 'contract__employee').prefetch_related('payrolldetail_set')
 		container = []
 
@@ -174,4 +176,34 @@ class InvoiceItemTypeAdmin(admin.ModelAdmin):
 
 @admin.register(InvoiceTransaction)
 class InvoiceTransactionAdmin(admin.ModelAdmin):
-	pass
+	change_list_template = 'admin/finance/change_list_finance_report.html'
+
+	def get_urls(self):
+		"""
+		Get default django admin urls then add custom url for report link
+		"""
+		from django.conf.urls import url
+
+		def wrap(view):
+			def wrapper(*args, **kwargs):
+				return self.admin_site.admin_view(view, cacheable=True)(*args, **kwargs)
+			return update_wrapper(wrapper, view)
+
+		info = self.model._meta.app_label, self.model._meta.model_name
+
+		urls = super(InvoiceTransactionAdmin, self).get_urls()
+		finance_statement_url = [
+			url(r'^generate_finance_statement/$',
+				wrap(self.generate_finance_statement),
+				name='%s_%s_generate_finance_statement' % info),
+		]
+		return finance_statement_url + urls
+
+	def generate_finance_statement(self, request):
+		record = get_financial_statement()
+		finance_list = [ obj for obj in record ]
+		print(finance_list)
+		context = Context({'finance_list': finance_list})
+		html_pdf = HTML2PDF(context, template_name='finance/report/finance_statement.html', output='document.pdf')
+		return html_pdf.render(request)
+

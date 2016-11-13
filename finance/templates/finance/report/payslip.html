@@ -1,4 +1,4 @@
-{% load static %}
+{% load static minierp_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -190,7 +190,7 @@
 								<tr>
 									<td><b>TERBILANG</td>
 									<td>:</td>
-									<td><b>#NAME?</b></td>
+									<td><b>{{ payroll.calculate_total|to_nominal }}</b></td>
 								</tr>
 							</tbody>
 						</table>

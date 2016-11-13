@@ -1,0 +1,10 @@
+{% extends "admin/finance/change_list.html" %}
+{% load i18n %}
+{% load admin_urls %}
+
+{% block object-tools-items %}
+  <li>
+  	<a href="{% url opts|admin_urlname:'generate_finance_statement' %}" class="grp-state-focus report_link">{% trans "Generate Finance Statement" %}</a>
+  </li>
+  {{ block.super }}
+{% endblock %}

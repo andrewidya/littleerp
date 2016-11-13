@@ -40,10 +40,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cron',
+    'debug_toolbar',
     'sekizai',
     'import_export',
     'fsm_admin',
     'django_fsm',
+    'report_builder',
     'utils',
     'hrm',
     'crm',
@@ -61,6 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'minierp.urls'
@@ -76,6 +79,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.static',
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -95,6 +99,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'minierp.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -157,3 +166,7 @@ MINIERP_SETTINGS = {
 }
 
 JET_DEFAULT_THEME = 'custom'
+
+REPORT_BUILDER_GLOBAL_EXPORT = True
+
+INTERNAL_IPS = '127.0.0.1'

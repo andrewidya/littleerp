@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.css' %}">
+	<style>
+		html, body {
+			font-family: "PT Sans";
+			font-size: 75%;
+		}
+	</style>
+</head>
+<body>
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<td>Code</td>
+				<td>Customer Name</td>
+				<td>Sales Order</td>
+				<td>Service</td>
+				<td>Employee</td>
+				<td>Expense</td>
+				<td>Invoice</td>
+				<td>Invoice Summary</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% if finance_list %}
+			{% for record in finance_list %}
+				<tr>
+					<td>{{ record.code }}</td>
+					<td>{{ record.name }}</td>
+					<td>{{ record.sales_order_count }}</td>
+					<td>{{ record.service_count }}</td>
+					<td>{{ record.employee_count }}</td>
+					<td>{{ record.expense }}</td>
+					<td>{{ record.invoice_count }}</td>
+					<td>{{ record.invoice_sum }}</td>
+				</tr>
+			{% endfor %}
+			{% endif %}
+		</tbody>
+	</table>
+</body>
+</html>

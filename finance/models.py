@@ -8,7 +8,7 @@ from django.db.models import Sum
 
 from operational.models import (Payroll, State, PayrollPeriod, PayrollDetail)
 from operational.models import State as OPState
-from crm.models import SalesOrder
+from crm.models import SalesOrder, Customer
 
 class State(object):
     '''
@@ -29,7 +29,7 @@ class State(object):
 
 class PaidPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PaidPayrollManager, self).get_queryset().select_related('contract__employee').filter(
+		return super(PaidPayrollManager, self).get_queryset().select_related('period', 'staff', 'contract', 'contract__employee').prefetch_related('payrolldetail_set').filter(
 					models.Q(state=OPState.PAID))
 
 
@@ -41,6 +41,11 @@ class ProcessedPayrollManager(models.Manager):
 class FinalPayrollManager(models.Manager):
 	def get_queryset(self):
 		return super(FinalPayrollManager, self).get_queryset().annotate(total_payment=Sum('payroll__total'))
+
+
+class InvoiceManager(models.Manager):
+	def get_queryset(self):
+		return super(InvoiceManager, self).get_queryset().prefetch_related('invoice_detail', 'invoicedetail_set').select_related('sales_order').all()
 
 
 class PaidPayroll(Payroll):
