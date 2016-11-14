@@ -2,6 +2,7 @@ from __future__ import division
 import datetime
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext as _
 from crm.models import SalesOrderDetail
 from django.utils.safestring import mark_safe
@@ -373,7 +374,12 @@ class SalaryName(models.Model):
 class EmployeeContract(models.Model):
     start_date = models.DateField(verbose_name=_('Start Date'))
     end_date = models.DateField(verbose_name=_('End Date'))
-    employee = models.ForeignKey(Employee, verbose_name=_('Employee'), related_name='contract')
+    employee = models.ForeignKey(
+        Employee,
+        limit_choices_to=Q(is_active=True),
+        verbose_name=_('Employee'),
+        related_name='contract'
+    )
     service_related = models.ForeignKey(
         SalesOrderDetail,
         verbose_name=_('Customer Demand Related'),

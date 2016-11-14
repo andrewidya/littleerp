@@ -24,7 +24,7 @@ class Customer(models.Model):
 		)
 
 	def __str__(self):
-		return '{0} {1}'.format(self.code, self.name)
+		return self.name
 
 	@staticmethod
 	def autocomplete_search_fields():
@@ -53,7 +53,7 @@ class SalesOrder(models.Model):
 		('BASIC', 'Basic Salary'),
 		('TOTAL', 'Grand Total')
 	)
-	number = models.CharField(verbose_name=_('SO Number'), max_length=50, blank=True)
+	number = models.IntegerField(verbose_name=_('SO Number'))
 	date_create = models.DateField(verbose_name=_('Date Issued'))
 	date_start = models.DateField(verbose_name=_('Contract Start Date'))
 	date_end = models.DateField(verbose_name=_('Contract End Date'))
@@ -79,7 +79,7 @@ class SalesOrder(models.Model):
 		verbose_name_plural = 'Sales Orders'
 
 	def __str__(self):
-		return self.number + " : " + self.customer.name
+		return 'SO # {0}'.format(self.number)
 
 	def save(self, *args, **kwargs):
 		if self.id == None:
@@ -124,7 +124,7 @@ class SalesOrderDetail(models.Model):
 	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order Number'))
 	service = models.ForeignKey(Service, verbose_name=_('Service Demand'))
 	quantity = models.SmallIntegerField(verbose_name=_('Unit Quantity'))
-	basic_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+	basic_salary = models.DecimalField(verbose_name=_('Base Salary'), max_digits=12, decimal_places=2, null=True, blank=True)
 	other_salary_detail = models.ManyToManyField(
 		'ServiceSalaryItem',
 		through='ServiceSalaryDetail',
@@ -136,7 +136,7 @@ class SalesOrderDetail(models.Model):
 		verbose_name_plural = 'Order Details'
 
 	def __str__(self):
-		return self.sales_order.number + " : " + self.service.name
+		return "SO # " + str(self.sales_order.number) + " : " + self.service.name
 
 	def get_service(self):
 		return self.service.name
@@ -194,8 +194,7 @@ class ServiceSalaryDetail(models.Model):
 		unique_together = (('service_order_detail', 'service_salary_item'),)
 
 	def __str__(self):
-		return self.service_salary_item.name + ":" \
-			   + self.service_order_detail.sales_order.number
+		return '{0}:{1}'.format(self.service_salary_item.name, self.service_order_detail.sales_order.number)
 
 class SatisficationPointCategory(models.Model):
 	name = models.CharField(verbose_name=_('Satisfication Point Category'),
