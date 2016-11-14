@@ -16,28 +16,39 @@ from hrm.models import Employee, EmployeeContract, SalaryName
 
 class FinalPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(FinalPayrollManager, self).get_queryset().select_related('contract__employee').filter(models.Q(state=State.FINAL))
+		return super(FinalPayrollManager, self).get_queryset().select_related(
+			'contract__employee').filter(Q(state=PayrollState.FINAL))
 
 
 class PayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(PayrollManager, self).get_queryset().select_related('contract__employee').filter(state=State.DRAFT).select_related('contract__employee')
+		return super(PayrollManager, self).get_queryset().select_related(
+			'contract__employee').filter(Q(state=PayrollState.DRAFT)).select_related('contract__employee')
 
 
-class State(object):
+class PayrollState(object):
     '''
     Constants to represent the `state`s of the PublishableModel
     '''
     DRAFT = 'DRAFT'
     FINAL = 'FINAL'
     PAID = 'PAID'
-    OPEN = 'OPEN'
-    CLOSE = 'CLOSE'
 
     CHOICES = (
         (DRAFT, DRAFT),
         (FINAL, FINAL),
         (PAID, PAID),
+    )
+
+
+class PeriodState(object):
+    '''
+    Constants to represent the `state`s of the PublishableModel
+    '''
+    OPEN = 'OPEN'
+    CLOSE = 'CLOSE'
+
+    CHOICES = (
         (OPEN, OPEN),
         (CLOSE, CLOSE),
     )
@@ -47,10 +58,12 @@ class VisitCustomer(models.Model):
 	visit_date = models.DateField(verbose_name=_('Visiting Date'))
 	sales_order_reference = models.ForeignKey(
 		SalesOrder, verbose_name=_('Sales Order'),
-		help_text=_('Sales Order number for referencing to customer'))
+		help_text=_('Sales Order number for referencing to customer')
+	)
 	employee = models.ManyToManyField(
 		Employee, verbose_name=_('Personnels at Location'),
-		help_text=_('Personnels in the field when these visits'))
+		help_text=_('Personnels in the field when these visits')
+	)
 	subject = models.CharField(verbose_name=_('Visit Subject Title'), max_length=255)
 
 	class Meta:
@@ -62,7 +75,6 @@ class VisitCustomer(models.Model):
 
 	def get_customer_name(self):
 		return self.sales_order_reference.customer
-
 	get_customer_name.short_description = 'Customer'
 
 
@@ -95,7 +107,7 @@ class PayrollPeriod(models.Model):
 	date_create = models.DateField(auto_now_add=True, verbose_name='Date Created')
 	start_date = models.DateField(verbose_name='Start Date')
 	end_date = models.DateField(verbose_name='End Date')
-	state = FSMField(default=State.OPEN, choices=State.CHOICES)
+	state = FSMField(default=PeriodState.OPEN, choices=PeriodState.CHOICES)
 
 	class Meta:
 		verbose_name = 'Period'
@@ -120,7 +132,7 @@ class PayrollPeriod(models.Model):
 	attendance_urls.allow_tags = True
 	attendance_urls.short_description = 'Attendance'
 
-	@transition(field=state, source=State.OPEN, target=State.CLOSE)
+	@transition(field=state, source=PeriodState.OPEN, target=PeriodState.CLOSE)
 	def close(self):
 		pass
 
@@ -152,9 +164,14 @@ class Attendance(models.Model):
 		verbose_name='Employee',
 		limit_choices_to=(
 			Q(is_active=True)
-			& (Q(contract__contract_status='ACTIVE')
-				| Q(contract__contract_status='NEED RENEWAL'))))
-	period = models.ForeignKey(PayrollPeriod, verbose_name='Period', on_delete=models.PROTECT)
+			& (Q(contract__contract_status='ACTIVE') | Q(contract__contract_status='NEED RENEWAL'))
+			)
+		)
+	period = models.ForeignKey(
+		PayrollPeriod,
+		verbose_name='Period',
+		on_delete=models.PROTECT
+	)
 	staff = models.ForeignKey(User, null=True, blank=True, verbose_name='User Staff')
 
 	class Meta:
@@ -203,6 +220,7 @@ class Payroll(models.Model):
 	)
 	period = models.ForeignKey(
 		PayrollPeriod,
+		limit_choices_to=Q(state=PeriodState.OPEN),
 		verbose_name='Period',
 		on_delete=models.PROTECT,
 		db_index=True
@@ -254,7 +272,7 @@ class Payroll(models.Model):
 		verbose_name='User Staff',
 		db_index=True
 	)
-	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
+	state = FSMField(default=PayrollState.DRAFT, choices=PayrollState.CHOICES)
 
 	draft_manager = PayrollManager()
 	objects = models.Manager()
@@ -265,6 +283,7 @@ class Payroll(models.Model):
 		unique_together = ('contract', 'period')
 		permissions = (
 			('audit_payroll', 'Can audit payroll'),
+			('pay_payroll', 'Can pay payroll'),
 		)
 
 	def __str__(self):
@@ -273,14 +292,16 @@ class Payroll(models.Model):
 	def save(self, *args, **kwargs):
 		if self.base_salary is None:
 			self.base_salary = self.contract.base_salary
-			self.overtime = self.base_salary / 173
-			self.base_salary_per_day = self.base_salary / 30
 		if self.back_pay is None:
 			self.back_pay = 0
 		if self.total is None:
 			self.total = 0
 		if self.normal_overtime is None:
 			self.normal_overtime = 0
+		if self.overtime is None:
+			self.overtime = self.base_salary / 173
+		if self.base_salary_per_day is None:
+			self.base_salary_per_day = self.base_salary / 30
 		super(Payroll, self).save(args, kwargs)
 
 	def detail_url(self):
@@ -289,8 +310,8 @@ class Payroll(models.Model):
 		"""
 		change_list_urls = reverse('admin:operational_payrolldetail_changelist')
 		return format_html(
-			"<a href='{0}?payroll__contract__employee__id__exact={1}'>Detail</a>",
-			change_list_urls, self.contract.employee.id
+			"<a href='{0}?payroll__contract__employee__id__exact={1}&payroll__period__id__exact={2}'>Detail</a>",
+			change_list_urls, self.contract.employee.id, self.period.id
 		)
 	detail_url.short_description = 'Other Salary Detail'
 	detail_url.allow_tags = True
@@ -299,17 +320,17 @@ class Payroll(models.Model):
 		return self.contract.employee.bank_account
 	bank_account.short_description = 'Bank Account'
 
-	@transition(field=state, source=State.DRAFT, target=State.FINAL,
+	@transition(field=state, source=PayrollState.DRAFT, target=PayrollState.FINAL,
 			   custom=dict(verbose="Finalized Calculation",))
 	def finalize(self):
 		self.total = self.calculate_total()
 		self.save(update='total')
 
-	@transition(field=state, source=State.FINAL, target=State.DRAFT)
+	@transition(field='state', source=PayrollState.FINAL, target=PayrollState.DRAFT, permission='operational.audit_payroll')
 	def unfinalize(self):
 		pass
 
-	@transition(field=state, source=State.FINAL, target=State.PAID)
+	@transition(field='state', source=PayrollState.FINAL, target=PayrollState.PAID, permission='operational.pay_payroll')
 	def pay(self):
 		pass
 
@@ -353,6 +374,7 @@ class Payroll(models.Model):
 	calculate_overtime.short_description = 'Total Overtime'
 
 	def calculate_decrease(self, attendance, salary_per_day):
+		# checking attendance record than multiply it with salary_per_day
 		if attendance:
 			total = (
 				(attendance.alpha_day + attendance.sick_day + attendance.leave_day)

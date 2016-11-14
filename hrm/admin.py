@@ -96,9 +96,6 @@ class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
     inlines = [FamilyInline, AddressInline, EducationInline]
     list_per_page = 20
 
-    def has_add_permission(self, request):
-        return False
-
 
 @admin.register(AnnualLeave)
 class AnnualLeaveAdmin(admin.ModelAdmin):

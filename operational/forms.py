@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models import Q
-from operational.models import PayrollPeriod, Payroll, State
+from operational.models import PayrollPeriod, Payroll, PayrollState
 from hrm.models import EmployeeContract
 
 class PayrollPeriodForm(forms.ModelForm):
@@ -23,7 +23,7 @@ class PayrollForm(forms.ModelForm):
 		if self.is_valid():
 			period = cleaned_data['period']
 			payroll = Payroll.objects.filter(period=period).filter(
-				Q(state=State.FINAL) | Q(state=State.PAID)
+				Q(state=PayrollState.FINAL) | Q(state=PayrollState.PAID)
 			)
 			contracts = [ obj.contract for obj in payroll ]
 			if cleaned_data['contract'] in contracts:

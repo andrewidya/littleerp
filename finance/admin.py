@@ -9,7 +9,7 @@ from django.template import Context
 
 from finance.models import (
 	PaidPayroll, FinalPayrollPeriod, ProcessedPayroll, PayrollDetail, Invoice, InvoicedItemType, InvoiceDetail,
-	InvoiceTransaction, State
+	InvoiceTransaction, InvoiceState
 )
 from finance.options import *
 from django_reporting.admin import HTMLModelReportMixin
@@ -121,17 +121,17 @@ class InvoiceDetailInline(CompactInline):
 	extra = 0
 
 	def get_readonly_fields(self, request, obj=None):
-		if obj is not None and obj.state != State.DRAFT:
+		if obj is not None and obj.state != InvoiceState.DRAFT:
 			return ('invoiced_item', 'period', 'amount', 'notes')
 		return super(InvoiceDetailInline, self).get_readonly_fields(request, obj=obj)
 
 	def get_max_num(self, request, obj=None, **kwargs):
-		if obj is not None and obj.state != State.DRAFT:
+		if obj is not None and obj.state != InvoiceState.DRAFT:
 			return 0
 		return super(InvoiceDetailInline, self).get_max_num(request, obj=obj, **kwargs)
 
 	def has_delete_permission(self, request, obj=None):
-		if obj is not None and obj.state != State.DRAFT:
+		if obj is not None and obj.state != InvoiceState.DRAFT:
 			return False
 		return super(InvoiceDetailInline, self).has_delete_permission(request, obj=obj)
 
@@ -151,12 +151,12 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
 	inlines = [InvoiceDetailInline]
 
 	def get_readonly_fields(self, request, obj=None):
-		if obj is not None and obj.state != State.DRAFT:
+		if obj is not None and obj.state != InvoiceState.DRAFT:
 			return ('sales_order', 'invoice_number')
 		return super(InvoiceAdmin, self).get_readonly_fields(request, obj=obj)
 
 	def has_delete_permission(self, request, obj=None):
-		if obj is not None and obj.state != State.DRAFT:
+		if obj is not None and obj.state != InvoiceState.DRAFT:
 			return False
 		return super(InvoiceAdmin, self).has_delete_permission(request, obj=obj)
 

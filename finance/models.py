@@ -7,11 +7,12 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.utils.translation import ugettext as _
 
-from operational.models import (Payroll, State, PayrollPeriod, PayrollDetail)
-from operational.models import State as OPState
+from operational.models import (
+	Payroll, PayrollPeriod, PayrollDetail, PeriodState, PayrollState
+)
 from crm.models import SalesOrder, Customer
 
-class State(object):
+class InvoiceState(object):
     '''
     Constants to represent the `state`s of the PublishableModel
     '''
@@ -31,12 +32,12 @@ class State(object):
 class PaidPayrollManager(models.Manager):
 	def get_queryset(self):
 		return super(PaidPayrollManager, self).get_queryset().select_related('period', 'staff', 'contract', 'contract__employee').prefetch_related('payrolldetail_set').filter(
-					models.Q(state=OPState.PAID))
+					Q(state=PayrollState.PAID))
 
 
 class ProcessedPayrollManager(models.Manager):
 	def get_queryset(self):
-		return super(ProcessedPayrollManager, self).get_queryset().select_related('contract__employee').filter(models.Q(state=OPState.FINAL) | models.Q(state=OPState.PAID))
+		return super(ProcessedPayrollManager, self).get_queryset().select_related('contract__employee').filter(Q(state=PayrollState.FINAL) | Q(state=PayrollState.PAID))
 
 
 class FinalPayrollManager(models.Manager):
@@ -86,7 +87,7 @@ class FinalPayrollPeriod(PayrollPeriod):
 class Invoice(models.Model):
 	sales_order = models.ForeignKey(SalesOrder, verbose_name=_('Sales Order'))
 	invoice_number = models.PositiveIntegerField(verbose_name=_('Invoice Number'))
-	state = FSMField(default=State.DRAFT, choices=State.CHOICES)
+	state = FSMField(default=InvoiceState.DRAFT, choices=InvoiceState.CHOICES)
 	date_create = models.DateField(auto_now_add=True, verbose_name=_('Date Created'))
 	invoice_detail = models.ManyToManyField(
 		'InvoicedItemType',
@@ -103,15 +104,15 @@ class Invoice(models.Model):
 	def formated_invoice_number(self):
 		return str(("INV #" + str(self.invoice_number).zfill(4)))
 
-	@transition(field=state, source=[State.DRAFT, State.ONGOING], target=State.CANCEL)
+	@transition(field=state, source=[InvoiceState.DRAFT, InvoiceState.ONGOING], target=InvoiceState.CANCEL)
 	def cancel(self):
 		pass
 
-	@transition(field=state, source=State.DRAFT, target=State.ONGOING)
+	@transition(field=state, source=InvoiceState.DRAFT, target=InvoiceState.ONGOING)
 	def send(self):
 		pass
 
-	@transition(field=state, source=[State.DRAFT, State.ONGOING], target=State.PAID)
+	@transition(field=state, source=[InvoiceState.DRAFT, InvoiceState.ONGOING], target=InvoiceState.PAID)
 	def paid(self):
 		pass
 
