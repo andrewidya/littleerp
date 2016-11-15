@@ -1,4 +1,5 @@
 from import_export.admin import ImportExportMixin, ImportMixin
+from jet.admin import CompactInline
 
 from django.contrib import admin
 
@@ -8,7 +9,7 @@ from hrm.models import (
     EvaluationPeriod, Evaluation, EvaluationItem
 )
 from hrm.forms import EvaluationDetailForm, EmployeeContractForm, LeaveTakenForm, AnnualLeaveForm
-from django_reporting.admin import ModelDetailReportMixin, HTMLModelReportMixin
+from django_reporting.admin import HTMLModelReportMixin
 
 
 @admin.register(Division)
@@ -27,9 +28,9 @@ class FamilyAdmin(admin.ModelAdmin):
     report_context_object_name = "Families"
 
 
-class FamilyInline(admin.TabularInline):
+class FamilyInline(CompactInline):
     model = FamilyOfEmployee
-    extra = 2
+    extra = 1
     fields = (
         'name',
         'gender',
@@ -37,27 +38,31 @@ class FamilyInline(admin.TabularInline):
         'birth_place',
         'birth_date'
     )
+    show_change_link = True
 
 
-class AddressInline(admin.TabularInline):
+class AddressInline(CompactInline):
     model = EmployeeAddress
-    extra = 2
+    extra = 1
     fields = (
         'address',
         'city',
         'province',
         'address_status'
     )
+    show_change_link = True
 
 
-class EducationInline(admin.TabularInline):
+class EducationInline(CompactInline):
     model = Education
+    extra = 1
     fields = (
         'grade',
         'name',
         'city',
         'graduation_date'
     )
+    show_change_link = True
 
 
 @admin.register(Employee)
@@ -86,15 +91,21 @@ class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
         }),
         ('Employemnt Info', {
             'fields': (
-                ('job_title', 'division'),
-                ('reg_number', 'date_of_hire'),
-                'is_active',
-                ('bank', 'bank_account')
+                'reg_number',
+                'job_title',
+                'division',
+                ('date_of_hire', 'is_active'),
+                'bank',
+                'bank_account'
             )
         }),
     )
     inlines = [FamilyInline, AddressInline, EducationInline]
     list_per_page = 20
+
+    def get_queryset(self, request):
+        queryset = Employee.objects.select_related('job_title', 'bank', 'division').all()
+        return queryset
 
 
 @admin.register(AnnualLeave)
@@ -178,7 +189,7 @@ class OtherSalaryInline(admin.TabularInline):
 
 
 @admin.register(EmployeeContract)
-class EmployeeContract(admin.ModelAdmin):
+class EmployeeContractAdmin(admin.ModelAdmin):
     list_display = (
         'employee',
         'service_related',
@@ -204,6 +215,9 @@ class EmployeeContract(admin.ModelAdmin):
     inlines = [OtherSalaryInline]
     form = EmployeeContractForm
 
+    def get_queryset(self, request):
+        return EmployeeContract.default_contract_manager.all()
+
 
 @admin.register(BankName)
 class BankAdmin(ImportMixin, admin.ModelAdmin):
@@ -220,6 +234,7 @@ class EvaluationPeriodAdmin(admin.ModelAdmin):
 @admin.register(EvaluationItem)
 class EvaluationItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
+
 
 class EvaluationDetailInline(admin.TabularInline):
     model = EvaluationDetail

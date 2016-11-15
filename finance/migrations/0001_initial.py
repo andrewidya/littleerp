@@ -75,17 +75,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='FinalPayrollPeriod',
-            fields=[
-            ],
-            options={
-                'verbose_name': 'Payroll Period',
-                'proxy': True,
-                'verbose_name_plural': 'Payroll Period',
-            },
-            bases=('operational.payrollperiod',),
-        ),
-        migrations.CreateModel(
             name='PaidPayroll',
             fields=[
             ],
@@ -93,17 +82,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Payroll Payments History',
                 'proxy': True,
                 'verbose_name_plural': 'Payroll Payments History',
-            },
-            bases=('operational.payroll',),
-        ),
-        migrations.CreateModel(
-            name='ProcessedPayroll',
-            fields=[
-            ],
-            options={
-                'verbose_name': 'Processed Payroll',
-                'proxy': True,
-                'verbose_name_plural': 'Processed Payroll',
             },
             bases=('operational.payroll',),
         ),

@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Payroll',
                 'verbose_name_plural': 'Payroll',
-                'permissions': (('audit_payroll', 'Can audit payroll'),),
+                'permissions': (('finalize_payroll', 'Can finalize payroll'), ('unfinalize_payroll', 'Can unfinalize payroll'), ('pay_payroll', 'Can pay payroll'), ('audit_payroll', 'Can audit payroll')),
             },
         ),
         migrations.CreateModel(
@@ -105,8 +105,9 @@ class Migration(migrations.Migration):
                 ('state', django_fsm.FSMField(default=b'OPEN', max_length=50, choices=[(b'OPEN', b'OPEN'), (b'CLOSE', b'CLOSE')])),
             ],
             options={
-                'verbose_name': 'Period',
-                'verbose_name_plural': 'Periods',
+                'verbose_name': 'Payroll Period',
+                'verbose_name_plural': 'Payroll Periods',
+                'permissions': (('close_period', 'Can close payroll period'),),
             },
         ),
         migrations.CreateModel(
@@ -202,28 +203,6 @@ class Migration(migrations.Migration):
             model_name='attendance',
             name='staff',
             field=models.ForeignKey(verbose_name=b'User Staff', blank=True, to=settings.AUTH_USER_MODEL, null=True),
-        ),
-        migrations.CreateModel(
-            name='FinalPayroll',
-            fields=[
-            ],
-            options={
-                'verbose_name': 'Finalized Payroll',
-                'proxy': True,
-                'verbose_name_plural': 'Finalized Payroll',
-            },
-            bases=('operational.payroll',),
-        ),
-        migrations.CreateModel(
-            name='FinalPayrollDetail',
-            fields=[
-            ],
-            options={
-                'verbose_name': 'Finalized Payroll Detail',
-                'proxy': True,
-                'verbose_name_plural': 'Finalized Payroll Detail',
-            },
-            bases=('operational.payrolldetail',),
         ),
         migrations.AlterUniqueTogether(
             name='payrolldetail',

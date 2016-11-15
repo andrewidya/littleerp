@@ -9,6 +9,8 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.conf import settings
 
+from hrm.managers import EmployeeContractManager, DefaultEmployeeContractManager
+
 
 class BankName(models.Model):
     name = models.CharField(verbose_name=_('Bank Name'), max_length=50)
@@ -124,19 +126,22 @@ class EmployeeAddress(models.Model):
     district = models.CharField(verbose_name=_('District'), max_length=255)
     city = models.CharField(verbose_name=_('City'), max_length=255)
     province = models.CharField(verbose_name=_('province'), max_length=255)
-    address_status = models.CharField(verbose_name=_('Description'), max_length=8,
+    address_status = models.CharField(
+        verbose_name=_('Description'),
+        max_length=8,
         choices=(
             ('KTP', 'KTP'),
             ('ASAL', 'ASAL'),
             ('DOMISILI', 'DOMISILI')
-        ))
+        )
+    )
 
     class Meta:
         verbose_name = 'Address Information'
         verbose_name_plural = 'Address Information'
 
     def __str__(self):
-        return self.address
+        return self.address_status
 
 
 class FamilyOfEmployee(models.Model):
@@ -164,7 +169,7 @@ class FamilyOfEmployee(models.Model):
         verbose_name_plural = "Familiy Informations"
 
     def __str__(self):
-        return self.employee.get_full_name()
+        return self.relationship
 
 
 class Education(models.Model):
@@ -220,12 +225,13 @@ def year_generator():
         choices += ((start_year + i, start_year + i),)
     return choices
 
+
 class AnnualLeave(models.Model):
     CHOICES = year_generator()
 
     employee = models.ForeignKey(Employee)
     leave_type = models.ForeignKey(LeaveType)
-    year = models.IntegerField(verbose_name=_('Year'), choices=CHOICES);
+    year = models.IntegerField(verbose_name=_('Year'), choices=CHOICES)
     day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
     remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
     last_update = models.DateField(auto_now_add=True)
@@ -274,7 +280,7 @@ class EvaluationPeriod(models.Model):
         return self.period
 
     def save(self, *args, **kwargs):
-        if self.id == None:
+        if self.id is None:
             self.period = str(self.evaluation_date.month) + "-" + str(self.evaluation_date.year)
         super(EvaluationPeriod, self).save(*args, **kwargs)
 
@@ -387,16 +393,23 @@ class EmployeeContract(models.Model):
         help_text=_('This info related to the service needed by customer as detail sales order')
     )
     contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
-    base_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'),
-        null=True, blank=True)
+    base_salary = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name=_('Basic Salary'),
+        null=True, blank=True
+    )
     reference = models.CharField(blank=True, max_length=255)
+
+    default_contract_manager = DefaultEmployeeContractManager()
+    objects = EmployeeContractManager()
 
     class Meta:
         verbose_name = 'Contract'
         verbose_name_plural = 'Contracts'
 
     def __str__(self):
-        return str(self.employee) + " " + str(self.service_related)
+        return str(self.employee) + " - " + str(self.service_related)
 
     def get_basic_salary(self):
         return self.basic_salary

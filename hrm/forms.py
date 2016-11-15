@@ -3,6 +3,7 @@ from django import forms
 
 from hrm.models import EmployeeContract, EvaluationDetail, LeaveTaken, AnnualLeave
 
+
 class EvaluationDetailForm(ModelForm):
     class Meta:
         model = EvaluationDetail
@@ -31,6 +32,7 @@ class LeaveTakenForm(ModelForm):
         if self.is_valid():
             if cleaned_data['from_date'].year != cleaned_data['to_date'].year:
                 raise forms.ValidationError('Leave date range must be within same year')
+
 
 class AnnualLeaveForm(ModelForm):
     class Meta:

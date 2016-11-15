@@ -1,8 +1,10 @@
-from django.contrib import admin
 from import_export.admin import ImportExportMixin, ImportMixin
+
+from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.admin.views import main
 
@@ -65,7 +67,7 @@ class ServiceSalaryDetailInline(admin.TabularInline):
 
 
 @admin.register(SalesOrder)
-class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalesOrderAdmin(admin.ModelAdmin):
 	fields = (
 		'number',
 		'date_create',
@@ -78,7 +80,7 @@ class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
 		'note'
 	)
 	list_display = (
-		'number',
+		'so_number',
 		'customer',
 		'date_start',
 		'date_end',
@@ -97,9 +99,18 @@ class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
 	]
 	inlines = [SalesOrderDetailInline]
 
+	def get_queryset(self, request):
+		return SalesOrder.objects.select_related('customer').all()
+
+	def sales_order_detail_page(self, obj):
+		return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>'
+			% (reverse('admin:app_list', kwargs={'app_label': 'crm'}), obj.number)
+		)
+	sales_order_detail_page.short_description = 'Order Detail Link'
+
 
 @admin.register(SalesOrderDetail)
-class SalesOrderDetailAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalesOrderDetailAdmin(admin.ModelAdmin):
 	list_display = (
 		'sales_order',
 		'get_service',
@@ -108,6 +119,7 @@ class SalesOrderDetailAdmin(ImportExportMixin, admin.ModelAdmin):
 	)
 	list_filter = ('service', 'sales_order__number',)
 	search_fields = ['sales_order__number', 'sales_order__customer__name']
+	list_select_related = ('sales_order', 'service')
 	inlines = [ServiceSalaryDetailInline]
 
 
@@ -131,6 +143,7 @@ class ServiceSalaryDetailAdmin(ImportExportMixin, admin.ModelAdmin):
 	list_display = ('service_order_detail', 'service_salary_item', 'price')
 	list_filter = ('service_order_detail__sales_order__number',)
 	search_fields = ['service_order_detail__sales_order__number', 'service_salary_item__name']
+	list_select_related = ('service_order_detail', 'service_salary_item')
 
 
 class SatisficationDetailInline(admin.TabularInline):

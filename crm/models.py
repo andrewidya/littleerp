@@ -42,7 +42,7 @@ class Service(models.Model):
 
 	class Meta:
 		verbose_name = 'Service Provided'
-		verbose_name = 'Service Provided List'
+		verbose_name = 'Service Provided'
 
 	def __str__(self):
 		return self.name
@@ -81,13 +81,6 @@ class SalesOrder(models.Model):
 	def __str__(self):
 		return 'SO # {0}'.format(self.number)
 
-	def save(self, *args, **kwargs):
-		if self.id == None:
-			from datetime import datetime
-			date = datetime.now().strftime("%Y%m%d")
-			self.number = "SO" + date
-		super(SalesOrder, self).save(*args, **kwargs)
-
 	def service_demand_list(self):
 		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
 		service = ''
@@ -110,11 +103,9 @@ class SalesOrder(models.Model):
 		return total
 	total_price.short_description = 'Total Price'
 
-	def sales_order_detail_page(self):
-		return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>'
-			% (reverse('admin:app_list', kwargs={'app_label': 'crm'}), self.number)
-		)
-	sales_order_detail_page.short_description = 'Order Detail Link'
+	def so_number(self):
+		return 'SO # {0}'.format(self.number)
+	so_number.short_description = 'SO Number'
 
 	@staticmethod
 	def autocomplete_search_fields():
@@ -166,8 +157,8 @@ class ServiceSalaryItem(models.Model):
 	)
 
 	class Meta:
-		verbose_name = 'Service Salary Item'
-		verbose_name_plural = 'Service Salariy Items'
+		verbose_name = 'Pricing Item'
+		verbose_name_plural = 'Pricing Items'
 
 	def __str__(self):
 		return self.name
@@ -189,8 +180,8 @@ class ServiceSalaryDetail(models.Model):
 	price = models.DecimalField(verbose_name=_('Price'), max_digits=12, decimal_places=2)
 
 	class Meta:
-		verbose_name = 'Detail Salary Per Service'
-		verbose_name_plural = 'Detail Salary Per Service'
+		verbose_name = 'Order Detail Salary'
+		verbose_name_plural = 'Order Detail Salaries'
 		unique_together = (('service_order_detail', 'service_salary_item'),)
 
 	def __str__(self):
@@ -202,8 +193,8 @@ class SatisficationPointCategory(models.Model):
 	description = models.TextField(verbose_name=_('Description'), blank=True)
 
 	class Meta:
-		verbose_name = 'Satisfication Point Category'
-		verbose_name_plural = 'Satisfication Point Categories'
+		verbose_name = 'Satisfication Category'
+		verbose_name_plural = 'Satisfication Categories'
 
 	def __str__(self):
 		return self.name
@@ -220,8 +211,8 @@ class SatisficationPointRateItem(models.Model):
 	description = models.TextField(verbose_name=_('Description'), blank=True)
 
 	class Meta:
-		verbose_name = 'Satisfication Point Rate Item'
-		verbose_name_plural = 'Satisfication Point Rate Item'
+		verbose_name = 'Satisfication Item'
+		verbose_name_plural = 'Satisfication Item'
 
 	def __str__(self):
 		return self.name
@@ -252,8 +243,8 @@ class SatisficationDetail(models.Model):
 	)
 
 	class Meta:
-		verbose_name = 'Satisfication Interview Detail'
-		verbose_name_plural = 'Satisfication Interview Details'
+		verbose_name = 'Satisfication Detail'
+		verbose_name_plural = 'Satisfication Details'
 		unique_together = ('satisfication', 'point_rate_item')
 
 	def __str__(self):
