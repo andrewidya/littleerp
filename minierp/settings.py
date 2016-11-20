@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'operational',
     'finance',
     'django_reporting',
+    'general_affair',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -166,6 +167,7 @@ MINIERP_SETTINGS = {
 }
 
 JET_DEFAULT_THEME = 'custom'
+JET_SIDE_MENU_COMPACT = True
 
 REPORT_BUILDER_GLOBAL_EXPORT = True
 
