@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'operational',
     'finance',
     'django_reporting',
+    'general_affair',
 )
 
 MIDDLEWARE_CLASSES = (
