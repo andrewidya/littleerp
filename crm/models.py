@@ -81,13 +81,6 @@ class SalesOrder(models.Model):
 	def __str__(self):
 		return 'SO # {0}'.format(self.number)
 
-	def save(self, *args, **kwargs):
-		if self.id == None:
-			from datetime import datetime
-			date = datetime.now().strftime("%Y%m%d")
-			self.number = "SO" + date
-		super(SalesOrder, self).save(*args, **kwargs)
-
 	def service_demand_list(self):
 		sales_order_detail = self.salesorderdetail_set.all().filter(sales_order=self)
 		service = ''

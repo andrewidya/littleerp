@@ -1,0 +1,98 @@
+[
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS002",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 1
+},
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS003",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 2
+},
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS004",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 3
+},
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS005",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 4
+},
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS006",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 5
+},
+{
+    "fields": {
+        "phone_number": "1111111",
+        "city": "Kota",
+        "code": "CS007",
+        "name": "PT Lintech Duta Pratama",
+        "parent": null,
+        "join_date": "2016-11-17",
+        "field": "Pabrik",
+        "tax_id_number": "99.999.999.9-999.999",
+        "address": "Jl Jalan",
+        "logo": ""
+    },
+    "model": "crm.customer",
+    "pk": 6
+}
+]

@@ -1,0 +1,877 @@
+[
+{
+    "fields": {
+        "name": "Bank Indonesia (Bank Sentral)"
+    },
+    "model": "hrm.bankname",
+    "pk": 4
+},
+{
+    "fields": {
+        "name": "Bank Rakyat Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 5
+},
+{
+    "fields": {
+        "name": "Bank Tabungan Negara"
+    },
+    "model": "hrm.bankname",
+    "pk": 6
+},
+{
+    "fields": {
+        "name": "Bank Mutiara (Dahulu dinamakan bank Century)"
+    },
+    "model": "hrm.bankname",
+    "pk": 7
+},
+{
+    "fields": {
+        "name": "Bank Agroniaga"
+    },
+    "model": "hrm.bankname",
+    "pk": 8
+},
+{
+    "fields": {
+        "name": "Bank Anda"
+    },
+    "model": "hrm.bankname",
+    "pk": 9
+},
+{
+    "fields": {
+        "name": "Bank Artha Graha Internasional"
+    },
+    "model": "hrm.bankname",
+    "pk": 10
+},
+{
+    "fields": {
+        "name": "Bank Bukopin"
+    },
+    "model": "hrm.bankname",
+    "pk": 11
+},
+{
+    "fields": {
+        "name": "Bank Bumi Arta"
+    },
+    "model": "hrm.bankname",
+    "pk": 12
+},
+{
+    "fields": {
+        "name": "Bank Capital Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 13
+},
+{
+    "fields": {
+        "name": "Bank Central Asia"
+    },
+    "model": "hrm.bankname",
+    "pk": 14
+},
+{
+    "fields": {
+        "name": "Bank Danamon"
+    },
+    "model": "hrm.bankname",
+    "pk": 15
+},
+{
+    "fields": {
+        "name": "Bank Ekonomi Raharja"
+    },
+    "model": "hrm.bankname",
+    "pk": 16
+},
+{
+    "fields": {
+        "name": "Bank Ganesha"
+    },
+    "model": "hrm.bankname",
+    "pk": 17
+},
+{
+    "fields": {
+        "name": "Bank Hana"
+    },
+    "model": "hrm.bankname",
+    "pk": 18
+},
+{
+    "fields": {
+        "name": "Bank Himpunan Saudara 1906 (Bandung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 19
+},
+{
+    "fields": {
+        "name": "Bank ICB Bumiputera, dahulu dikenal sebagai Bank Bumiputera"
+    },
+    "model": "hrm.bankname",
+    "pk": 20
+},
+{
+    "fields": {
+        "name": "Bank ICBC Indonesia, dahulu dikenal sebagai Bank Halim Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 21
+},
+{
+    "fields": {
+        "name": "Bank Index Selindo"
+    },
+    "model": "hrm.bankname",
+    "pk": 22
+},
+{
+    "fields": {
+        "name": "Bank Internasional Indonesia Maybank"
+    },
+    "model": "hrm.bankname",
+    "pk": 23
+},
+{
+    "fields": {
+        "name": "Bank Kesawan"
+    },
+    "model": "hrm.bankname",
+    "pk": 24
+},
+{
+    "fields": {
+        "name": "Bank Maspion"
+    },
+    "model": "hrm.bankname",
+    "pk": 25
+},
+{
+    "fields": {
+        "name": "Bank Mayapada"
+    },
+    "model": "hrm.bankname",
+    "pk": 26
+},
+{
+    "fields": {
+        "name": "Bank Mega"
+    },
+    "model": "hrm.bankname",
+    "pk": 27
+},
+{
+    "fields": {
+        "name": "Bank Mestika Dharma"
+    },
+    "model": "hrm.bankname",
+    "pk": 28
+},
+{
+    "fields": {
+        "name": "Bank Metro Express"
+    },
+    "model": "hrm.bankname",
+    "pk": 29
+},
+{
+    "fields": {
+        "name": "Bank Muamalat Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 30
+},
+{
+    "fields": {
+        "name": "Bank Nusantara Parahyangan"
+    },
+    "model": "hrm.bankname",
+    "pk": 31
+},
+{
+    "fields": {
+        "name": "Bank OCBC NISP (Gabungan dari Bank NISP dengan Bank OCBC Indonesia)"
+    },
+    "model": "hrm.bankname",
+    "pk": 32
+},
+{
+    "fields": {
+        "name": "Bank Permata"
+    },
+    "model": "hrm.bankname",
+    "pk": 33
+},
+{
+    "fields": {
+        "name": "Bank SBI Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 34
+},
+{
+    "fields": {
+        "name": "Bank Sinarmas"
+    },
+    "model": "hrm.bankname",
+    "pk": 35
+},
+{
+    "fields": {
+        "name": "Bank Swadesi"
+    },
+    "model": "hrm.bankname",
+    "pk": 36
+},
+{
+    "fields": {
+        "name": "Bank Syariah Mandiri"
+    },
+    "model": "hrm.bankname",
+    "pk": 37
+},
+{
+    "fields": {
+        "name": "Bank Syariah Mega Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 38
+},
+{
+    "fields": {
+        "name": "Bank Victoria Internasional"
+    },
+    "model": "hrm.bankname",
+    "pk": 39
+},
+{
+    "fields": {
+        "name": "Bank Pan Indonesia Bank"
+    },
+    "model": "hrm.bankname",
+    "pk": 40
+},
+{
+    "fields": {
+        "name": "Bank Anglomas Internasional Bank (Surabaya)"
+    },
+    "model": "hrm.bankname",
+    "pk": 41
+},
+{
+    "fields": {
+        "name": "Bank Andara, dahulu dikenal sebagai Bank Sri Partha"
+    },
+    "model": "hrm.bankname",
+    "pk": 42
+},
+{
+    "fields": {
+        "name": "Bank Artos Indonesia (Bandung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 43
+},
+{
+    "fields": {
+        "name": "Bank Barclays Indonesia, dahulu dikenal sebagai Bank Akita"
+    },
+    "model": "hrm.bankname",
+    "pk": 44
+},
+{
+    "fields": {
+        "name": "Bank Bisnis Internasional (Bandung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 45
+},
+{
+    "fields": {
+        "name": "Bank BRI Syariah, dahulu dikenal sebagai Bank Jasa Arta"
+    },
+    "model": "hrm.bankname",
+    "pk": 46
+},
+{
+    "fields": {
+        "name": "Bank Central Asia Syariah, dahulu dikenal sebagai Bank UIB"
+    },
+    "model": "hrm.bankname",
+    "pk": 47
+},
+{
+    "fields": {
+        "name": "Bank Dipo International"
+    },
+    "model": "hrm.bankname",
+    "pk": 48
+},
+{
+    "fields": {
+        "name": "Bank Fama Internasional (Bandung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 49
+},
+{
+    "fields": {
+        "name": "Bank Harda Internasional"
+    },
+    "model": "hrm.bankname",
+    "pk": 50
+},
+{
+    "fields": {
+        "name": "Bank Ina Perdana"
+    },
+    "model": "hrm.bankname",
+    "pk": 51
+},
+{
+    "fields": {
+        "name": "Bank Jasa Jakarta"
+    },
+    "model": "hrm.bankname",
+    "pk": 52
+},
+{
+    "fields": {
+        "name": "Bank Kesejahteraan Ekonomi"
+    },
+    "model": "hrm.bankname",
+    "pk": 53
+},
+{
+    "fields": {
+        "name": "Bank Liman International"
+    },
+    "model": "hrm.bankname",
+    "pk": 54
+},
+{
+    "fields": {
+        "name": "Bank Mayora"
+    },
+    "model": "hrm.bankname",
+    "pk": 55
+},
+{
+    "fields": {
+        "name": "Bank ANZ Panin Bank, merger dari Royal Bank of Scotland"
+    },
+    "model": "hrm.bankname",
+    "pk": 56
+},
+{
+    "fields": {
+        "name": "Bank Agris, dahulu dikenal sebagai Bank Finconesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 57
+},
+{
+    "fields": {
+        "name": "Bank Commonwealth, digabung dengan Bank Arta Niaga Kencana"
+    },
+    "model": "hrm.bankname",
+    "pk": 58
+},
+{
+    "fields": {
+        "name": "Bank BNP Paribas Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 59
+},
+{
+    "fields": {
+        "name": "Bank DBS Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 60
+},
+{
+    "fields": {
+        "name": "Bank KEB Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 61
+},
+{
+    "fields": {
+        "name": "Bank Maybank Syariah Indonesia, dahulu dikenal sebagai Bank Maybank Indocorp"
+    },
+    "model": "hrm.bankname",
+    "pk": 62
+},
+{
+    "fields": {
+        "name": "Bank Mizuho Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 63
+},
+{
+    "fields": {
+        "name": "Bank UOB Buana, dahulu dikenal sebagai Bank Buana Indonesia, bergabung dengan Bank UOB Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 64
+},
+{
+    "fields": {
+        "name": "Bank Rabobank Internasional Indonesia, bergabung dengan HagaBank dan Bank HagaKita"
+    },
+    "model": "hrm.bankname",
+    "pk": 65
+},
+{
+    "fields": {
+        "name": "Bank Resona Perdania"
+    },
+    "model": "hrm.bankname",
+    "pk": 66
+},
+{
+    "fields": {
+        "name": "Bank Windu Kentjana Internasional, bergabung dengan Bank Multicor"
+    },
+    "model": "hrm.bankname",
+    "pk": 67
+},
+{
+    "fields": {
+        "name": "Bank Woori Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 68
+},
+{
+    "fields": {
+        "name": "Bank Chinatrust Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 69
+},
+{
+    "fields": {
+        "name": "Bank Sumitomo Mitsui Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 70
+},
+{
+    "fields": {
+        "name": "Bank UFJ Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 71
+},
+{
+    "fields": {
+        "name": "Bank Mitraniaga"
+    },
+    "model": "hrm.bankname",
+    "pk": 72
+},
+{
+    "fields": {
+        "name": "Bank Multi Arta Sentosa"
+    },
+    "model": "hrm.bankname",
+    "pk": 73
+},
+{
+    "fields": {
+        "name": "Bank Nationalnobu, dahulu dikenal sebagai Bank Alfindo"
+    },
+    "model": "hrm.bankname",
+    "pk": 74
+},
+{
+    "fields": {
+        "name": "Bank Pundi Indonesia, dahulu dikenal sebagai Bank Eksekutif Internasional"
+    },
+    "model": "hrm.bankname",
+    "pk": 75
+},
+{
+    "fields": {
+        "name": "Bank Purba Danarta (Semarang)"
+    },
+    "model": "hrm.bankname",
+    "pk": 76
+},
+{
+    "fields": {
+        "name": "Bank Royal Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 77
+},
+{
+    "fields": {
+        "name": "Bank Sinar Harapan Bali"
+    },
+    "model": "hrm.bankname",
+    "pk": 78
+},
+{
+    "fields": {
+        "name": "Bank STMIK Binamulia (Palu)"
+    },
+    "model": "hrm.bankname",
+    "pk": 79
+},
+{
+    "fields": {
+        "name": "Bank Syariah Bukopin, dahulu dikenal sebagai Bank Persyarikatan Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 80
+},
+{
+    "fields": {
+        "name": "Bank Tabungan Pensiunan Nasional (Bandung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 81
+},
+{
+    "fields": {
+        "name": "Bank Victoria Syariah, dahulu dikenal sebagai Bank Swaguna"
+    },
+    "model": "hrm.bankname",
+    "pk": 82
+},
+{
+    "fields": {
+        "name": "Bank Yudha Bhakti"
+    },
+    "model": "hrm.bankname",
+    "pk": 83
+},
+{
+    "fields": {
+        "name": "Bank Centratama Nasional Bank (Surabaya)"
+    },
+    "model": "hrm.bankname",
+    "pk": 84
+},
+{
+    "fields": {
+        "name": "Bank Pan Indonesia Bank Syariah, dahulu dikenal sebagai Bank Harfa"
+    },
+    "model": "hrm.bankname",
+    "pk": 85
+},
+{
+    "fields": {
+        "name": "Bank Prima Master Bank"
+    },
+    "model": "hrm.bankname",
+    "pk": 86
+},
+{
+    "fields": {
+        "name": "Bank Jambi (Jambi)"
+    },
+    "model": "hrm.bankname",
+    "pk": 87
+},
+{
+    "fields": {
+        "name": "Bank Kalsel (Banjarmasin)"
+    },
+    "model": "hrm.bankname",
+    "pk": 88
+},
+{
+    "fields": {
+        "name": "Bank Kaltim (Samarinda)"
+    },
+    "model": "hrm.bankname",
+    "pk": 89
+},
+{
+    "fields": {
+        "name": "Bank Sultra (Kendari)"
+    },
+    "model": "hrm.bankname",
+    "pk": 90
+},
+{
+    "fields": {
+        "name": "Bank BPD DIY (Yogyakarta)"
+    },
+    "model": "hrm.bankname",
+    "pk": 91
+},
+{
+    "fields": {
+        "name": "Bank Nagari (Padang)"
+    },
+    "model": "hrm.bankname",
+    "pk": 92
+},
+{
+    "fields": {
+        "name": "Bank DKI (Jakarta)"
+    },
+    "model": "hrm.bankname",
+    "pk": 93
+},
+{
+    "fields": {
+        "name": "Bank Lampung (Bandar Lampung)"
+    },
+    "model": "hrm.bankname",
+    "pk": 94
+},
+{
+    "fields": {
+        "name": "Bank Kalteng (Palangka Raya)"
+    },
+    "model": "hrm.bankname",
+    "pk": 95
+},
+{
+    "fields": {
+        "name": "Bank BPD Aceh (Banda Aceh)"
+    },
+    "model": "hrm.bankname",
+    "pk": 96
+},
+{
+    "fields": {
+        "name": "Bank Sulsel (Makassar)"
+    },
+    "model": "hrm.bankname",
+    "pk": 97
+},
+{
+    "fields": {
+        "name": "Bank BJB (Bandung), dahulu dikenal sebagai Bank Jabar Banten atau BPD Jawa Barat."
+    },
+    "model": "hrm.bankname",
+    "pk": 98
+},
+{
+    "fields": {
+        "name": "Bank Kalbar (Pontianak)"
+    },
+    "model": "hrm.bankname",
+    "pk": 99
+},
+{
+    "fields": {
+        "name": "Bank Maluku (Ambon)"
+    },
+    "model": "hrm.bankname",
+    "pk": 100
+},
+{
+    "fields": {
+        "name": "Bank Bengkulu (Kota Bengkulu)"
+    },
+    "model": "hrm.bankname",
+    "pk": 101
+},
+{
+    "fields": {
+        "name": "Bank Jateng (Semarang)"
+    },
+    "model": "hrm.bankname",
+    "pk": 102
+},
+{
+    "fields": {
+        "name": "Bank Jatim (Surabaya)"
+    },
+    "model": "hrm.bankname",
+    "pk": 103
+},
+{
+    "fields": {
+        "name": "Bank NTB (Mataram)"
+    },
+    "model": "hrm.bankname",
+    "pk": 104
+},
+{
+    "fields": {
+        "name": "Bank NTT (Kupang)"
+    },
+    "model": "hrm.bankname",
+    "pk": 105
+},
+{
+    "fields": {
+        "name": "Bank Sulteng (Palu)"
+    },
+    "model": "hrm.bankname",
+    "pk": 106
+},
+{
+    "fields": {
+        "name": "Bank Sulut (Manado)"
+    },
+    "model": "hrm.bankname",
+    "pk": 107
+},
+{
+    "fields": {
+        "name": "Bank BPD Bali (Denpasar)"
+    },
+    "model": "hrm.bankname",
+    "pk": 108
+},
+{
+    "fields": {
+        "name": "Bank Papua (Jayapura), dahulu sebagai BPD Irian Jaya"
+    },
+    "model": "hrm.bankname",
+    "pk": 109
+},
+{
+    "fields": {
+        "name": "Bank Riau Kepri (Pekanbaru), dahulu dikenal sebagai Bank Riau"
+    },
+    "model": "hrm.bankname",
+    "pk": 110
+},
+{
+    "fields": {
+        "name": "Bank Sumsel Babel (Palembang), dahulu dikenal sebagai Bank Sumsel"
+    },
+    "model": "hrm.bankname",
+    "pk": 111
+},
+{
+    "fields": {
+        "name": "Bank Sumut (Medan)"
+    },
+    "model": "hrm.bankname",
+    "pk": 112
+},
+{
+    "fields": {
+        "name": "Bank BNI Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 113
+},
+{
+    "fields": {
+        "name": "Bank BRI Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 114
+},
+{
+    "fields": {
+        "name": "Bank Maybank Syariah Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 115
+},
+{
+    "fields": {
+        "name": "Bank Mega Syariah Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 116
+},
+{
+    "fields": {
+        "name": "Bank Muamalat Indonesia"
+    },
+    "model": "hrm.bankname",
+    "pk": 117
+},
+{
+    "fields": {
+        "name": "Bank Syariah Bukopin"
+    },
+    "model": "hrm.bankname",
+    "pk": 118
+},
+{
+    "fields": {
+        "name": "Bank Syariah Mandiri"
+    },
+    "model": "hrm.bankname",
+    "pk": 119
+},
+{
+    "fields": {
+        "name": "Bank Victoria Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 120
+},
+{
+    "fields": {
+        "name": "Bank Pan Indonesia Bank Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 121
+},
+{
+    "fields": {
+        "name": "Bank CIMB Niaga Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 122
+},
+{
+    "fields": {
+        "name": "Bank OCBC NISP Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 123
+},
+{
+    "fields": {
+        "name": "Bank Danamon Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 124
+},
+{
+    "fields": {
+        "name": "Bank Riau Kepri Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 125
+},
+{
+    "fields": {
+        "name": "Bank BCA Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 126
+},
+{
+    "fields": {
+        "name": "Bank BJB Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 127
+},
+{
+    "fields": {
+        "name": "Bank Permata Syariah"
+    },
+    "model": "hrm.bankname",
+    "pk": 128
+}
+]

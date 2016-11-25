@@ -1,0 +1,34 @@
+[
+{
+    "fields": {
+        "name": "OB",
+        "description": "Jasa layanan Office Boy untuk perkantoran"
+    },
+    "model": "hrm.jobtitle",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "Security",
+        "description": "Jasa layanan keamanan security"
+    },
+    "model": "hrm.jobtitle",
+    "pk": 2
+},
+{
+    "fields": {
+        "name": "Penjaga Malam",
+        "description": "Jasa layanan penjaga keamanan"
+    },
+    "model": "hrm.jobtitle",
+    "pk": 3
+},
+{
+    "fields": {
+        "name": "GS",
+        "description": "Jasa layanan security & penjaga lengkap untuk sebuah perkantoran"
+    },
+    "model": "hrm.jobtitle",
+    "pk": 4
+}
+]

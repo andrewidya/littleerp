@@ -3,11 +3,14 @@ from import_export.admin import ImportExportMixin, ImportMixin
 from django.contrib import admin
 
 from hrm.models import (
-    Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education, AnnualLeave,
-    LeaveTaken, LeaveType, SalaryCategory, SalaryName, EmployeeContract, OtherSalary, BankName, EvaluationDetail,
+    Division, JobTitle, Employee, FamilyOfEmployee, EmployeeAddress, Education,
+    AnnualLeave, LeaveTaken, LeaveType, SalaryCategory, SalaryName,
+    EmployeeContract, OtherSalary, BankName, EvaluationDetail,
     EvaluationPeriod, Evaluation, EvaluationItem
 )
-from hrm.forms import EvaluationDetailForm, EmployeeContractForm, LeaveTakenForm, AnnualLeaveForm
+from hrm.forms import (
+    EvaluationDetailForm, EmployeeContractForm, LeaveTakenForm, AnnualLeaveForm
+)
 from django_reporting.admin import ModelDetailReportMixin, HTMLModelReportMixin
 
 
