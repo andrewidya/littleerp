@@ -213,15 +213,11 @@ class LeaveType(models.Model):
         return ('name',)
 
 
-def year_generator():
-    start_year = 1990
-    choices = ()
-    for i in range(101):
-        choices += ((start_year + i, start_year + i),)
-    return choices
+year_generator = lambda year, interval : [ ( year + i, year + i ) for i in range(interval) ]
 
-class AnnualLeave(models.Model):
-    CHOICES = year_generator()
+
+class AnnualLeave(models.Model):    
+    CHOICES = year_generator(1990, 101)
 
     employee = models.ForeignKey(Employee)
     leave_type = models.ForeignKey(LeaveType)
@@ -399,7 +395,7 @@ class EmployeeContract(models.Model):
         return str(self.employee) + " " + str(self.service_related)
 
     def get_basic_salary(self):
-        return self.basic_salary
+        return self.base_salary
     get_basic_salary.short_description = 'Basic Salary'
 
     @staticmethod
@@ -408,6 +404,7 @@ class EmployeeContract(models.Model):
 
     def get_contract_salary(self):
         salaries = 0
+        salaries += self.base_salary
         if not self.contract_status == "ACTIVE":
             return "IDR{:,.2f}".format(salaries)
         for other in self.other_salary.all():
@@ -449,3 +446,6 @@ class OtherSalary(models.Model):
     class Meta:
         verbose_name_plural = 'Other Salaries'
         unique_together = ('employee_contract', 'salary_name')
+
+    def __str__(self):
+        return self.salary_name.name

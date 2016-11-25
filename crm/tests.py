@@ -3,6 +3,7 @@ import datetime
 
 from django.test import TestCase
 from django.utils import timezone
+
 from crm.models import (SalesOrder, Customer, Service, SalesOrderDetail, ItemCategory,
                         ServiceSalaryItem, ServiceSalaryDetail)
 
@@ -25,22 +26,27 @@ class SalesOrderTest(TestCase):
             fee=Decimal(0.1),
             fee_calculate_condition='TOTAL'
         )
+        self.sales_order.save()
         self.item_ategory = ItemCategory.objects.create(name="Pendapatan Utama")
+        self.item_ategory.save()
         self.service_salary_item = ServiceSalaryItem.objects.create(
             name="Tunjangan Lembur",
             category=self.item_ategory
         )
+        self.service_salary_item.save()
         self.sales_order_detail = SalesOrderDetail.objects.create(
             sales_order=self.sales_order,
             service=self.service,
             quantity=10,
             basic_salary=Decimal(1400000)
         )
+        self.sales_order_detail.save()
         self.service_salary_detail = ServiceSalaryDetail.objects.create(
             service_order_detail=self.sales_order_detail,
             service_salary_item=self.service_salary_item,
             price=Decimal(100000)
         )
+        self.service_salary_detail.save()
 
     def test_sales_order_total_price(self):
         self.assertEqual((self.sales_order.total_price() == Decimal(15000000)), True)
@@ -57,3 +63,5 @@ class SalesOrderTest(TestCase):
         )
         service_salary_detail.save()
         self.assertEqual((self.sales_order.total_price() == Decimal(16000000)), True)
+
+
