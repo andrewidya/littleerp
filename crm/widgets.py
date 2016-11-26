@@ -1,12 +1,11 @@
 from django import forms
-from django.forms.widgets import ClearableFileInput
 from django.utils.safestring import mark_safe
+
 
 class AdminImageWidget(forms.FileInput):
     """
     A ImageField Widget for admin that shows a thumbnail.
     """
-
     def __init__(self, attrs={}):
         super(AdminImageWidget, self).__init__(attrs)
 

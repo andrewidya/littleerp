@@ -25,7 +25,7 @@ class SupplierBusinessType(models.Model):
 		verbose_name = 'Supplier Bussiness Type'
 		verbose_name_plural = 'Supplier Bussiness Type'
 
-	def __str__(self):
+	def __unicode__(self):
 		return self.name
 
 
@@ -48,7 +48,7 @@ class Supplier(models.Model):
 		verbose_name = 'Supplier'
 		verbose_name_plural = 'Suppliers'
 
-	def __str__(self):
+	def __unicode__(self):
 		return self.name
 
 
@@ -60,7 +60,7 @@ class ItemType(models.Model):
 		verbose_name = 'Item Type'
 		verbose_name_plural = 'Item Types'
 
-	def __str__(self):
+	def __unicode__(self):
 		return self.code + " " + self.name
 
 
@@ -71,7 +71,7 @@ class ItemCategory(models.Model):
 		verbose_name = 'Item Category'
 		verbose_name_plural = 'Item Categories'
 
-	def __str__(self):
+	def __unicode__(self):
 		return self.name
 
 
@@ -88,7 +88,7 @@ class Item(models.Model):
 		verbose_name = 'Item'
 		verbose_name_plural = 'Item Lists & Stocks'
 
-	def __str__(self):
+	def __unicode__(self):
 		return self.name
 
 
@@ -104,11 +104,11 @@ class PurchaseOrder(models.Model):
 		verbose_name = 'Purchase Order'
 		verbose_name_plural = 'Purchase Order'
 
-	def __str__(self):
+	def __unicode__(self):
 		return "PO # {0}".format(str(self.number))
 
 	def get_po_number(self):
-		return self.__str__()
+		return self.__unicode__()
 	get_po_number.short_description = 'PO Number'
 
 	@transition(field=state, source=PurchaseOrderState.DRAFT, target=PurchaseOrderState.ONGOING)
@@ -136,7 +136,7 @@ class OrderReceipt(models.Model):
 		verbose_name = 'Receipt Order'
 		verbose_name_plural = 'Order Receipt'
 
-	def __str__(self):
+	def __unicode__(self):
 		return str(self.number)
 
 
@@ -151,7 +151,7 @@ class ItemIssued(models.Model):
 		verbose_name = 'Item Issued'
 		verbose_name_plural = 'Item Issued'
 
-	def __str__(self):
+	def __unicode__(self):
 		return str(self.item)
 
 

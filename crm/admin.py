@@ -1,8 +1,9 @@
-from import_export.admin import ImportExportMixin, ImportMixin
-
 from django.contrib import admin
 from django.contrib.admin.views import main
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.safestring import mark_safe
+from import_export.admin import ImportExportMixin, ImportMixin
 
 from crm.forms import SatisficationDetailForm
 from crm.models import (Customer, ItemCategory, SalesOrder, SalesOrderDetail,
@@ -92,6 +93,14 @@ class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
         'customer__name'
     ]
     inlines = [SalesOrderDetailInline]
+
+    def get_queryset(self, request):
+        return SalesOrder.objects.select_related('customer').all()
+
+    def sales_order_detail_page(self, obj):
+        return mark_safe('<a href="%ssalesorderdetail/?sales_order__number=%s">See Detail</a>'
+                         % (reverse('admin:app_list', kwargs={'app_label': 'crm'}), obj.number))
+    sales_order_detail_page.short_description = 'Order Detail Link'
 
 
 @admin.register(SalesOrderDetail)

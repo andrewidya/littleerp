@@ -1,13 +1,17 @@
 from __future__ import division
+
 import datetime
 
+from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from django.utils.translation import ugettext as _
-from crm.models import SalesOrderDetail
-from django.utils.safestring import mark_safe
 from django.utils import timezone
-from django.conf import settings
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
+
+from crm.models import SalesOrderDetail
+from hrm.managers import (DefaultEmployeeContractManager,
+                          EmployeeContractManager)
 
 
 class BankName(models.Model):
@@ -17,7 +21,7 @@ class BankName(models.Model):
         verbose_name = 'Bank'
         verbose_name_plural = 'Banks'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -33,7 +37,7 @@ class Division(models.Model):
         verbose_name = 'Division'
         verbose_name_plural = 'Divisions'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -49,7 +53,7 @@ class JobTitle(models.Model):
         verbose_name = 'Job Title'
         verbose_name_plural = 'Job Titles'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -104,7 +108,7 @@ class Employee(models.Model):
             ('hrm_employee_view', 'Can view only'),
         )
 
-    def __str__(self):
+    def __unicode__(self):
         return self.reg_number + " " + self.first_name + " " + self.last_name
 
     def get_full_name(self):
@@ -124,19 +128,22 @@ class EmployeeAddress(models.Model):
     district = models.CharField(verbose_name=_('District'), max_length=255)
     city = models.CharField(verbose_name=_('City'), max_length=255)
     province = models.CharField(verbose_name=_('province'), max_length=255)
-    address_status = models.CharField(verbose_name=_('Description'), max_length=8,
+    address_status = models.CharField(
+        verbose_name=_('Description'),
+        max_length=8,
         choices=(
             ('KTP', 'KTP'),
             ('ASAL', 'ASAL'),
             ('DOMISILI', 'DOMISILI')
-        ))
+        )
+    )
 
     class Meta:
         verbose_name = 'Address Information'
         verbose_name_plural = 'Address Information'
 
-    def __str__(self):
-        return self.address
+    def __unicode__(self):
+        return self.address_status
 
 
 class FamilyOfEmployee(models.Model):
@@ -163,8 +170,8 @@ class FamilyOfEmployee(models.Model):
         verbose_name = 'Family Information'
         verbose_name_plural = "Familiy Informations"
 
-    def __str__(self):
-        return self.employee.get_full_name()
+    def __unicode__(self):
+        return self.relationship
 
 
 class Education(models.Model):
@@ -194,7 +201,7 @@ class Education(models.Model):
     class Meta:
         verbose_name = 'Education'
 
-    def __str__(self):
+    def __unicode__(self):
         return Education.GRADE_CHOICES[int(self.grade)-1][1]
 
 
@@ -205,7 +212,7 @@ class LeaveType(models.Model):
         verbose_name = 'Leave Type'
         verbose_name_plural = 'Leave Types'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -213,15 +220,12 @@ class LeaveType(models.Model):
         return ('name',)
 
 
-year_generator = lambda year, interval : [ ( year + i, year + i ) for i in range(interval) ]
-
-
-class AnnualLeave(models.Model):    
-    CHOICES = year_generator(1990, 101)
+class AnnualLeave(models.Model):
+    CHOICES = [(1990 + i, 1990 + i) for i in range(101)]
 
     employee = models.ForeignKey(Employee)
     leave_type = models.ForeignKey(LeaveType)
-    year = models.IntegerField(verbose_name=_('Year'), choices=CHOICES);
+    year = models.IntegerField(verbose_name=_('Year'), choices=CHOICES)
     day_allowed = models.SmallIntegerField(verbose_name=_('Day Allowed'), null=True, blank=True)
     remaining_day_allowed = models.SmallIntegerField(verbose_name=_('Remainig Days'), null=True, blank=True)
     last_update = models.DateField(auto_now_add=True)
@@ -235,7 +239,7 @@ class AnnualLeave(models.Model):
             self.remaining_day_allowed = self.day_allowed
         super(AnnualLeave, self).save(*args, **kwargs)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.employee.get_full_name()
 
 
@@ -250,7 +254,7 @@ class LeaveTaken(models.Model):
         verbose_name = 'Leave Check List'
         verbose_name_plural = 'Leave Check Lists'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.employee.get_full_name()
 
     def save(self, *args, **kwargs):
@@ -266,11 +270,11 @@ class EvaluationPeriod(models.Model):
     class Meta:
         verbose_name = 'Evaluation Period'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.period
 
     def save(self, *args, **kwargs):
-        if self.id == None:
+        if self.id is None:
             self.period = str(self.evaluation_date.month) + "-" + str(self.evaluation_date.year)
         super(EvaluationPeriod, self).save(*args, **kwargs)
 
@@ -283,7 +287,7 @@ class EvaluationItem(models.Model):
         verbose_name = 'Evaluating Item'
         verbose_name_plural = 'Evaluating Items'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -294,7 +298,7 @@ class Evaluation(models.Model):
     evaluated_location = models.CharField(verbose_name=_('Location'), max_length=255, blank=True)
     ranking = models.CharField(verbose_name=_('Ranking'), max_length=6)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.employee.first_name
 
     class Meta:
@@ -336,7 +340,7 @@ class SalaryCategory(models.Model):
         verbose_name = 'Salary Category'
         verbose_name_plural = 'Salary Categories'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -359,7 +363,7 @@ class SalaryName(models.Model):
         verbose_name = 'Salary Name'
         verbose_name_plural = 'Salaries Name'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -383,16 +387,23 @@ class EmployeeContract(models.Model):
         help_text=_('This info related to the service needed by customer as detail sales order')
     )
     contract_status = models.CharField(blank=True, max_length=8, default="ACTIVE")
-    base_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Basic Salary'),
-        null=True, blank=True)
+    base_salary = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name=_('Basic Salary'),
+        null=True, blank=True
+    )
     reference = models.CharField(blank=True, max_length=255)
+
+    default_contract_manager = DefaultEmployeeContractManager()
+    objects = EmployeeContractManager()
 
     class Meta:
         verbose_name = 'Contract'
         verbose_name_plural = 'Contracts'
 
-    def __str__(self):
-        return str(self.employee) + " " + str(self.service_related)
+    def __unicode__(self):
+        return str(self.employee) + " - " + str(self.service_related)
 
     def get_basic_salary(self):
         return self.base_salary
@@ -447,5 +458,5 @@ class OtherSalary(models.Model):
         verbose_name_plural = 'Other Salaries'
         unique_together = ('employee_contract', 'salary_name')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.salary_name.name

@@ -18,11 +18,12 @@ if 'wpadmin' in settings.INSTALLED_APPS:
     FSM_SUBMIT_BUTTON_TEMPLATE = 'fsm_admin/fsm_submit_button_wpadmin.html'
     FSM_SUBMIT_LINE_TEMPLATE = 'fsm_admin/fsm_submit_line_wpadmin.html'
 
+
 @register.inclusion_tag(FSM_SUBMIT_LINE_TEMPLATE, takes_context=True)
 def minierp_submit_row_without_save_button(context):
-	ctx = fsm_submit_row(context)
-	ctx['show_save'] = False
-	ctx['show_save_as_new'] = False
-	ctx['show_save_and_continue'] = False
-	ctx['show_save_and_add_another'] = False
-	return ctx
+    ctx = fsm_submit_row(context)
+    ctx['show_save'] = False
+    ctx['show_save_as_new'] = False
+    ctx['show_save_and_continue'] = False
+    ctx['show_save_and_add_another'] = False
+    return ctx

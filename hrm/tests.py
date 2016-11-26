@@ -1,13 +1,14 @@
-from decimal import Decimal
 import datetime
+from decimal import Decimal
 
+from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
-from django.conf import settings
 
-from hrm.models import EmployeeContract, Employee, SalaryName, SalaryCategory, OtherSalary
 from crm.models import Customer, SalesOrder, SalesOrderDetail, Service
-# Create your tests here.
+from hrm.models import (Employee, EmployeeContract, OtherSalary,
+                        SalaryCategory, SalaryName)
+
 
 class MiniErp():
     def __init__(self):

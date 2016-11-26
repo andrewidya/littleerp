@@ -23,7 +23,7 @@ class Customer(models.Model):
             ('view_only_customer', 'Can view only available customer'),
         )
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -44,7 +44,7 @@ class Service(models.Model):
         verbose_name = 'Service Provided'
         verbose_name = 'Service Provided List'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -78,7 +78,7 @@ class SalesOrder(models.Model):
         verbose_name = 'Sales Order'
         verbose_name_plural = 'Sales Orders'
 
-    def __str__(self):
+    def __unicode__(self):
         return 'SO # {0}'.format(self.number)
 
     def service_demand_list(self):
@@ -135,7 +135,7 @@ class SalesOrderDetail(models.Model):
         verbose_name = 'Order Detail'
         verbose_name_plural = 'Order Details'
 
-    def __str__(self):
+    def __unicode__(self):
         return "SO # " + str(self.sales_order.number) + " : " + self.service.name
 
     def get_service(self):
@@ -154,7 +154,7 @@ class ItemCategory(models.Model):
         verbose_name = 'Salary Category'
         verbose_name_plural = 'Salary Categories'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -171,7 +171,7 @@ class ServiceSalaryItem(models.Model):
         verbose_name = 'Service Salary Item'
         verbose_name_plural = 'Service Salariy Items'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -196,7 +196,7 @@ class ServiceSalaryDetail(models.Model):
         verbose_name_plural = 'Detail Salary Per Service'
         unique_together = (('service_order_detail', 'service_salary_item'),)
 
-    def __str__(self):
+    def __unicode__(self):
         return '{0}:{1}'.format(self.service_salary_item.name, self.service_order_detail.sales_order.number)
 
 
@@ -211,10 +211,8 @@ class SatisficationPointCategory(models.Model):
         verbose_name = 'Satisfication Point Category'
         verbose_name_plural = 'Satisfication Point Categories'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
-
-    description.allow_tags = True
 
 
 class SatisficationPointRateItem(models.Model):
@@ -230,7 +228,7 @@ class SatisficationPointRateItem(models.Model):
         verbose_name = 'Satisfication Point Rate Item'
         verbose_name_plural = 'Satisfication Point Rate Item'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -248,7 +246,7 @@ class Satisfication(models.Model):
         verbose_name = 'Satisfication'
         verbose_name_plural = 'Satisfication Interview'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -265,7 +263,7 @@ class SatisficationDetail(models.Model):
         verbose_name_plural = 'Satisfication Interview Details'
         unique_together = ('satisfication', 'point_rate_item')
 
-    def __str__(self):
+    def __unicode__(self):
         return '{0} {1}'.format(
             self.satisfication.sales_order.number,
             self.satisfication.sales_order.customer.name
