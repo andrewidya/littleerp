@@ -13,6 +13,10 @@ class BaseReport(object):
             return (app_label, self.model._meta.module_name,)
 
 class ModelDetailReportMixin(BaseReport):
+    """
+    Mixin for django admin to generate model object detail in pdf format 
+    report with ReportLab *.rml template
+    """
     report_template = None
     report_context_object_name = None
     report_output = None
@@ -40,7 +44,7 @@ class ModelDetailReportMixin(BaseReport):
 
     def get_context_object_name(self):
         """
-        Get the name to use for object in template
+        Get the context name to used in template
         """
         if self.report_context_object_name:
             return self.report_context_object_name
@@ -48,7 +52,7 @@ class ModelDetailReportMixin(BaseReport):
 
     def get_context_data(self, obj):
         """
-        Insert singgle object into context dict
+        Get context data to used in template, should return django Context objects
         """
         if self.report_context_object_name:
             context = Context({
@@ -59,6 +63,10 @@ class ModelDetailReportMixin(BaseReport):
         return context
 
     def get_report_template(self):
+        """
+        Get report template, used by render() function to render the report
+        should return html template file
+        """
         if self.report_template:
             return self.report_template
         else:
@@ -68,11 +76,27 @@ class ModelDetailReportMixin(BaseReport):
                 )
 
     def get_output_filename(self):
+        """
+        Get report ouput filename when rendering report output
+        """
         if self.report_output is None:
             return "default.pdf"
         return self.report_output
 
     def report(self, request, object_id, extra_context=None):
+        """
+        View used to ouputs the report
+
+        Parameters
+        ----------
+            request = django HttpRequest object
+            object_id = django models object id
+            extra_context
+
+        Return
+        ----------
+            report = Reporting objects extending django HttpResponse
+        """
         from .utils import Reporting
 
         obj = self.get_object(request, unquote(object_id))
@@ -85,6 +109,10 @@ class ModelDetailReportMixin(BaseReport):
         return report.render()
 
 class HTMLModelReportMixin(BaseReport):
+    """
+    Mixin for django admin to generate model object detail in pdf format 
+    report with WeasyPrint using html file template
+    """
     report_template = None
     report_context_object_name = None
     report_output = None
@@ -112,7 +140,7 @@ class HTMLModelReportMixin(BaseReport):
 
     def get_context_object_name(self):
         """
-        Get the name to use for object in template
+        Get the context name to used in template
         """
         if self.report_context_object_name:
             return self.report_context_object_name
@@ -120,7 +148,7 @@ class HTMLModelReportMixin(BaseReport):
 
     def get_context_data(self, obj):
         """
-        Insert singgle object into context dict
+        Get context data to used in template, should return django Context objects
         """
         if self.report_context_object_name:
             context = Context({
@@ -131,6 +159,10 @@ class HTMLModelReportMixin(BaseReport):
         return context
 
     def get_report_template(self):
+        """
+        Get report template, used by render() function to render the report
+        should return html template file
+        """
         if self.report_template:
             return self.report_template
         else:
@@ -140,11 +172,27 @@ class HTMLModelReportMixin(BaseReport):
                 )
 
     def get_output_filename(self):
+        """
+        Get report ouput filename when rendering report output
+        """
         if self.report_output is None:
             return "default.pdf"
         return self.report_output
 
     def report(self, request, object_id, extra_context=None):
+        """
+        View used to ouputs the report
+
+        Parameters
+        ----------
+            request = django HttpRequest object
+            object_id = django models object id
+            extra_context
+
+        Return
+        ----------
+            report = Reporting objects extending django HttpResponse
+        """
         from .utils import HTML2PDF
 
         obj = self.get_object(request, unquote(object_id))
