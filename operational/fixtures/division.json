@@ -1,0 +1,18 @@
+[
+{
+    "fields": {
+        "name": "Non Security",
+        "description": "Pekerjaan yang bersifat non security"
+    },
+    "model": "hrm.division",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "Security",
+        "description": "Pekerjaan dalam bidang keamanan dan security"
+    },
+    "model": "hrm.division",
+    "pk": 2
+}
+]

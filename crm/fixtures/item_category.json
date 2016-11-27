@@ -1,0 +1,9 @@
+[
+{
+    "fields": {
+        "name": "Pendapatan Utama"
+    },
+    "model": "crm.itemcategory",
+    "pk": 1
+}
+]

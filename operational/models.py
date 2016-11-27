@@ -110,7 +110,7 @@ class PayrollPeriod(models.Model):
 
     def save(self, *args, **kwargs):
         self.period = str(self.end_date.strftime('%Y-%m'))
-        super(PayrollPeriod, self).save(args, kwargs)
+        super(PayrollPeriod, self).save(*args, **kwargs)
 
     @staticmethod
     def autocomplete_search_fields():
@@ -286,38 +286,62 @@ class Payroll(models.Model):
     @transition(field=state, source=PayrollState.DRAFT, target=PayrollState.FINAL,
                 custom=dict(verbose="Finalized Calculation",), permission='operational.finalize_payroll')
     def finalize(self):
+        """
+        Set payroll object to final state
+        """
         self.total = self.calculate_total()
         self.save(update='total')
 
     @transition(field='state', source=PayrollState.FINAL, target=PayrollState.DRAFT,
                 permission='operational.unfinalize_payroll')
     def unfinalize(self):
+        """
+        Set payroll final object to unfinalize state
+        """
         pass
 
     @transition(field='state', source=PayrollState.FINAL, target=PayrollState.PAID,
                 permission='operational.pay_payroll')
     def pay(self):
+        """
+        Set payroll object to paid state
+        """
         pass
 
     def get_attendance(self):
+        """
+        Get attendance for current payroll objects, should return Attendance objects
+        """
         attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
         return attendance
 
     def normative_overtime(self):
+        """
+        Get normative overtime value, should return value in Decimal format
+        """
         attendance = self.get_attendance()
         return self.normal_overtime * attendance.ln
 
     def specific_overtime(self):
+        """
+        Get value of specific overtime if set, should return value in Decimal format
+        """
         attendance = self.get_attendance()
         salary_per_day = self.base_salary_per_day
         return attendance.lk * Decimal(salary_per_day)
 
     def changing_overtime(self):
+        """
+        Get changing overtime salary if set, should return value in Decimal format
+        """
         attendance = self.get_attendance()
         salary_per_day = self.base_salary_per_day
         return attendance.lp * Decimal(salary_per_day)
 
     def hourly_overtime(self):
+        """
+        Get hourly based overtime, should return value in Decimal format
+        """
         attendance = self.get_attendance()
         rate = self.overtime
         l1 = attendance.l1 * rate * Decimal(1.50)
@@ -327,6 +351,18 @@ class Payroll(models.Model):
         return l1 + l2 + l3 + l4
 
     def calculate_overtime(self, attendance, salary_per_day):
+        """
+        Calculating overtime based on employee attendance
+
+        Parameters
+        ----------
+            attendance = Attendance objects
+            salary_per_day = value in Decimal format
+
+        Return
+        ----------
+            total = Decimal format
+        """
         rate = self.overtime
         ln = self.normal_overtime * attendance.ln
         lp = attendance.lp * Decimal(salary_per_day)
@@ -339,7 +375,17 @@ class Payroll(models.Model):
     calculate_overtime.short_description = 'Total Overtime'
 
     def calculate_decrease(self, attendance, salary_per_day):
-        # checking attendance record than multiply it with salary_per_day
+        """
+        Checking attendance record than multiply it with salary_per_day
+
+        Parameters
+        ----------
+            attendance = Attendance objects
+            salary_per_day = value in Decimal format
+        Return
+        ----------
+            total = Decimal format
+        """
         if attendance:
             total = (
                 (attendance.alpha_day + attendance.sick_day + attendance.leave_day)
@@ -349,6 +395,10 @@ class Payroll(models.Model):
     calculate_decrease.short_description = 'Decrease'
 
     def calculate_total(self):
+        """
+        Calculate total salary, total all decrease/increase aspect then return
+        total salary in Decimal format
+        """
         attendance = self.get_attendance()
         salary_per_day = self.base_salary_per_day
         total = self.base_salary + self.back_pay
@@ -369,6 +419,9 @@ class Payroll(models.Model):
 
 
 class PayrollDetail(models.Model):
+    """
+    Detail of Payroll objects, one payroll may have many of this objects
+    """
     payroll = models.ForeignKey(Payroll, verbose_name='Payroll')
     salary = models.ForeignKey(SalaryName, verbose_name='Component')
     value = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Value')

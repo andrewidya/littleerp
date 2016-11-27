@@ -1,0 +1,18 @@
+[
+{
+    "fields": {
+        "category": 1,
+        "name": "Tunjangan Kerja"
+    },
+    "model": "crm.servicesalaryitem",
+    "pk": 1
+},
+{
+    "fields": {
+        "category": 1,
+        "name": "Tunjangan Kehadiran"
+    },
+    "model": "crm.servicesalaryitem",
+    "pk": 2
+}
+]

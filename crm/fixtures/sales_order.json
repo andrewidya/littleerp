@@ -1,0 +1,18 @@
+[
+{
+    "fields": {
+        "customer": 1,
+        "note": "",
+        "fee": "0.100",
+        "reference": "",
+        "fee_calculate_condition": "TOTAL",
+        "date_end": "2016-11-30",
+        "date_start": "2016-11-01",
+        "tax": "0.10",
+        "number": 1,
+        "date_create": "2016-11-01"
+    },
+    "model": "crm.salesorder",
+    "pk": 1
+}
+]
