@@ -19,7 +19,7 @@ class EmployeeContractForm(ModelForm):
     class Meta:
         model = EmployeeContract
         exclude = ['id']
-        localize_fields = ('basic_salary',)
+        localize_fields = ('base_salary',)
 
 
 class LeaveTakenForm(ModelForm):

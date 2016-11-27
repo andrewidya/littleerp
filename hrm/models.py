@@ -4,7 +4,7 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -235,12 +235,27 @@ class AnnualLeave(models.Model):
         verbose_name_plural = 'Annual Leaves'
 
     def save(self, *args, **kwargs):
-        if self.remaining_day_allowed is None:
-            self.remaining_day_allowed = self.day_allowed
+        self.remaining_day_allowed = self.day_allowed - self._calculate_leave_type_taken()
         super(AnnualLeave, self).save(*args, **kwargs)
+
+    def update(self):
+        self.save()
 
     def __unicode__(self):
         return self.employee.get_full_name()
+
+    def _calculate_leave_type_taken(self):
+        leave_taken_day = LeaveTaken.objects.filter(
+            employee=self.employee,
+            leave_type=self.leave_type,
+            from_date__year=self.year,
+            to_date__year=self.year
+        ).aggregate(Sum('day'))
+
+        if leave_taken_day['day__sum'] is None:
+            return 0
+        else:
+            return leave_taken_day['day__sum']
 
 
 class LeaveTaken(models.Model):
@@ -296,7 +311,7 @@ class Evaluation(models.Model):
     employee = models.ForeignKey(Employee, verbose_name=_('Employee Name'))
     eval_period = models.ForeignKey(EvaluationPeriod, verbose_name=_('Period'))
     evaluated_location = models.CharField(verbose_name=_('Location'), max_length=255, blank=True)
-    ranking = models.CharField(verbose_name=_('Ranking'), max_length=6)
+    ranking = models.CharField(verbose_name=_('Ranking'), max_length=6, blank=True)
 
     def __unicode__(self):
         return self.employee.first_name
