@@ -6,7 +6,7 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 
 
-class Reporting(object):
+class RML2PDF(object):
     template_name = None
     context = None
 

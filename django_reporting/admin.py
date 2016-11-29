@@ -12,7 +12,7 @@ class BaseReport(object):
         except AttributeError:
             return (app_label, self.model._meta.module_name,)
 
-class ModelDetailReportMixin(BaseReport):
+class RMLModelReportMixin(BaseReport):
     """
     Mixin for django admin to generate model object detail in pdf format 
     report with ReportLab *.rml template
@@ -97,7 +97,7 @@ class ModelDetailReportMixin(BaseReport):
         ----------
             report = Reporting objects extending django HttpResponse
         """
-        from .utils import Reporting
+        from .utils import RML2PDF
 
         obj = self.get_object(request, unquote(object_id))
 
