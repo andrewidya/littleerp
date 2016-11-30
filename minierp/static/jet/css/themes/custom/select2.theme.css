@@ -705,7 +705,7 @@
 .select2-container--jet .select2-dropdown {
   border: 0;
   border-radius: 4px;
-  box-shadow: 0 0 4px 0 rgba(164, 100, 196, 0.75);
+  box-shadow: 0 0 4px 0 rgba(194, 66, 87, 0.75);
   overflow: hidden;
   z-index: 1;
 }
@@ -763,7 +763,7 @@
 }
 /* line 114, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option[aria-selected=true] {
-  color: #A464C4;
+  color: #C24257;
 }
 /* line 118, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option .select2-results__option {

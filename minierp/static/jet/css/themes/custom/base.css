@@ -750,8 +750,8 @@ body.non-scrollable {
 
 /* line 51, ../../jquery-ui/_jquery-ui.theme.scss */
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  border: 1px solid #A464C4;
-  background: #A464C4;
+  border: 1px solid #C24257;
+  background: #C24257;
   font-weight: bold;
   color: #fff;
 }
@@ -1049,7 +1049,7 @@ body.non-scrollable {
 .select2-container--jet .select2-dropdown {
   border: 0;
   border-radius: 4px;
-  box-shadow: 0 0 4px 0 rgba(164, 100, 196, 0.75);
+  box-shadow: 0 0 4px 0 rgba(194, 66, 87, 0.75);
   overflow: hidden;
   z-index: 1;
 }
@@ -1107,7 +1107,7 @@ body.non-scrollable {
 }
 /* line 114, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option[aria-selected=true] {
-  color: #A464C4;
+  color: #C24257;
 }
 /* line 118, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option .select2-results__option {
@@ -1550,7 +1550,7 @@ img[src$="admin/img/icon-no.gif"] + span, img[src$="admin/img/icon-no.svg"] + sp
 /* line 28, ../../_forms.scss */
 .button.default, input[type="submit"].default, input[type="button"].default, .object-tools a.default {
   font-weight: lighter;
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
   text-transform: uppercase;
   margin: 0 8px 0 0;
@@ -1567,7 +1567,7 @@ img[src$="admin/img/icon-no.gif"] + span, img[src$="admin/img/icon-no.svg"] + sp
 }
 /* line 46, ../../_forms.scss */
 .button:active, input[type="submit"]:active, input[type="button"]:active, .object-tools a:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 
@@ -1604,7 +1604,7 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="p
 }
 /* line 82, ../../_forms.scss */
 input[type="text"]:focus, fieldset.module input[type="text"]:focus, input[type="email"]:focus, fieldset.module input[type="email"]:focus, input[type="password"]:focus, fieldset.module input[type="password"]:focus, input[type="url"]:focus, fieldset.module input[type="url"]:focus, input[type="number"]:focus, fieldset.module input[type="number"]:focus, textarea:focus, fieldset.module textarea:focus, select:focus, fieldset.module select:focus, .vTextField:focus, fieldset.module .vTextField:focus {
-  box-shadow: 0 0 4px 0 rgba(164, 100, 196, 0.75);
+  box-shadow: 0 0 4px 0 rgba(194, 66, 87, 0.75);
   border-color: #fff;
 }
 
@@ -1639,7 +1639,7 @@ textarea {
 }
 /* line 117, ../../_forms.scss */
 .segmented-button:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 /* line 122, ../../_forms.scss */
@@ -2050,8 +2050,8 @@ div.system-message p.system-message-title:before {
 /* line 5, ../../_header.scss */
 #branding {
   display: none;
-  background-color: #4d3b73;
-  color: #9988cc;
+  background-color: #C24257;
+  color: #F0B0BB;
   padding: 14px;
   text-align: center;
 }
@@ -2072,7 +2072,7 @@ div.system-message p.system-message-title:before {
 }
 /* line 27, ../../_header.scss */
 #branding a, #branding a:visited, #branding a:hover {
-  color: #9988cc;
+  color: #F0B0BB;
 }
 /* line 31, ../../_header.scss */
 #branding a:hover {
@@ -2113,7 +2113,7 @@ div.system-message p.system-message-title:before {
     max-width: 200px;
     color: #C2B8E0;
     border: 0;
-    border-left: 1px solid #4d3b73;
+    border-left: 1px solid #C24257;
     border-radius: 0;
     transform: none;
     transition: transform 0.3s;
@@ -2849,7 +2849,7 @@ fieldset.monospace textarea {
 }
 /* line 380, ../../_changeform.scss */
 .submit-row a.deletelink:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 
@@ -3696,7 +3696,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 122, ../../_changelist.scss */
 #toolbar form input[type="submit"], #toolbar form input[type="submit"]:visited, #toolbar form input[type="submit"]:hover {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
   font-size: 12px;
   font-weight: lighter;
@@ -3712,7 +3712,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 138, ../../_changelist.scss */
 #toolbar form input[type="submit"]:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 
@@ -3835,7 +3835,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 259, ../../_changelist.scss */
 .paginator .pages-wrapper span {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 /* line 263, ../../_changelist.scss */
@@ -3950,7 +3950,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 /* line 374, ../../_changelist.scss */
 #changelist .actions .button, #changelist .actions .button:visited, #changelist .actions .button:hover {
   display: inline-block;
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
   border: 0;
   border-radius: 4px;
@@ -3978,7 +3978,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 401, ../../_changelist.scss */
 #changelist .actions .button:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 /* line 407, ../../_changelist.scss */
@@ -4026,8 +4026,8 @@ body.popup .changelist-footer.fixed {
   left: 0;
   bottom: 0;
   z-index: 4;
-  background-color: #554488;
-  color: #9988cc;
+  background-color: #D82D4A;
+  color: #F0B0BB;
   transition: background-color 0.3s;
   padding-bottom: 32px;
 }
@@ -4074,8 +4074,8 @@ body.popup .changelist-footer.fixed {
 /* line 48, ../../_sidebar.scss */
 .sidebar-header-wrapper {
   display: none;
-  background-color: #554488;
-  color: #9988cc;
+  background-color: #D82D4A;
+  color: #F0B0BB;
   position: fixed;
   top: 0;
   right: 0;
@@ -4095,7 +4095,7 @@ body.popup .changelist-footer.fixed {
 }
 /* line 67, ../../_sidebar.scss */
 .sidebar-header-wrapper.sidebar-opened {
-  background-color: #4d3b73;
+  background-color: #C24257;
   transform: none !important;
 }
 /* line 74, ../../_sidebar.scss */
@@ -4106,7 +4106,7 @@ body.popup .changelist-footer.fixed {
   color: #C2B8E0;
   line-height: 44px;
   padding: 0 16px;
-  border-right: 1px solid #4d3b73;
+  border-right: 1px solid #C24257;
 }
 /* line 84, ../../_sidebar.scss */
 .sidebar-header-menu-icon {
@@ -4117,7 +4117,7 @@ body.popup .changelist-footer.fixed {
 .sidebar-header-menu-icon.icon-cross {
   display: none;
   font-size: 20px;
-  color: #9988cc;
+  color: #F0B0BB;
 }
 /* line 97, ../../_sidebar.scss */
 .sidebar-header.sidebar-opened .sidebar-header-menu-icon.icon-menu {
@@ -4159,7 +4159,7 @@ body.popup .changelist-footer.fixed {
 /* line 134, ../../_sidebar.scss */
 .sidebar-section {
   padding: 20px 0;
-  border-bottom: 1px solid #4d3b73;
+  border-bottom: 1px solid #C24257;
   transition: border-bottom-color 0.3s;
 }
 @media only screen and (max-width: 960px) {
@@ -4175,7 +4175,7 @@ body.popup .changelist-footer.fixed {
 /* line 148, ../../_sidebar.scss */
 .sidebar-title {
   display: block;
-  color: #9988cc;
+  color: #F0B0BB;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: bold;
@@ -4199,7 +4199,7 @@ body.popup .changelist-footer.fixed {
 }
 /* line 171, ../../_sidebar.scss */
 .sidebar-title-link, .sidebar-title-link:visited, .sidebar-title-link:hover {
-  color: #9988cc;
+  color: #F0B0BB;
   font-weight: bold;
   transition: color 0.3s;
 }
@@ -4234,14 +4234,14 @@ body.popup .changelist-footer.fixed {
 /* line 206, ../../_sidebar.scss */
 .sidebar-link:hover, .sidebar-link.selected {
   color: #fff;
-  background-color: #443366;
+  background-color: #A22237;
 }
 /* line 211, ../../_sidebar.scss */
 .sidebar-link-icon {
   font-size: 18px;
   vertical-align: middle;
   margin-right: 6px;
-  color: #9988cc;
+  color: #F0B0BB;
   transition: color 0.3s;
 }
 /* line 219, ../../_sidebar.scss */
@@ -4260,7 +4260,7 @@ html.touchevents .editing .sidebar-link-label {
 /* line 234, ../../_sidebar.scss */
 .sidebar-center-link, .sidebar-center-link:visited, .sidebar-center-link:hover {
   display: block;
-  color: #9988cc;
+  color: #F0B0BB;
   font-size: 11px;
   text-align: center;
   padding: 8px 0;
@@ -4276,7 +4276,7 @@ html.touchevents .editing .sidebar-link-label {
 /* line 248, ../../_sidebar.scss */
 .sidebar-center-link:hover {
   color: #FDBB5E;
-  background-color: #443366;
+  background-color: #A22237;
 }
 /* line 254, ../../_sidebar.scss */
 .sidebar-left {
@@ -4307,7 +4307,7 @@ html.touchevents .sidebar-left.collapsible {
   position: absolute;
   top: 1px;
   font-size: 14px;
-  color: #9988cc;
+  color: #F0B0BB;
   transition: color 0.3s;
 }
 /* line 285, ../../_sidebar.scss */
@@ -4374,7 +4374,7 @@ html.touchevents .sidebar-right-edit {
 }
 /* line 347, ../../_sidebar.scss */
 .sidebar-right-arrow {
-  color: #40305F;
+  color: #E26277;
   font-size: 16px;
   font-weight: bold !important;
   transition: color 0.3s, opacity 0.3s;
@@ -4386,7 +4386,7 @@ html.touchevents .editing .sidebar-right-arrow {
 /* line 359, ../../_sidebar.scss */
 .sidebar-right-remove, .sidebar-right-remove:visited, .sidebar-right-remove:hover {
   position: relative;
-  color: #9988cc;
+  color: #F0B0BB;
   transition: color 0.3s;
 }
 /* line 365, ../../_sidebar.scss */
@@ -4419,8 +4419,8 @@ html.touchevents .editing .sidebar-right-arrow {
 }
 /* line 397, ../../_sidebar.scss */
 .sidebar-copyright {
-  background-color: #4d3b73;
-  color: #9988cc;
+  background-color: #C24257;
+  color: #F0B0BB;
   height: 32px;
   line-height: 32px;
   position: absolute;
@@ -5304,7 +5304,7 @@ html.touchevents .dashboard-item-header-buttons {
 }
 /* line 73, ../../_delete-confirmation.scss */
 .delete-confirmation #content form input[type="submit"]:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 /* line 79, ../../_delete-confirmation.scss */
@@ -5326,7 +5326,7 @@ html.touchevents .dashboard-item-header-buttons {
 /* LOGIN FORM */
 /* line 5, ../../_login.scss */
 body.login {
-  background: #554488;
+  background: #D82D4A;
   padding: 100px 30px 30px 30px;
 }
 @media only screen and (max-width: 480px) {
@@ -5421,7 +5421,7 @@ body.login .submit-row {
 body.login .submit-row input[type="submit"] {
   font-size: 12px;
   font-weight: lighter;
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
   text-transform: uppercase;
 }
@@ -5432,7 +5432,7 @@ body.login .submit-row input[type="submit"]:hover, body.login .submit-row input[
 }
 /* line 104, ../../_login.scss */
 body.login .submit-row input[type="submit"]:active {
-  background-color: #A464C4;
+  background-color: #C24257;
   color: #fff;
 }
 /* line 111, ../../_login.scss */
