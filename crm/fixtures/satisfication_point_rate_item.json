@@ -1,0 +1,11 @@
+[
+{
+    "fields": {
+        "category": 1,
+        "name": "Seragam",
+        "description": ""
+    },
+    "model": "crm.satisficationpointrateitem",
+    "pk": 1
+}
+]
