@@ -12,10 +12,11 @@ class BaseReport(object):
         except AttributeError:
             return (app_label, self.model._meta.module_name,)
 
+
 class RMLModelReportMixin(BaseReport):
-    """
-    Mixin for django admin to generate model object detail in pdf format 
-    report with ReportLab *.rml template
+    """RML Admin Mixin for django admin to
+
+    Generate model object detail in pdf format report with ReportLab *.rml template
     """
     report_template = None
     report_context_object_name = None
@@ -57,7 +58,7 @@ class RMLModelReportMixin(BaseReport):
         if self.report_context_object_name:
             context = Context({
                 self.report_context_object_name: obj
-                })
+            })
         else:
             context = Context({'object': obj})
         return context
@@ -105,13 +106,14 @@ class RMLModelReportMixin(BaseReport):
         output_file = self.get_output_filename()
         context = self.get_context_data(obj)
 
-        report = Reporting(context, template_name=template, output=output_file)
+        report = RML2PDF(context, template_name=template, output=output_file)
         return report.render()
 
+
 class HTMLModelReportMixin(BaseReport):
-    """
-    Mixin for django admin to generate model object detail in pdf format 
-    report with WeasyPrint using html file template
+    """HTML Admin Mixin for django admin
+    Generate model object detail in pdf format report with WeasyPrint
+    using html file template
     """
     report_template = None
     report_context_object_name = None

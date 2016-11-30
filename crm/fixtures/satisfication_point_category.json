@@ -1,0 +1,10 @@
+[
+{
+    "fields": {
+        "name": "Kerapian",
+        "description": "Penilaian terhadap kerapian personel"
+    },
+    "model": "crm.satisficationpointcategory",
+    "pk": 1
+}
+]

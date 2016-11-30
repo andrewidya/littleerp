@@ -8,8 +8,7 @@ from django.utils import timezone
 from crm.models import Customer, SalesOrder, SalesOrderDetail, Service
 from hrm.models import (Employee, EmployeeContract, OtherSalary,
                         SalaryCategory, SalaryName, LeaveType, AnnualLeave,
-                        LeaveTaken, EvaluationPeriod, EvaluationItem, Evaluation,
-                        EvaluationDetail)
+                        LeaveTaken, EvaluationPeriod, EvaluationItem, Evaluation)
 from hrm.forms import (EmployeeContractForm, AnnualLeaveForm, LeaveTakenForm,
                        EvaluationDetailForm)
 
@@ -145,7 +144,6 @@ class EmployeeContractTest(TestCase):
         increase.save()
         self.assertEqual(self.minierp.contract.get_contract_salary(), "IDR1,600,000.00")
 
-    
     def test_employee_contract_form(self):
         employee = Employee.objects.get(pk=1)
         sales_order_detail = self.minierp.sales_order_detail
@@ -172,7 +170,7 @@ class LeaveTest(TestCase):
         del self.employee
         super(LeaveTest, self).tearDown()
 
-    def test_leave_creation(self):        
+    def test_leave_creation(self):
         leave_taken = LeaveTaken.objects.create(
             employee=self.employee,
             leave_type=self.leave_type,
@@ -196,7 +194,6 @@ class LeaveTest(TestCase):
         self.assertEqual(annual_leave.day_allowed, 12)
         self.assertEqual(annual_leave.remaining_day_allowed, 9)
 
-
     def test_annual_leave_remaining_day_allowed_updating(self):
         leave_taken = LeaveTaken.objects.create(
             employee=self.employee,
@@ -214,10 +211,9 @@ class LeaveTest(TestCase):
 
         annual_leave.day_allowed = 5
         annual_leave.save(update_fields=['day_allowed', 'remaining_day_allowed'])
-        
+
         self.assertEqual(annual_leave.day_allowed, 5)
         self.assertEqual(annual_leave.remaining_day_allowed, 2)
-
 
     def test_annual_leave_remaining_day_allowed_after_deletion(self):
         leave_taken = LeaveTaken.objects.create(
@@ -268,6 +264,7 @@ class LeaveTest(TestCase):
 
 class EvaluationTest(TestCase):
     fixtures = ['division.json', 'job_title.json', 'bank.json', 'employee.json']
+
     def setUp(self):
         self.eval_period = EvaluationPeriod.objects.create(
             evaluation_date=datetime.date(2016, 1, 1)

@@ -100,15 +100,6 @@ class PayrollDetailInline(admin.TabularInline):
         return super(PayrollDetailInline, self).has_delete_permission(request, obj)
 
 
-class PayrollDetailInline(admin.TabularInline):
-	model = PayrollDetail
-
-	def get_readonly_fields(self, request, obj=None):
-		if obj is not None and (obj.state == PayrollState.FINAL or obj.state == PayrollState.PAID):
-			return ('salary', 'value', 'note')
-		return super(PayrollDetailInline, self).get_readonly_fields(request, obj=obj)
-
-
 @admin.register(Payroll)
 class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
     fields = (

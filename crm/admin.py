@@ -49,6 +49,7 @@ class CustomerAdmin(ImportExportMixin, admin.ModelAdmin):
         super(CustomerAdmin, self).__init__(*args, **kwargs)
         main.EMPTY_CHANGELIST_VALUE = '-'
 
+
 admin.site.register(Customer, CustomerAdmin)
 
 

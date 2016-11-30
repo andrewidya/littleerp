@@ -6,3 +6,5 @@ media/*
 .codeintel/*
 notes
 .coverage
+minierp.sublime-project
+minierp.sublime-workspace
