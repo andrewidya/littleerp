@@ -1,0 +1,24 @@
+[
+{
+    "fields": {
+        "date_create": "2016-11-20",
+        "state": "CLOSE",
+        "period": "2016-11",
+        "end_date": "2016-11-30",
+        "start_date": "2016-11-01"
+    },
+    "model": "operational.payrollperiod",
+    "pk": 1
+},
+{
+    "fields": {
+        "date_create": "2016-11-28",
+        "state": "OPEN",
+        "period": "2016-12",
+        "end_date": "2016-12-30",
+        "start_date": "2016-12-01"
+    },
+    "model": "operational.payrollperiod",
+    "pk": 2
+}
+]

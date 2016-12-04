@@ -1,0 +1,11 @@
+[
+{
+    "fields": {
+        "name": "BPJS Kesehatan",
+        "salary_category": 1,
+        "calculate_condition": "-"
+    },
+    "model": "hrm.salaryname",
+    "pk": 1
+}
+]

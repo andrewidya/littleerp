@@ -2,6 +2,7 @@ from django import forms
 
 from operational.models import PayrollPeriod, Payroll
 
+
 class PeriodChoideField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.id
@@ -22,4 +23,3 @@ class PayrollCreationForm(forms.ModelForm):
     class Meta:
         model = Payroll
         exclude = ['id']
-        
