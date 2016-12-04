@@ -109,9 +109,12 @@ class Employee(models.Model):
         )
 
     def __unicode__(self):
-        return self.reg_number + " " + self.first_name + " " + self.last_name
+        return self.reg_number + " " + self.get_full_name()
 
     def get_full_name(self):
+        """Get employee's full name."""
+        if not self.last_name:
+            return self.first_name
         return self.first_name + " " + self.last_name
 
     get_full_name.short_description = 'Name'
@@ -202,7 +205,7 @@ class Education(models.Model):
         verbose_name = 'Education'
 
     def __unicode__(self):
-        return Education.GRADE_CHOICES[int(self.grade)-1][1]
+        return Education.GRADE_CHOICES[int(self.grade) - 1][1]
 
 
 class LeaveType(models.Model):
@@ -361,8 +364,8 @@ class SalaryCategory(models.Model):
 
 class SalaryName(models.Model):
     CALCULATE_CHOICES = (
-            ('+', 'Adding Total Salary'),
-            ('-', 'Decreasing Total Salary')
+        ('+', 'Adding Total Salary'),
+        ('-', 'Decreasing Total Salary')
     )
 
     name = models.CharField(verbose_name=_('Salary Name'), max_length=255)
@@ -432,13 +435,13 @@ class EmployeeContract(models.Model):
         salaries = 0
         salaries += self.base_salary
         if not self.contract_status == "ACTIVE":
-            return "IDR{:,.2f}".format(salaries)
+            return salaries
         for other in self.other_salary.all():
             if other.salary_name.calculate_condition == "+":
                 salaries += other.value
             else:
                 salaries -= other.value
-        return 'IDR{:,.2f}'.format(salaries)
+        return salaries
     get_contract_salary.short_description = 'Other Salaries in Contract'
 
     def get_salaries_in_contract(self):
@@ -452,10 +455,11 @@ class EmployeeContract(models.Model):
     def check_contract_status(self):
         today = timezone.now()
         warning_level = today + datetime.timedelta(
-                days=settings.MINIERP_SETTINGS['HRM']['recontract_warning'])
-        if self.end_date < today.date():
+            days=settings.MINIERP_SETTINGS['HRM']['recontract_warning']
+        )
+        if self.end_date < today:
             return "EXPIRED"
-        if today.date() <= self.end_date <= warning_level.date():
+        if today <= self.end_date <= warning_level:
             return "NEED RENEWAL"
         return "ACTIVE"
 

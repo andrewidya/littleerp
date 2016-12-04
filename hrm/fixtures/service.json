@@ -1,0 +1,16 @@
+[
+{
+    "fields": {
+        "name": "Security"
+    },
+    "model": "crm.service",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "Administration"
+    },
+    "model": "crm.service",
+    "pk": 2
+}
+]
