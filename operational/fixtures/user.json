@@ -1,0 +1,20 @@
+[
+{
+    "fields": {
+        "username": "andre",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2016-11-30T16:18:57.708Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$20000$Ox4q4DUjf5hy$cj2dfG4lsko+ImMUVtjwALbZTzzm/lOP+tNthzUbSZs=",
+        "email": "andrywidyaputra@gmail.com",
+        "date_joined": "2016-11-15T16:42:52.480Z"
+    },
+    "model": "auth.user",
+    "pk": 1
+}
+]

@@ -1,0 +1,12 @@
+[
+{
+    "fields": {
+        "basic_salary": "1400000.00",
+        "service": 1,
+        "sales_order": 1,
+        "quantity": 10
+    },
+    "model": "crm.salesorderdetail",
+    "pk": 1
+}
+]

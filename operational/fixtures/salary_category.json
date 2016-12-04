@@ -1,0 +1,9 @@
+[
+{
+    "fields": {
+        "name": "Tunjangan Kesejahteraan"
+    },
+    "model": "hrm.salarycategory",
+    "pk": 1
+}
+]
