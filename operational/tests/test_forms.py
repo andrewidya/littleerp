@@ -1,30 +1,28 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.test import TestCase
+from django.utils import timezone
 
-from hrm.models import Employee
 from operational.models import PayrollPeriod
 from operational.forms import PayrollPeriodForm
 
 
-class PayrollPeriodTest(TestCase):
-    def get_payroll_period(self):
-        obj = PayrollPeriod.objects.create(
-            pk=1,
-            date_create=date(2016, 11, 28),
-            start_date=date(2016, 12, 1),
-            end_date=date(2016, 12, 30)
+class PayrollPeriodFormTest(TestCase):
+    def setUp(self):
+        super(PayrollPeriodFormTest, self).setUp()
+        self.payroll_period = PayrollPeriod.objects.create(
+            date_create=timezone.now().date(),
+            start_date=timezone.now().date(),
+            end_date=(timezone.now() + timedelta(days=30)).date()
         )
-        obj.save()
-        return obj
 
     def test_payroll_period_model(self):
-        obj = self.get_payroll_period()
+        obj = self.payroll_period
         self.assertEqual(obj.state, 'OPEN')
-        self.assertEqual(obj.period, '2016-12')
+        self.assertEqual(obj.period, self.payroll_period.end_date.strftime('%Y-%m'))
 
     def test_payroll_period_close_state(self):
-        obj = self.get_payroll_period()
+        obj = self.payroll_period
         obj.close()
         self.assertEqual(obj.state, 'CLOSE')
 
