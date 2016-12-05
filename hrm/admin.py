@@ -1,25 +1,21 @@
-from import_export.admin import ImportExportMixin, ImportMixin
 from jet.admin import CompactInline
 
 from django.contrib import admin
 
 from django_reporting.admin import HTMLModelReportMixin
-from hrm.forms import (AnnualLeaveForm, EmployeeContractForm,
-                       EvaluationDetailForm, LeaveTakenForm)
-from hrm.models import (AnnualLeave, BankName, Division, Education, Employee,
-                        EmployeeAddress, EmployeeContract, Evaluation,
-                        EvaluationDetail, EvaluationItem, EvaluationPeriod,
-                        FamilyOfEmployee, JobTitle, LeaveTaken, LeaveType,
-                        OtherSalary, SalaryCategory, SalaryName)
+from hrm.forms import AnnualLeaveForm, EmployeeContractForm, EvaluationDetailForm, LeaveTakenForm
+from hrm.models import (AnnualLeave, BankName, Division, Education, Employee, EmployeeAddress, EmployeeContract,
+                        Evaluation, EvaluationDetail, EvaluationItem, EvaluationPeriod, FamilyOfEmployee, JobTitle,
+                        LeaveTaken, LeaveType, OtherSalary, SalaryCategory, SalaryName)
 
 
 @admin.register(Division)
-class DivisionAdmin(ImportExportMixin, admin.ModelAdmin):
+class DivisionAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(JobTitle)
-class JobTitle(ImportExportMixin, admin.ModelAdmin):
+class JobTitle(admin.ModelAdmin):
     pass
 
 
@@ -67,7 +63,7 @@ class EducationInline(CompactInline):
 
 
 @admin.register(Employee)
-class EmployeeAdmin(HTMLModelReportMixin, ImportExportMixin, admin.ModelAdmin):
+class EmployeeAdmin(HTMLModelReportMixin, admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'reg_number']
     list_filter = ('job_title', 'division', 'marital_status')
     list_display = (
@@ -172,12 +168,12 @@ class EducationAdmin(admin.ModelAdmin):
 
 
 @admin.register(SalaryCategory)
-class SalaryCategoryAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalaryCategoryAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(SalaryName)
-class SalaryNameAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalaryNameAdmin(admin.ModelAdmin):
     list_display = ('name', 'salary_category', 'calculate_condition')
 
 
@@ -218,7 +214,7 @@ class EmployeeContractAdmin(admin.ModelAdmin):
 
 
 @admin.register(BankName)
-class BankAdmin(ImportMixin, admin.ModelAdmin):
+class BankAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_per_page = 20
     ordering = ['id']

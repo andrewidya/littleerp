@@ -6,11 +6,12 @@ from jet.admin import CompactInline
 from django.contrib import admin
 from django.template import Context
 
-from finance.models import PaidPayroll, Invoice, InvoicedItemType, InvoiceDetail, InvoiceTransaction, InvoiceState
-from finance.options import get_financial_statement
-from operational.models import PayrollDetail
 from django_reporting.admin import HTMLModelReportMixin
 from django_reporting.utils import HTML2PDF
+from finance.models import (Invoice, InvoiceDetail, InvoicedItemType,
+                            InvoiceState, InvoiceTransaction, PaidPayroll)
+from finance.options import get_financial_statement
+from operational.models import PayrollDetail
 
 
 class PaidPayrollDetailInline(admin.TabularInline):
@@ -70,6 +71,21 @@ class PaidPayrollAdmin(admin.ModelAdmin):
         return actions
 
     def print_payslip(self, request, queryset):
+        """Print payslip action.
+        
+        Admin action to generate payslip in pdf format
+
+        Parameters
+        ----------
+            request : ``HttpRequest``
+                      Django request object
+            queryset : queryset
+
+        Return
+        ------
+            ``HttpResponse``
+                      PDF data formated objects
+        """
         payroll_list = queryset.select_related('contract', 'contract__employee').prefetch_related('payrolldetail_set')
         container = []
         for payroll in payroll_list:

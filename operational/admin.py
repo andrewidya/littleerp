@@ -1,18 +1,13 @@
-from functools import partial
-
 from fsm_admin.mixins import FSMTransitionMixin
 
 from django.contrib import admin
-from django.forms.models import modelformset_factory
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.contrib.admin.options import IS_POPUP_VAR
 
-from operational.models import (
-    VisitCustomer, VisitPointRateItem, VisitCustomerDetail, PayrollPeriod, Attendance,
-    Payroll, PayrollDetail, PayrollState, PeriodState, CourseType, Course,
-    TrainingSchedule, TrainingClass
-)
+from operational.models import (VisitCustomer, VisitPointRateItem, VisitCustomerDetail, PayrollPeriod, Attendance,
+                                Payroll, PayrollDetail, PayrollState, PeriodState, CourseType, Course,
+                                TrainingSchedule, TrainingClass)
 from operational.forms import PayrollCreationForm, PayrollPeriodForm
 
 

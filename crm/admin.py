@@ -3,7 +3,6 @@ from django.contrib.admin.views import main
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.safestring import mark_safe
-from import_export.admin import ImportExportMixin, ImportMixin
 
 from crm.forms import SatisficationDetailForm
 from crm.models import (Customer, ItemCategory, SalesOrder, SalesOrderDetail,
@@ -13,7 +12,7 @@ from crm.models import (Customer, ItemCategory, SalesOrder, SalesOrderDetail,
 from crm.widgets import AdminImageWidget
 
 
-class CustomerAdmin(ImportExportMixin, admin.ModelAdmin):
+class CustomerAdmin(admin.ModelAdmin):
     list_filter = ('parent', 'join_date')
     list_display = (
         'logo_tag',
@@ -63,7 +62,7 @@ class ServiceSalaryDetailInline(admin.TabularInline):
 
 
 @admin.register(SalesOrder)
-class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalesOrderAdmin(admin.ModelAdmin):
     fields = (
         'number',
         'date_create',
@@ -105,7 +104,7 @@ class SalesOrderAdmin(ImportExportMixin, admin.ModelAdmin):
 
 
 @admin.register(SalesOrderDetail)
-class SalesOrderDetailAdmin(ImportExportMixin, admin.ModelAdmin):
+class SalesOrderDetailAdmin(admin.ModelAdmin):
     list_display = (
         'sales_order',
         'get_service',
@@ -118,7 +117,7 @@ class SalesOrderDetailAdmin(ImportExportMixin, admin.ModelAdmin):
 
 
 @admin.register(ItemCategory)
-class ItemCategoryAdmin(ImportMixin, admin.ModelAdmin):
+class ItemCategoryAdmin(admin.ModelAdmin):
     pass
 
 
@@ -133,7 +132,7 @@ class ServiceAdmin(admin.ModelAdmin):
 
 
 @admin.register(ServiceSalaryDetail)
-class ServiceSalaryDetailAdmin(ImportExportMixin, admin.ModelAdmin):
+class ServiceSalaryDetailAdmin(admin.ModelAdmin):
     list_display = ('service_order_detail', 'service_salary_item', 'price')
     list_filter = ('service_order_detail__sales_order__number',)
     search_fields = ['service_order_detail__sales_order__number', 'service_salary_item__name']
@@ -147,12 +146,12 @@ class SatisficationDetailInline(admin.TabularInline):
 
 
 @admin.register(SatisficationPointCategory)
-class SatisficationPointCategoryAdmin(ImportMixin, admin.ModelAdmin):
+class SatisficationPointCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
 
 @admin.register(SatisficationPointRateItem)
-class SatisficationPointRateItemAdmin(ImportMixin, admin.ModelAdmin):
+class SatisficationPointRateItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'description')
 
 
