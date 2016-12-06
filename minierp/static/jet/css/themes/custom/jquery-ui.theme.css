@@ -568,8 +568,8 @@
 
 /* line 44, ../../jquery-ui/_jquery-ui.theme.scss */
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  border: 1px solid #1cacfc;
-  background: #1cacfc;
+  border: 1px solid #E26277;
+  background: #E26277;
   font-weight: bold;
   color: #fff;
 }

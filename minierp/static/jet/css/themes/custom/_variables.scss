@@ -41,7 +41,7 @@ $sidebar-hover-title-action-item-color: #FDBB5E;
 
 $sidebar-text-color: #F0B0BB; // #9988cc;
 $sidebar-icon-color: #F0B0BB; // #9988cc;
-$sidebar-link-color: #C2B8E0;
+$sidebar-link-color: #F0B0BB; // #C2B8E0;
 $sidebar-hover-link-color: #fff;
 $sidebar-hover-background-color: #A22237; // #443366;
 
@@ -70,14 +70,14 @@ $top-hover-link-color: #1cacfc;
 $top-border-color: #dce0e6;
 $top-icon-color: $link-color;
 
-$top-dropdown-background-color: #5e4d99;
-$top-dropdown-text-color: #fff;
+$top-dropdown-background-color: #D82D4A; // #5e4d99;
+$top-dropdown-text-color: #F0B0BB; // #fff;
 $top-dropdown-contrast-background-color: #4d3b73;
 $top-dropdown-contrast-text-color: #c8beeb;
-$top-dropdown-border-color: #594585;
+$top-dropdown-border-color: #E26277; // #594585;
 $top-dropdown-link-color: #fff;
 $top-dropdown-hover-link-color: #fff;
-$top-dropdown-icon-color: #c8beeb;
+$top-dropdown-icon-color: #E26277; // #c8beeb;
 $top-dropdown-selected-color: #EFEDC8;
 
 /*
@@ -102,7 +102,7 @@ $tab-error-border-color: #c7254e;
  */
 
 $button-background-color: #E3ECF2;
-$button-hover-background-color: #1cacfc;
+$button-hover-background-color: #E26277; // #1cacfc;
 $button-active-background-color: $contrast-color;
 $button-text-color: #7f8fa4;
 $button-hover-text-color: #fff;
@@ -124,7 +124,7 @@ $background-button-text-color: #7f8fa4;
 $input-background-color: #fff;
 $input-contrast-background-color: #E3ECF2;
 $input-border-color: #CFCFFF;//#EDEDED;
-$input-hover-background-color: #1cacfc;
+$input-hover-background-color: #D82D4A; // #1cacfc;
 $input-icon-color: $link-color;
 $input-text-color: $text-color;
 $input-contrast-text-color: #7f8fa4;

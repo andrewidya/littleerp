@@ -130,26 +130,31 @@ class Attendance(models.Model):
     Attributes
     ----------
     work_day : int
-        value of total work days a month
+        Value of total work days a month
     sick_day : int
-        value of total sick days a month
+        Value of total sick days a month
     alpha_day : int
-        value of total leave day a month
+        Value of total leave day a month
     leave_left : int
-        value of remaining leave left in current period
+        Value of remaining leave left in current period
     ln : int
-        value of normal overtime days in current period
+        Value of normal overtime days in current period
     lp : int
-        value of changable overtime days in current period
+        Value of changable overtime days in current period
     lk : int
-        value of specific overtime days in current period
+        Value of specific overtime days in current period
     l1, l2, l3, l4 : int
-        value of total days of hourly overtime, e.g if l1 
+        Value of total days of hourly overtime, e.g if l1
         value set to 5, it means there are 5 days of 1 hour
         overtime each day in current period
-    employee : class Employee
-    period : class PayrollPeriod
-    staff : class django.contrib.auth.models.User 
+    employee : ``Employee`` object
+        Object of ``Employee`` being recorded
+    period : ``PayrollPeriod`` object
+        Period which this attendance is belong to.
+    staff : ``django.contrib.auth.models.User`` object
+        Staff which calculate and do work for this Attendance records.
+        this value commonly get from currently loged user and can be
+        retrieved from ``HttpRequest`` object
     """
     work_day = models.PositiveIntegerField(verbose_name='Day Work', null=True, blank=True, default=0)
     sick_day = models.PositiveIntegerField(verbose_name='Day Sick', null=True, blank=True, default=0)
@@ -220,16 +225,19 @@ class Payroll(models.Model):
 
     Attributes
     ----------
-    contract : class  EmployeeContract
-    period : class PayrollPeriod
+    contract : ``EmployeeContract`` object
+    period : ``PayrollPeriod`` object
     base_salary : decimal
     overtime : decimal, optional
     back_pay : decimal, optional
     base_salary_per_day : decimal, optional
     normal_overtime : decimal, optional
     total : decimal, optional
-    staff : class django.contrib.auth.models.User
-    state : str
+    staff : ``django.contrib.auth.models.User``
+        Staff which calculate and do work for this Attendance records.
+        this value commonly get from currently loged user and can be
+    state : ``FSMField``, optional
+        Status indication the current payroll state, default to "OPEN"
     """
     contract = models.ForeignKey(
         EmployeeContract,
@@ -370,7 +378,7 @@ class Payroll(models.Model):
 
         Return
         ------
-        attenande : class Attendance
+        attenande : class ``Attendance``
         """
         attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
         return attendance
@@ -511,14 +519,14 @@ class Payroll(models.Model):
 
 class PayrollDetail(models.Model):
     """PayrollDetail models.
-    
+
     Detail of Payroll objects, one payroll may have many of this objects
-    describing salary detail in certain ``class Payroll``.
+    describing salary detail in certain ``Payroll`` object.
 
     Attributes
     ----------
-    payroll : class Payroll
-    salary : class SalaryName
+    payroll : ``Payroll`` objects
+    salary : ``SalaryName`` objects
     value : decimal
     note : str
     """

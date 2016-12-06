@@ -4,6 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.template import Context
 from django.contrib.admin.utils import unquote
 
+
 class BaseReport(object):
     def get_model_info(self):
         app_label = self.model._meta.app_label
@@ -36,7 +37,7 @@ class RMLModelReportMixin(BaseReport):
             return update_wrapper(wrapper, view)
 
         info = self.get_model_info()
-        urls = super(ModelDetailReportMixin, self).get_urls()
+        urls = super(RMLModelReportMixin, self).get_urls()
         report_url = [
             url(r'^(.+)/report/$', wrap(self.report), name='%s_%s_report' % info),
         ]
@@ -74,7 +75,7 @@ class RMLModelReportMixin(BaseReport):
             raise ImproperlyConfigured(
                 "{0} attribute value is {1}, {2}'s report_template is missing".format(
                     "report_template", self.report_template, self.__class__.__name__)
-                )
+            )
 
     def get_output_filename(self):
         """
@@ -155,7 +156,7 @@ class HTMLModelReportMixin(BaseReport):
         if self.report_context_object_name:
             context = Context({
                 self.report_context_object_name: obj
-                })
+            })
         else:
             context = Context({'object': obj})
         return context
@@ -171,7 +172,7 @@ class HTMLModelReportMixin(BaseReport):
             raise ImproperlyConfigured(
                 "{0} attribute value is {1}, {2}'s report_template is missing".format(
                     "report_template", self.report_template, self.__class__.__name__)
-                )
+            )
 
     def get_output_filename(self):
         """

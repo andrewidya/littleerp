@@ -742,8 +742,8 @@ body.non-scrollable {
 
 /* line 44, ../../jquery-ui/_jquery-ui.theme.scss */
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  border: 1px solid #1cacfc;
-  background: #1cacfc;
+  border: 1px solid #E26277;
+  background: #E26277;
   font-weight: bold;
   color: #fff;
 }
@@ -978,7 +978,7 @@ body.non-scrollable {
 }
 /* line 51, ../../select2/_multiple.scss */
 .select2-container--jet .select2-selection--multiple .select2-selection__choice__remove:hover {
-  color: #1cacfc;
+  color: #D82D4A;
 }
 /* line 59, ../../select2/_multiple.scss */
 .select2-container--jet[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--jet[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder {
@@ -1144,7 +1144,7 @@ body.non-scrollable {
 }
 /* line 152, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option--highlighted[aria-selected] {
-  background-color: #1cacfc;
+  background-color: #D82D4A;
   color: #fff;
 }
 /* line 157, ../../select2/_layout.scss */
@@ -1515,7 +1515,7 @@ img[src$="admin/img/icon-no.gif"] + span, img[src$="admin/img/icon-no.svg"] + sp
 .loading-indicator {
   display: inline-block;
   font-size: 32px;
-  color: #1cacfc;
+  color: #E26277;
   animation: spin 4s linear infinite;
 }
 /* line 293, ../../_content.scss */
@@ -1562,7 +1562,7 @@ img[src$="admin/img/icon-no.gif"] + span, img[src$="admin/img/icon-no.svg"] + sp
 }
 /* line 41, ../../_forms.scss */
 .button:hover, .button:focus, input[type="submit"]:hover, input[type="submit"]:focus, input[type="button"]:hover, input[type="button"]:focus, .object-tools a:hover, .object-tools a:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 46, ../../_forms.scss */
@@ -1634,7 +1634,7 @@ textarea {
 }
 /* line 112, ../../_forms.scss */
 .segmented-button:hover, .segmented-button:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 117, ../../_forms.scss */
@@ -1809,7 +1809,7 @@ table thead th.sortable {
 }
 /* line 113, ../../_tables.scss */
 table thead th.sortable:hover {
-  background: #1cacfc;
+  background: #E26277;
 }
 /* line 118, ../../_tables.scss */
 table thead th.sorted {
@@ -2111,7 +2111,7 @@ div.system-message p.system-message-title:before {
     right: 0;
     width: auto;
     max-width: 200px;
-    color: #C2B8E0;
+    color: #F0B0BB;
     border: 0;
     border-left: 1px solid #C24257;
     border-radius: 0;
@@ -2129,9 +2129,9 @@ div.system-message p.system-message-title:before {
 }
 /* line 81, ../../_header.scss */
 .user-tools ul.opened {
-  background-color: #5e4d99;
+  background-color: #D82D4A;
   border-color: transparent;
-  color: #fff;
+  color: #F0B0BB;
 }
 @media only screen and (max-width: 960px) {
   /* line 81, ../../_header.scss */
@@ -2196,11 +2196,11 @@ div.system-message p.system-message-title:before {
 }
 /* line 132, ../../_header.scss */
 .user-tools ul.opened .user-tools-welcome-msg {
-  border-bottom: 1px solid #594585;
+  border-bottom: 1px solid #E26277;
 }
 /* line 135, ../../_header.scss */
 .user-tools ul.opened .user-tools-welcome-msg:before {
-  color: #c8beeb;
+  color: #E26277;
   transform: rotate(180deg);
 }
 /* line 141, ../../_header.scss */
@@ -2844,7 +2844,7 @@ fieldset.monospace textarea {
 }
 /* line 375, ../../_changeform.scss */
 .submit-row a.deletelink:hover, .submit-row a.deletelink:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 380, ../../_changeform.scss */
@@ -2913,7 +2913,7 @@ body.popup .submit-row {
 }
 /* line 437, ../../_changeform.scss */
 .vDateField-link:hover span, .vTimeField-link:hover span {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 
@@ -3240,7 +3240,7 @@ body.popup .submit-row {
 }
 /* line 731, ../../_changeform.scss */
 html.no-touchevents .inline-navigation-item:hover, .inline-navigation-item:active {
-  background: #1cacfc;
+  background: #E26277;
   color: #fff;
 }
 /* line 736, ../../_changeform.scss */
@@ -3545,7 +3545,7 @@ form .related-widget-wrapper ul {
 @media only screen and (max-width: 960px) {
   /* line 997, ../../_changeform.scss */
   .changeform-tabs-item.selected a, .changeform-tabs-item.selected a:hover, .changeform-tabs-item.selected a:visited {
-    background: #1cacfc;
+    background: #E26277;
     color: #fff;
   }
 }
@@ -3707,7 +3707,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 133, ../../_changelist.scss */
 #toolbar form input[type="submit"]:hover, #toolbar form input[type="submit"]:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 138, ../../_changelist.scss */
@@ -3851,7 +3851,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 276, ../../_changelist.scss */
 .paginator .pages-wrapper a:focus, .paginator .pages-wrapper a:hover {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 284, ../../_changelist.scss */
@@ -3973,7 +3973,7 @@ body.change-form #content-main > form > div > .module.initialized, body.change-f
 }
 /* line 396, ../../_changelist.scss */
 #changelist .actions .button:hover, #changelist .actions .button:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 401, ../../_changelist.scss */
@@ -4103,7 +4103,7 @@ body.popup .changelist-footer.fixed {
   display: inline-block;
   font-size: 14px;
   text-transform: uppercase;
-  color: #C2B8E0;
+  color: #F0B0BB;
   line-height: 44px;
   padding: 0 16px;
   border-right: 1px solid #C24257;
@@ -4210,7 +4210,7 @@ body.popup .changelist-footer.fixed {
 /* line 184, ../../_sidebar.scss */
 .sidebar-link, .sidebar-link:visited, .sidebar-link:hover {
   display: block;
-  color: #C2B8E0;
+  color: #F0B0BB;
   padding: 8px 12px 8px 24px;
   vertical-align: middle;
   transition: color 0.3s, background-color 0.3s;
@@ -4647,7 +4647,7 @@ html.touchevents .editing .sidebar-right-arrow {
 @media only screen and (max-width: 960px) {
   /* line 82, ../../_relatedpopup.scss */
   .related-popup-back:hover, .related-popup-back:focus {
-    background: #1cacfc;
+    background: #E26277;
     color: #fff;
   }
 }
@@ -5299,7 +5299,7 @@ html.touchevents .dashboard-item-header-buttons {
 }
 /* line 68, ../../_delete-confirmation.scss */
 .delete-confirmation #content form input[type="submit"]:hover, .delete-confirmation #content form input[type="submit"]:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 73, ../../_delete-confirmation.scss */
@@ -5427,7 +5427,7 @@ body.login .submit-row input[type="submit"] {
 }
 /* line 99, ../../_login.scss */
 body.login .submit-row input[type="submit"]:hover, body.login .submit-row input[type="submit"]:focus {
-  background-color: #1cacfc;
+  background-color: #E26277;
   color: #fff;
 }
 /* line 104, ../../_login.scss */

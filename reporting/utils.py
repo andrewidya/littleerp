@@ -89,6 +89,6 @@ class HTML2PDF(object):
         response = HttpResponse(pdf_data, content_type='application/pdf')
         response['Content-Disposition'] = 'filename="{0}"'.format(self.output_file)
 
-        #HTML(string=html_string).write_pdf(response)
+        # HTML(string=html_string).write_pdf(response)
 
         return response

@@ -165,33 +165,33 @@ using it to make custom action in admin class)</p>
 <div class="section" id="rml2pdf">
 <h4>RML2PDF<a class="headerlink" href="#rml2pdf" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
-<dt id="django_reporting.utils.RML2PDF">
-<em class="property">class </em><code class="descclassname">django_reporting.utils.</code><code class="descname">RML2PDF</code><span class="sig-paren">(</span><em>context</em>, <em>template_name=None</em>, <em>output=None</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.RML2PDF" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.RML2PDF">
+<em class="property">class </em><code class="descclassname">reporting.utils.</code><code class="descname">RML2PDF</code><span class="sig-paren">(</span><em>context</em>, <em>template_name=None</em>, <em>output=None</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.RML2PDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>ReportLab wrapper class to generate pdf report
 with *.rml template file</p>
 <p><strong>Attributes</strong></p>
 <dl class="attribute">
-<dt id="django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.template_name">
-<code class="descclassname">RML2PDF.</code><code class="descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.template_name" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.RML2PDF.RML2PDF.template_name">
+<code class="descclassname">RML2PDF.</code><code class="descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#reporting.utils.reporting.utils.RML2PDF.RML2PDF.template_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>html template name used to render the report</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.context">
-<code class="descclassname">RML2PDF.</code><code class="descname">context</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.context" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.RML2PDF.RML2PDF.context">
+<code class="descclassname">RML2PDF.</code><code class="descname">context</code><em class="property"> = None</em><a class="headerlink" href="#reporting.utils.reporting.utils.RML2PDF.RML2PDF.context" title="Permalink to this definition">¶</a></dt>
 <dd><p>context object used by <code class="docutils literal"><span class="pre">render()</span></code> function</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.utils.RML2PDF.RML2PDF.output">
-<code class="descclassname">RML2PDF.</code><code class="descname">output</code><a class="headerlink" href="#django_reporting.utils.RML2PDF.RML2PDF.output" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.RML2PDF.RML2PDF.output">
+<code class="descclassname">RML2PDF.</code><code class="descname">output</code><a class="headerlink" href="#reporting.utils.RML2PDF.RML2PDF.output" title="Permalink to this definition">¶</a></dt>
 <dd><p>pdf output filename, default to <code class="docutils literal"><span class="pre">default.pdf</span></code></p>
 </dd></dl>
 
 <p><strong>Method</strong></p>
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.get_template">
-<code class="descclassname">RML2PDF.</code><code class="descname">get_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.get_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.RML2PDF.RML2PDF.get_template">
+<code class="descclassname">RML2PDF.</code><code class="descname">get_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.RML2PDF.RML2PDF.get_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>get template file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -204,8 +204,8 @@ with *.rml template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.get_context_data">
-<code class="descclassname">RML2PDF.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.RML2PDF.RML2PDF.get_context_data">
+<code class="descclassname">RML2PDF.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.RML2PDF.RML2PDF.get_context_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>get context data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -218,8 +218,8 @@ with *.rml template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.render">
-<code class="descclassname">RML2PDF.</code><code class="descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.RML2PDF.RML2PDF.render" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.RML2PDF.RML2PDF.render">
+<code class="descclassname">RML2PDF.</code><code class="descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.RML2PDF.RML2PDF.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>render pdf report data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -237,33 +237,33 @@ with *.rml template file</p>
 <div class="section" id="html2pdf">
 <h4>HTML2PDF<a class="headerlink" href="#html2pdf" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
-<dt id="django_reporting.utils.HTML2PDF">
-<em class="property">class </em><code class="descclassname">django_reporting.utils.</code><code class="descname">HTML2PDF</code><span class="sig-paren">(</span><em>context</em>, <em>template_name=None</em>, <em>output=None</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.HTML2PDF" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.HTML2PDF">
+<em class="property">class </em><code class="descclassname">reporting.utils.</code><code class="descname">HTML2PDF</code><span class="sig-paren">(</span><em>context</em>, <em>template_name=None</em>, <em>output=None</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.HTML2PDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>WeasyPrint wrapper class to generate pdf report
 with *.html template file</p>
 <p><strong>Attributes</strong></p>
 <dl class="attribute">
-<dt id="django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.template_name">
-<code class="descclassname">HTML2PDF.</code><code class="descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.template_name" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.template_name">
+<code class="descclassname">HTML2PDF.</code><code class="descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.template_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>html template name used to render the report</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.context">
-<code class="descclassname">HTML2PDF.</code><code class="descname">context</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.context" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.context">
+<code class="descclassname">HTML2PDF.</code><code class="descname">context</code><em class="property"> = None</em><a class="headerlink" href="#reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.context" title="Permalink to this definition">¶</a></dt>
 <dd><p>context object used by <code class="docutils literal"><span class="pre">render()</span></code> function</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.utils.HTML2PDF.HTML2PDF.output">
-<code class="descclassname">HTML2PDF.</code><code class="descname">output</code><a class="headerlink" href="#django_reporting.utils.HTML2PDF.HTML2PDF.output" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.HTML2PDF.HTML2PDF.output">
+<code class="descclassname">HTML2PDF.</code><code class="descname">output</code><a class="headerlink" href="#reporting.utils.HTML2PDF.HTML2PDF.output" title="Permalink to this definition">¶</a></dt>
 <dd><p>pdf output filename, default to <code class="docutils literal"><span class="pre">default.pdf</span></code></p>
 </dd></dl>
 
 <p><strong>Method</strong></p>
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.get_template">
-<code class="descclassname">HTML2PDF.</code><code class="descname">get_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.get_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.get_template">
+<code class="descclassname">HTML2PDF.</code><code class="descname">get_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.get_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>get template file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -276,8 +276,8 @@ with *.html template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.get_context_data">
-<code class="descclassname">HTML2PDF.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.get_context_data">
+<code class="descclassname">HTML2PDF.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.get_context_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>get context data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -290,8 +290,8 @@ with *.html template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.render">
-<code class="descclassname">HTML2PDF.</code><code class="descname">render</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.utils.django_reporting.utils.HTML2PDF.HTML2PDF.render" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.render">
+<code class="descclassname">HTML2PDF.</code><code class="descname">render</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.utils.reporting.utils.HTML2PDF.HTML2PDF.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>render pdf report data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -312,39 +312,39 @@ with *.html template file</p>
 <div class="section" id="htmlmodelreportmixin">
 <h4>HTMLModelReportMixin<a class="headerlink" href="#htmlmodelreportmixin" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
-<dt id="django_reporting.admin.HTMLModelReportMixin">
-<em class="property">class </em><code class="descclassname">django_reporting.admin.</code><code class="descname">HTMLModelReportMixin</code><a class="headerlink" href="#django_reporting.admin.HTMLModelReportMixin" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.HTMLModelReportMixin">
+<em class="property">class </em><code class="descclassname">reporting.admin.</code><code class="descname">HTMLModelReportMixin</code><a class="headerlink" href="#reporting.admin.HTMLModelReportMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Model mixin with WeasyPrint engine.</p>
 <p>Mixin for django admin to generate model object detail
 in pdf format report with WeasyPrint using html file template.</p>
 <p><strong>Attributes</strong></p>
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_template">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_template</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_template">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_template</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_template" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite> path of html file template to be used for rendering the report</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_context_object_name">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_context_object_name</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_context_object_name" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_context_object_name">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_context_object_name</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_context_object_name" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite>, object context used in rendered template</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_output">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_output</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_output" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_output">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report_output</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report_output" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite> report output file type, default to pdf format</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.change_form_template">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">change_form_template</code><em class="property"> = 'admin/django_reporting/change_form_report.html'</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.change_form_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.change_form_template">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">change_form_template</code><em class="property"> = 'admin/django_reporting/change_form_report.html'</em><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.change_form_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Methods</strong></p>
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_urls">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_urls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_urls" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_urls">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_urls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_urls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get default django admin urls then add custom url for report link</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -357,27 +357,27 @@ in pdf format report with WeasyPrint using html file template.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_context_data">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_context_data">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_context_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get context data to used in template, should return django Context objects</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_report_template">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_report_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_report_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_report_template">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_report_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_report_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get report template, used by render() function to render the report
 should return html template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_output_filename">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_output_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_output_filename" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_output_filename">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">get_output_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.get_output_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get report ouput filename when rendering report output</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report">
-<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report</code><span class="sig-paren">(</span><em>request</em>, <em>object_id</em>, <em>extra_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report">
+<code class="descclassname">HTMLModelReportMixin.</code><code class="descname">report</code><span class="sig-paren">(</span><em>request</em>, <em>object_id</em>, <em>extra_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.HTMLModelReportMixin.HTMLModelReportMixin.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>View used to ouputs the report</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -406,39 +406,39 @@ should return html template file</p>
 <div class="section" id="rmlmodelreportmixin">
 <h4>RMLModelReportMixin<a class="headerlink" href="#rmlmodelreportmixin" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
-<dt id="django_reporting.admin.RMLModelReportMixin">
-<em class="property">class </em><code class="descclassname">django_reporting.admin.</code><code class="descname">RMLModelReportMixin</code><a class="headerlink" href="#django_reporting.admin.RMLModelReportMixin" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.RMLModelReportMixin">
+<em class="property">class </em><code class="descclassname">reporting.admin.</code><code class="descname">RMLModelReportMixin</code><a class="headerlink" href="#reporting.admin.RMLModelReportMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Model mixin with ReportLab engine.</p>
 <p>Mixin for django admin to generate model object detail
 in pdf format report with ReportLab *.rml template.</p>
 <p><strong>Attributes</strong></p>
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_template">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_template</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_template">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_template</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_template" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite> path of html file template to be used for rendering the report</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_context_object_name">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_context_object_name</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_context_object_name" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_context_object_name">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_context_object_name</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_context_object_name" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite>, object context used in rendered template</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_output">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_output</code><em class="property"> = None</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_output" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_output">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report_output</code><em class="property"> = None</em><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report_output" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>String</cite> report output file type, default to pdf format</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.change_form_template">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">change_form_template</code><em class="property"> = 'admin/django_reporting/change_form_report.html'</em><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.change_form_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.change_form_template">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">change_form_template</code><em class="property"> = 'admin/django_reporting/change_form_report.html'</em><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.change_form_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Methods</strong></p>
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_urls">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_urls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_urls" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_urls">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_urls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_urls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get default django admin urls then add custom url for report link</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -451,27 +451,27 @@ in pdf format report with ReportLab *.rml template.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_context_data">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_context_data">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_context_data</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_context_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get context data to used in template, should return django Context objects</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_report_template">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_report_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_report_template" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_report_template">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_report_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_report_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get report template, used by render() function to render the report
 should return html template file</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_output_filename">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_output_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_output_filename" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_output_filename">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">get_output_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.get_output_filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get report ouput filename when rendering report output</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report">
-<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report</code><span class="sig-paren">(</span><em>request</em>, <em>object_id</em>, <em>extra_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#django_reporting.admin.django_reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report" title="Permalink to this definition">¶</a></dt>
+<dt id="reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report">
+<code class="descclassname">RMLModelReportMixin.</code><code class="descname">report</code><span class="sig-paren">(</span><em>request</em>, <em>object_id</em>, <em>extra_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#reporting.admin.reporting.admin.RMLModelReportMixin.RMLModelReportMixin.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>View used to ouputs the report</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

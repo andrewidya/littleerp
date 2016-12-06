@@ -6,8 +6,8 @@ from jet.admin import CompactInline
 from django.contrib import admin
 from django.template import Context
 
-from django_reporting.admin import HTMLModelReportMixin
-from django_reporting.utils import HTML2PDF
+from reporting.admin import HTMLModelReportMixin
+from reporting.utils import HTML2PDF
 from finance.models import (Invoice, InvoiceDetail, InvoicedItemType,
                             InvoiceState, InvoiceTransaction, PaidPayroll)
 from finance.options import get_financial_statement
@@ -72,7 +72,7 @@ class PaidPayrollAdmin(admin.ModelAdmin):
 
     def print_payslip(self, request, queryset):
         """Print payslip action.
-        
+
         Admin action to generate payslip in pdf format
 
         Parameters

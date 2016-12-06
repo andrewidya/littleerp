@@ -50,7 +50,7 @@ INSTALLED_APPS = (
     'crm',
     'operational',
     'finance',
-    'django_reporting',
+    'reporting',
     'general_affair',
 )
 

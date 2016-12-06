@@ -634,7 +634,7 @@
 }
 /* line 51, ../../select2/_multiple.scss */
 .select2-container--jet .select2-selection--multiple .select2-selection__choice__remove:hover {
-  color: #1cacfc;
+  color: #D82D4A;
 }
 /* line 59, ../../select2/_multiple.scss */
 .select2-container--jet[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--jet[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder {
@@ -800,7 +800,7 @@
 }
 /* line 152, ../../select2/_layout.scss */
 .select2-container--jet .select2-results__option--highlighted[aria-selected] {
-  background-color: #1cacfc;
+  background-color: #D82D4A;
   color: #fff;
 }
 /* line 157, ../../select2/_layout.scss */

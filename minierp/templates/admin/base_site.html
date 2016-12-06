@@ -1,10 +1,14 @@
 {% extends "admin/base.html" %}
-{% load minierp_tags %}
+{% load minierp_tags static %}
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">PT Comercial Servisindo Prima</a></h1>
+<img src="{% static 'minierp/img/logo.png' %}" alt="" style="max-width: 75%;">
+<br>
+<h1 id="site-name">
+	<a href="{% url 'admin:index' %}">PT Comercial Servisindo Prima</a>
+</h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}

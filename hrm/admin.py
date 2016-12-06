@@ -2,7 +2,7 @@ from jet.admin import CompactInline
 
 from django.contrib import admin
 
-from django_reporting.admin import HTMLModelReportMixin
+from reporting.admin import HTMLModelReportMixin
 from hrm.forms import AnnualLeaveForm, EmployeeContractForm, EvaluationDetailForm, LeaveTakenForm
 from hrm.models import (AnnualLeave, BankName, Division, Education, Employee, EmployeeAddress, EmployeeContract,
                         Evaluation, EvaluationDetail, EvaluationItem, EvaluationPeriod, FamilyOfEmployee, JobTitle,

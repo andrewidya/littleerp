@@ -20,7 +20,7 @@ using it to make custom action in admin class)
 RML2PDF
 -------
 
-.. py:class:: django_reporting.utils.RML2PDF(context, template_name=None, output=None)
+.. py:class:: reporting.utils.RML2PDF(context, template_name=None, output=None)
    
    ReportLab wrapper class to generate pdf report
    with \*.rml template file
@@ -62,7 +62,7 @@ RML2PDF
 HTML2PDF
 --------
 
-.. py:class:: django_reporting.utils.HTML2PDF(context, template_name=None, output=None)
+.. py:class:: reporting.utils.HTML2PDF(context, template_name=None, output=None)
    
    WeasyPrint wrapper class to generate pdf report
    with \*.html template file
@@ -108,7 +108,7 @@ Mixin
 HTMLModelReportMixin
 --------------------
 
-.. py:class:: django_reporting.admin.HTMLModelReportMixin
+.. py:class:: reporting.admin.HTMLModelReportMixin
 
    Model mixin with WeasyPrint engine.
 
@@ -145,7 +145,7 @@ HTMLModelReportMixin
 
 RMLModelReportMixin
 -------------------
-.. py:class:: django_reporting.admin.RMLModelReportMixin
+.. py:class:: reporting.admin.RMLModelReportMixin
 
    Model mixin with ReportLab engine.
 
