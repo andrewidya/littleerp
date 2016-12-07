@@ -8,6 +8,12 @@ from operational.models import Payroll, PayrollDetail
 
 @receiver(post_save, sender=Payroll)
 def autopopulate_data(sender, instance, created, **kwargs):
+    """Signal use to autopopulate data for payroll details.
+
+    This signal autopopulate payroll detail data based on
+    ``EmployeeContract`` object records associated with the sender,
+    in this case ``Payroll`` object.
+    """
     if created:
         # checking all salary item list on contract of payroll
         # instance
@@ -23,6 +29,11 @@ def autopopulate_data(sender, instance, created, **kwargs):
 
 @receiver(fsm_post_transition, sender=Payroll)
 def db_state_transition_update(sender, instance=None, target=None, **kwargs):
+    """Signal use to update state of ``Payroll`` object.
+
+    This signal has side effect of udpate ``Payroll.total`` attribute
+    value by calling ``Payroll.calculate_total()`` method.
+    """
     if not isinstance(instance, sender):
         return
     instance.total = instance.calculate_total()

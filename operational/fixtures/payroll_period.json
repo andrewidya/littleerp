@@ -2,7 +2,7 @@
 {
     "fields": {
         "date_create": "2016-11-20",
-        "state": "CLOSE",
+        "state": "OPEN",
         "period": "2016-11",
         "end_date": "2016-11-30",
         "start_date": "2016-11-01"

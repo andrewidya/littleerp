@@ -15,6 +15,9 @@ from hrm.managers import (DefaultEmployeeContractManager,
 
 
 class BankName(models.Model):
+    """
+    Records bank list
+    """
     name = models.CharField(verbose_name=_('Bank Name'), max_length=50)
 
     class Meta:
@@ -62,6 +65,35 @@ class JobTitle(models.Model):
 
 
 class Employee(models.Model):
+    """
+    Model class to records employee list.
+
+    Attributes
+    ----------
+    reg_number : str
+        Employement registration number.
+    first_name, last_name: str
+    birth_place : str
+    birth_date : ``datetime.date`` object
+    phone_number : str
+    gender : str
+        This value representing the gender listed in
+        ``GENDER_CHOICES`` constant
+    bank : ``Bank`` object
+    bank_account`: str
+        Account bank number
+    religion : str
+    id_number : str
+    job_title : ``JobTitle`` object
+    division : ``Divison`` object
+    mother_name : str
+    blood_type : str
+        This value representing blood type listed in
+        ``BLOOD_TYPE_CHOICES`` constant
+    date_of_hire : ``datetime.date`` object
+    marital_status : str
+    is_active : boolean
+    """
     BLODD_TYPE_CHOICES = (
         ('A', 'A'),
         ('B', 'B'),
@@ -324,6 +356,13 @@ class Evaluation(models.Model):
         verbose_name_plural = 'Evaluations'
 
     def evaluation_rate(self):
+        """Calculation of evaluation rate result.
+
+        Return
+        ------
+        str
+            String of "BURUK", "CUKUP" or "BAIK"
+        """
         rate = 0
         rate_count = 0
         self.evaluationdetail_set.all()
@@ -390,6 +429,26 @@ class SalaryName(models.Model):
 
 
 class EmployeeContract(models.Model):
+    """Contract of Employee
+
+    Records contract of ``Employee`` objects for particular
+    ``SalesOrder`` object.
+
+    Attributes
+    ----------
+    start_date, end_date : ``datetime.date``
+    employee : ``Employee`` object
+    service_related : ``SalesOrderDetail`` object
+    contract_status : str
+        Representing the status of contract of "ACTIVE", "NEED RENEWAL"
+        or "EXPIRED".
+    base_salary : decimal
+    reference : str
+        Reference of contract, usually to records number of physical
+        document's contract.
+    default_contract_manager : custom ``Django Manager`` object
+
+    """
     start_date = models.DateField(verbose_name=_('Start Date'))
     end_date = models.DateField(verbose_name=_('End Date'))
     employee = models.ForeignKey(

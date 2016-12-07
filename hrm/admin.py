@@ -2,7 +2,6 @@ from jet.admin import CompactInline
 
 from django.contrib import admin
 
-from reporting.admin import HTMLModelReportMixin
 from hrm.forms import AnnualLeaveForm, EmployeeContractForm, EvaluationDetailForm, LeaveTakenForm
 from hrm.models import (AnnualLeave, BankName, Division, Education, Employee, EmployeeAddress, EmployeeContract,
                         Evaluation, EvaluationDetail, EvaluationItem, EvaluationPeriod, FamilyOfEmployee, JobTitle,
@@ -63,7 +62,7 @@ class EducationInline(CompactInline):
 
 
 @admin.register(Employee)
-class EmployeeAdmin(HTMLModelReportMixin, admin.ModelAdmin):
+class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'reg_number']
     list_filter = ('job_title', 'division', 'marital_status')
     list_display = (
@@ -74,7 +73,6 @@ class EmployeeAdmin(HTMLModelReportMixin, admin.ModelAdmin):
         'job_title',
         'is_active'
     )
-    report_template = 'hrm/report/payslip.html'
     fieldsets = (
         ('Personal Info', {
             'fields': (

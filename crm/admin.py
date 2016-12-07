@@ -23,6 +23,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'join_date',
         'parent',
     )
+    list_display_links = ('logo_tag', 'code')
     fieldsets = (
         ('Customer Information', {
             'fields': (

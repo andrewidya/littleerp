@@ -8,8 +8,9 @@ class EmployeeContractManager(models.Manager):
                 .get_queryset()
                 .select_related('employee', 'service_related')
                 .filter(
-                    Q(employee__is_active=True)
-                    & (Q(contract_status='ACTIVE') | Q(contract_status='NEED RENEWAL')))
+                    Q(employee__is_active=True) &
+                    (Q(contract_status='ACTIVE') |
+                        Q(contract_status='NEED RENEWAL')))
                 )
 
 
