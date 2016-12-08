@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    getting_started
+   how_to
    tutorial
    reporting/mixins
 
