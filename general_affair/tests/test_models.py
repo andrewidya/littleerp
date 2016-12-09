@@ -5,8 +5,8 @@ from django.test import TestCase
 from django.db import IntegrityError
 
 from general_affair.models import (ItemType, Item, ItemCategory,
-                                   PurchaseOrder, SupplierBusinessType,
-                                   Supplier, OrderReceipt, ItemIssued)
+                                   PurchaseOrder, Supplier, OrderReceipt,
+                                   ItemIssued, IDReleaseType, IDCard)
 
 
 class ItemTypeModelTest(TestCase):
@@ -168,3 +168,34 @@ class OrderReceiptModelTest(TestCase):
         self.assertEqual(item.stock, 15)
         issued.delete()
         self.assertEqual(item.stock, 20)
+
+
+class IDCardReleaseTest(TestCase):
+    fixtures = [
+        'bank.json',
+        'division.json',
+        'job_title.json',
+        'employee.json'
+    ]
+
+    def setUp(self):
+        from hrm.models import Employee
+
+        self.id_release_type = IDReleaseType.objects.create(
+            name="First Printing"
+        )
+        self.employee = Employee.objects.get(pk=1)
+
+    def tearDown(self):
+        del self.id_release_type
+        del self.employee
+
+    def test_created_id_card(self):
+        id_card = IDCard.objects.create(
+            employee=self.employee,
+            date_created=date(2016, 12, 9),
+            date_expired=date(2017, 12, 9),
+            release_type=self.id_release_type
+        )
+        id_card.save()
+        self.assertEqual(IDCard.objects.count(), 1)
