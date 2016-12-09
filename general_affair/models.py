@@ -3,6 +3,8 @@ from django_fsm import FSMField, transition
 from django.db import models
 from django.utils.translation import ugettext as _
 
+from hrm.models import Employee
+
 
 class PurchaseOrderState(object):
     DRAFT = 'DRAFT'
@@ -154,3 +156,29 @@ class ItemIssued(models.Model):
 
     def __unicode__(self):
         return str(self.item)
+
+
+class IDReleaseType(models.Model):
+    name = models.CharField(verbose_name=_('Name'), max_length=50)
+
+    class Meta:
+        verbose_name = 'Release Type'
+        verbose_name_plural = 'Release Types'
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class IDCard(models.Model):
+    employee = models.ForeignKey(Employee, verbose_name=_('Employee'))
+    date_created = models.DateField(verbose_name=_('Date Created'))
+    date_expired = models.DateField(verbose_name=_('Expired'))
+    status = models.BooleanField(verbose_name=_('Is Active'), default=False)
+    release_type = models.ForeignKey(IDReleaseType, verbose_name=_('Release Type'))
+
+    class Meta:
+        verbose_name = 'ID Card'
+        verbose_name_plural = 'ID Cards'
+
+    def __unicode__(self):
+        return str(self.employee.get_full_name())
