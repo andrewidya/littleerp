@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Data Supplier</title>
+		<link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.css' %}">
+		<style>
+			html, body {
+				font-family: "PT Sans";
+				font-size: 75%;
+			}
+			.header-title {
+				font-weight: bold;
+				font-size: 80%;
+			}			
+			@page {
+				size: A4;
+				margin: 0.5cm 1cm;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<div class="row">
+					<div class="logo col-sm-3"></div>
+					<div class="header-title col-sm-7 text-center">DATA SUPPLIER</div>
+				</div>
+			</div>
+			<br>
+			<br>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th>No</th>
+						<th>Code</th>
+						<th>Nama</th>
+						<th>Produk / Jasa</th>
+						<th>Alamat</th>
+						<th>Contact Person</th>
+						<th>Tanggal Terdaftar</th>
+						<th>Status / Keterangan</th>
+					</tr>
+				</thead>
+				{% if suppliers %}
+				<tbody>
+					{% for supplier in suppliers %}
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ supplier.owner }}</td>
+						<td>{{ supplier.name }}</td>
+						<td>{{ supplier.business_type }}</td>
+						<td>{{ supplier.address }}</td>
+						<td>{{ supplier.phone_number }}</td>
+						<td>{{ supplier.join_date }}</td>
+						<td>{{ supplier.description }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+				{% endif %}
+			</table>
+			<p>Tanggal : {{ today|date:"d F Y" }}</p>
+			<p>Dibuat oleh</p>
+			<br>
+			<br>
+			<br>
+			<p>Staff Logistik &amp; GA</p>
+		</div>
+	</body>
+</html>
