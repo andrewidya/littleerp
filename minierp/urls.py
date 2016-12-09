@@ -2,8 +2,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from django.http import HttpResponseRedirect
+
 
 urlpatterns = [
+    url(r'^$', lambda x: HttpResponseRedirect('/admin')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', include(admin.site.urls)),
