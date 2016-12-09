@@ -1,0 +1,39 @@
+==========
+User Guide
+==========
+
+COPSERP is a customize order of erp system to work for man power supply
+company, initiated by PT Commercial Servisindo Prima. As an erp system
+it has common applications used in other erp system, this documentation
+covers how to & usage the system.
+
+We divided application in the system as listed
+
+1. CRM Application
+2. HRM Application
+3. Operational Application
+4. Finance Application
+5. General & Affairs Application
+
+CRM Application
+===============
+
+This application covers bussines logic workflows for Customer Relation
+Manager department.
+
+Customer
+--------
+
+
+
+HRM Application
+===============
+
+Operational Application
+=======================
+
+Finance Application
+===================
+
+General & Affairs Application
+============================= 
