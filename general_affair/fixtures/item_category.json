@@ -1,0 +1,9 @@
+[
+{
+    "fields": {
+        "name": "Personel Attribute"
+    },
+    "model": "general_affair.itemcategory",
+    "pk": 1
+}
+]

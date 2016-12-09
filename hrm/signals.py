@@ -36,4 +36,3 @@ def update_leave(sender, instance, **kwargs):
     )
     annual_leave.remaining_day_allowed = F('remaining_day_allowed') + instance.day
     annual_leave.save(update_fields=['remaining_day_allowed'])
-

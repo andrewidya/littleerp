@@ -1,0 +1,21 @@
+[
+{
+    "fields": {
+        "phone_number": "0315963312",
+        "business_type": 1,
+        "name": "Maju Jaya Teknik",
+        "end_date": "2017-12-30",
+        "siup_number": "",
+        "join_date": "2017-12-1",
+        "tax_id_number": "",
+        "owner_id_number": "",
+        "address": "Jl Raya Mastrip 70 Komplek Industri Wira Jatim Surabaya",
+        "owner": "",
+        "tdp_number": "",
+        "start_date": "2017-12-1",
+        "description": ""
+    },
+    "model": "general_affair.supplier",
+    "pk": 1
+}
+]

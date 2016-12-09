@@ -1,0 +1,9 @@
+[
+{
+    "fields": {
+        "name": "PT (Perseroan Terbatas)"
+    },
+    "model": "general_affair.supplierbusinesstype",
+    "pk": 1
+}
+]

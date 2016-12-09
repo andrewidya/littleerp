@@ -1,0 +1,15 @@
+[
+{
+    "fields": {
+        "code": "A.1",
+        "description": "",
+        "item_category": 1,
+        "buy_price": "10000.00",
+        "sell_price": "12000.00",
+        "item_type": 1,
+        "name": "ID Card"
+    },
+    "model": "general_affair.item",
+    "pk": 1
+}
+]

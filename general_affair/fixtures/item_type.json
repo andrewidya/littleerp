@@ -1,0 +1,10 @@
+[
+{
+    "fields": {
+        "code": "IT.01",
+        "name": "Consumable"
+    },
+    "model": "general_affair.itemtype",
+    "pk": 1
+}
+]
