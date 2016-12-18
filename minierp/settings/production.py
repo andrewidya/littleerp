@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'en(g%a=uend@&#n_zu9pr71iz-5x_$94q_=hk)k$af%ys!%@z_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cron',
-    'debug_toolbar',
     'sekizai',
     'import_export',
     'fsm_admin',
@@ -90,8 +89,7 @@ TEMPLATES = [
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
-                    ]
-                )
+                ])
             ],
         },
     },
@@ -105,13 +103,14 @@ REST_FRAMEWORK = {
     )
 }
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'minierp',
+        'HOST': 'localhost',
+        'USER': 'copsadmin',
+        'PASSWORD': 'copscops',
+        'PORT': '3306',
     }
 }
 
@@ -134,12 +133,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'minierp/static/'),
+    os.path.join(BASE_DIR, 'static/'),
 )
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../media/')
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -167,9 +166,5 @@ MINIERP_SETTINGS = {
 
 JET_DEFAULT_THEME = 'custom'
 JET_SIDE_MENU_COMPACT = True
-
 REPORT_BUILDER_GLOBAL_EXPORT = True
-
-INTERNAL_IPS = '127.0.0.1'
-
 JET_CHANGE_FORM_SIBLING_LINKS = False

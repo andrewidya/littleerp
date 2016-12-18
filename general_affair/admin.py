@@ -1,7 +1,10 @@
+from functools import update_wrapper
+
 from datetime import datetime
 
 from fsm_admin.mixins import FSMTransitionMixin
 
+from django.conf.urls import url
 from django.contrib import admin
 from django.template import Context
 
@@ -10,6 +13,20 @@ from general_affair.models import (Supplier, SupplierBusinessType,
                                    OrderReceipt, ItemIssued, IDReleaseType,
                                    IDCard)
 from reporting.utils import HTML2PDF
+
+
+def get_model_info(obj):
+    app_label = obj.model._meta.app_label
+    try:
+        return (app_label, obj.model._meta.model_name,)
+    except AttributeError:
+        return (app_label, obj.model._meta.module_name,)
+
+
+def wrap(obj, view):
+    def wrapper(*args, **kwargs):
+        return obj.admin_site.admin_view(view, cacheable=True)(*args, **kwargs)
+    return update_wrapper(wrapper, view)
 
 
 @admin.register(Supplier)
@@ -48,17 +65,26 @@ class SupplierAdmin(admin.ModelAdmin):
         })
     )
     search_fields = ('name', )
-    actions = ['print_supplier']
+    change_list_template = 'admin/general_affair/change_list.html'
 
-    def print_supplier(self, request, queryset):
-        supplier = queryset.select_related('business_type').order_by('name')
-        context = Context({'suppliers': supplier, 'today': datetime.now()})
+    def get_urls(self):
+        urls = super(SupplierAdmin, self).get_urls()
+        info = get_model_info(self)
+        admin_extra_url = [
+            url(r'report/$', self.admin_site.admin_view(self.report), name='%s_%s_report' % info)
+        ]
+
+        return admin_extra_url + urls
+
+    def report(self, request, *args, **kwargs):
+        queryset = self.model._default_manager.get_queryset()
+        context = Context({'suppliers': queryset, 'today': datetime.now()})
         report = HTML2PDF(
             context,
             template_name='general_affair/report/supplier.html',
-            output='supplier_data_report.pdf')
+            output='supplier_list.pdf'
+        )
         return report.render(request)
-    print_supplier.short_description = 'Print selected supplier'
 
 
 @admin.register(SupplierBusinessType)

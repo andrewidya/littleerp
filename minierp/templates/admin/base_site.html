@@ -3,11 +3,14 @@
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
+{% block extrastyle %}
+	<link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
+{% endblock %}
 {% block branding %}
 <img src="{% static 'minierp/img/logo.png' %}" alt="" style="max-width: 75%;">
 <br>
 <h1 id="site-name">
-	<a href="{% url 'admin:index' %}">PT Comercial Servisindo Prima</a>
+	<a href="{% url 'admin:index' %}">PT Commercial Prima Servisindo</a>
 </h1>
 {% endblock %}
 

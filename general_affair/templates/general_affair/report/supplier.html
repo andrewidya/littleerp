@@ -14,6 +14,9 @@
 				font-weight: bold;
 				font-size: 80%;
 			}			
+			.logo__brand {
+				width: 10%;
+			}
 			@page {
 				size: A4;
 				margin: 0.5cm 1cm;
@@ -24,7 +27,9 @@
 		<div class="container">
 			<div class="header">
 				<div class="row">
-					<div class="logo col-sm-3"></div>
+					<div class="logo col-sm-3">
+						<img src="{% static 'minierp/img/logo.png' %}" class="logo__brand">
+					</div>
 					<div class="header-title col-sm-7 text-center">DATA SUPPLIER</div>
 				</div>
 			</div>
