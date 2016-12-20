@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django_fsm import FSMField, transition
 
 from django.db import models
@@ -44,6 +46,29 @@ class Invoice(models.Model):
         through='InvoiceDetail',
         related_name='invoice_detail'
     )
+    pph21 = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name=_('PPh21'),
+        help_text=_('PPh21 value must be decimal, ex: input 12\% / as 0.12')
+    )
+    fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=3,
+        blank=True,
+        null=True,
+        verbose_name=_('Management Fee'),
+        help_text=_('Fee value must be decimal, ex: input 12\% / as 0.12')
+    )
+    ppn = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name=_('PPN'),
+        default=Decimal(0.1),
+        help_text=_('PPN value must be decimal, ex: input 12\% / as 0.12')
+    )
 
     objects = InvoiceManager()
 
@@ -53,8 +78,16 @@ class Invoice(models.Model):
     def __unicode__(self):
         return str(("INV #" + str(self.invoice_number).zfill(4)))
 
+    def save(self, *args, **kwargs):
+        if self.pph21 is None:
+            self.pph21 = self.sales_order.tax
+        if self.fee is None:
+            self.fee = self.sales_order.fee
+        super(Invoice, self).save(*args, **kwargs)
+
     def formated_invoice_number(self):
         return str(("INV #" + str(self.invoice_number).zfill(4)))
+    formated_invoice_number.short_description = 'Invoice'
 
     @transition(field=state, source=[InvoiceState.DRAFT, InvoiceState.ONGOING], target=InvoiceState.CANCEL)
     def cancel(self):

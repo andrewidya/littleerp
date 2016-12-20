@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from functools import update_wrapper
 
 from fsm_admin.mixins import FSMTransitionMixin
 from jet.admin import CompactInline
 
 from django.contrib import admin
+from django.contrib.admin.options import IS_POPUP_VAR
 from django.template import Context
 
 from reporting.admin import HTMLModelReportMixin
@@ -143,11 +146,13 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
         ('General Information', {
             'fields': ('invoice_number', 'sales_order')
         }),
+        ('Tax Information', {
+            'fields': ('pph21', 'fee', 'ppn')
+        })
     )
-    fsm_field = ['state', ]
     report_context_object_name = 'invoice'
     report_template = 'finance/report/invoice.html'
-    change_form_template = "admin/finance/change_form.html"
+    change_form_template = "admin/finance/change_form_fsm.html"
     list_select_related = True
     inlines = [InvoiceDetailInline]
 
@@ -161,12 +166,43 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
             return False
         return super(InvoiceAdmin, self).has_delete_permission(request, obj=obj)
 
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            fieldsets = (
+                ('General Information', {
+                    'fields': ('invoice_number', 'sales_order')
+                }),
+            )
+            return fieldsets
+        return super(InvoiceAdmin, self).get_fieldsets(request, obj)
+
+    def get_inline_instances(self, request, obj=None):
+        if obj is None:
+            return []
+        return super(InvoiceAdmin, self).get_inline_instances(request, obj)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        if '_addanother' not in request.POST and IS_POPUP_VAR not in request.POST:
+            request.POST['_continue'] = 1
+        return super(InvoiceAdmin, self).response_add(request, obj, post_url_continue)
+
     def get_context_data(self, obj):
         invoice_item = obj.invoicedetail_set.all()
+        total_invoice_detail = 0
+        if invoice_item:
+            for item in invoice_item:
+                total_invoice_detail += item.amount
+        pph21 = obj.pph21 * total_invoice_detail
+        ppn = obj.ppn * total_invoice_detail
+        fee = obj.fee * total_invoice_detail
         customer = obj.sales_order.customer
         context = super(InvoiceAdmin, self).get_context_data(obj)
         context['invoice_item'] = invoice_item
         context['customer'] = customer
+        context['pph21'] = pph21.quantize(Decimal("0.00"))
+        context['ppn'] = ppn.quantize(Decimal("0.00"))
+        context['fee'] = fee.quantize(Decimal("0.00"))
+        context['total'] = (fee + ppn + pph21 + total_invoice_detail).quantize(Decimal("0.00"))
         return context
 
 
