@@ -1,16 +1,23 @@
+from decimal import Decimal
+
 from functools import update_wrapper
 
 from fsm_admin.mixins import FSMTransitionMixin
 from jet.admin import CompactInline
 
+import django
 from django.contrib import admin
+from django.contrib.admin.options import IS_POPUP_VAR
 from django.template import Context
+from django.template.response import TemplateResponse
 
 from reporting.admin import HTMLModelReportMixin
 from reporting.utils import HTML2PDF
 from finance.models import (Invoice, InvoiceDetail, InvoicedItemType,
-                            InvoiceState, InvoiceTransaction, PaidPayroll)
+                            InvoiceState, InvoiceTransaction, PaidPayroll,
+                            TransactionType)
 from finance.options import get_financial_statement
+from finance.forms import FinanceStatementPeriodForm
 from operational.models import PayrollDetail
 
 
@@ -86,7 +93,10 @@ class PaidPayrollAdmin(admin.ModelAdmin):
             ``HttpResponse``
                       PDF data formated objects
         """
-        payroll_list = queryset.select_related('contract', 'contract__employee').prefetch_related('payrolldetail_set')
+        payroll_list = queryset.select_related(
+            'contract',
+            'contract__employee'
+        ).prefetch_related('payrolldetail_set')
         container = []
         for payroll in payroll_list:
             payroll_item = {}
@@ -96,8 +106,11 @@ class PaidPayrollAdmin(admin.ModelAdmin):
                 'tunjangan': [],
                 'lain': []
             }
-            for detail in (payroll.payrolldetail_set.select_related('salary', 'salary__salary_category').all()
-                           .order_by('salary__salary_category')):
+            data = payroll.payrolldetail_set.selected(
+                'salary',
+                'salary__salary_category'
+            ).all().order_by('salary__salary_category')
+            for detail in data:
                 if detail.salary.salary_category.name == "Potongan":
                     payroll_item['detail']['potongan'].append(detail)
                 elif detail.salary.salary_category.name == "Tunjangan":
@@ -116,18 +129,21 @@ class InvoiceDetailInline(CompactInline):
     extra = 0
 
     def get_readonly_fields(self, request, obj=None):
-        if obj is not None and obj.state != InvoiceState.DRAFT:
-            return ('invoiced_item', 'period', 'amount', 'notes')
+        if obj:
+            if obj.state != InvoiceState.DRAFT:
+                return ('invoiced_item', 'period', 'amount', 'note')
         return super(InvoiceDetailInline, self).get_readonly_fields(request, obj=obj)
 
     def get_max_num(self, request, obj=None, **kwargs):
-        if obj is not None and obj.state != InvoiceState.DRAFT:
-            return 0
+        if obj:
+            if obj.state != InvoiceState.DRAFT:
+                return 0
         return super(InvoiceDetailInline, self).get_max_num(request, obj=obj, **kwargs)
 
     def has_delete_permission(self, request, obj=None):
-        if obj is not None and obj.state != InvoiceState.DRAFT:
-            return False
+        if obj:
+            if obj.state != InvoiceState.DRAFT:
+                return False
         return super(InvoiceDetailInline, self).has_delete_permission(request, obj=obj)
 
 
@@ -143,17 +159,19 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
         ('General Information', {
             'fields': ('invoice_number', 'sales_order')
         }),
+        ('Tax Information', {
+            'fields': ('pph21', 'fee', 'ppn')
+        })
     )
-    fsm_field = ['state', ]
     report_context_object_name = 'invoice'
     report_template = 'finance/report/invoice.html'
-    change_form_template = "admin/finance/change_form.html"
+    change_form_template = "admin/finance/change_form_fsm.html"
     list_select_related = True
     inlines = [InvoiceDetailInline]
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.state != InvoiceState.DRAFT:
-            return ('sales_order', 'invoice_number')
+            return ('sales_order', 'invoice_number', 'pph21', 'fee', 'ppn')
         return super(InvoiceAdmin, self).get_readonly_fields(request, obj=obj)
 
     def has_delete_permission(self, request, obj=None):
@@ -161,12 +179,43 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
             return False
         return super(InvoiceAdmin, self).has_delete_permission(request, obj=obj)
 
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            fieldsets = (
+                ('General Information', {
+                    'fields': ('invoice_number', 'sales_order')
+                }),
+            )
+            return fieldsets
+        return super(InvoiceAdmin, self).get_fieldsets(request, obj)
+
+    def get_inline_instances(self, request, obj=None):
+        if obj is None:
+            return []
+        return super(InvoiceAdmin, self).get_inline_instances(request, obj)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        if '_addanother' not in request.POST and IS_POPUP_VAR not in request.POST:
+            request.POST['_continue'] = 1
+        return super(InvoiceAdmin, self).response_add(request, obj, post_url_continue)
+
     def get_context_data(self, obj):
         invoice_item = obj.invoicedetail_set.all()
+        total_invoice_detail = 0
+        if invoice_item:
+            for item in invoice_item:
+                total_invoice_detail += item.amount
+        pph21 = obj.pph21 * total_invoice_detail
+        ppn = obj.ppn * total_invoice_detail
+        fee = obj.fee * total_invoice_detail
         customer = obj.sales_order.customer
         context = super(InvoiceAdmin, self).get_context_data(obj)
         context['invoice_item'] = invoice_item
         context['customer'] = customer
+        context['pph21'] = pph21.quantize(Decimal("0.00"))
+        context['ppn'] = ppn.quantize(Decimal("0.00"))
+        context['fee'] = fee.quantize(Decimal("0.00"))
+        context['total'] = (fee + ppn + pph21 + total_invoice_detail).quantize(Decimal("0.00"))
         return context
 
 
@@ -175,9 +224,21 @@ class InvoiceItemTypeAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(TransactionType)
+class TransactionTypeAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(InvoiceTransaction)
 class InvoiceTransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        'invoice',
+        'transaction_type',
+        'date',
+        'amount'
+    )
     change_list_template = 'admin/finance/change_list_finance_report.html'
+    report_intermediate_template = 'finance/finance_report_generation.html'
 
     def get_urls(self):
         """
@@ -201,9 +262,28 @@ class InvoiceTransactionAdmin(admin.ModelAdmin):
         return finance_statement_url + urls
 
     def generate_finance_statement(self, request):
-        record = get_financial_statement()
-        finance_list = [obj for obj in record]
-        print(finance_list)
-        context = Context({'finance_list': finance_list})
-        html_pdf = HTML2PDF(context, template_name='finance/report/finance_statement.html', output='document.pdf')
-        return html_pdf.render(request)
+        import pdb
+        pdb.set_trace()
+
+        form = FinanceStatementPeriodForm(request.POST or None)
+
+        if form.is_valid():
+            record = get_financial_statement()
+            finance_list = [obj for obj in record]
+            context = Context({'finance_list': finance_list})
+            html_pdf = HTML2PDF(context, template_name='finance/report/finance_statement.html',
+                                output='document.pdf')
+            return html_pdf.render(request)
+
+        context = {}
+
+        if django.VERSION >= (1, 8, 0):
+            context.update(self.admin_site.each_context(request))
+        elif django.VERSION >= (1, 7, 0):
+            context.update(self.admin_site.each_context())
+
+        context['form'] = form
+        context['opts'] = self.model._meta
+        request.current_app = self.admin_site.name
+        return TemplateResponse(request, [self.report_intermediate_template],
+                                context)

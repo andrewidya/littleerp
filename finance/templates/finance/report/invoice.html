@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +49,9 @@
 		}
 		.customer-info .name {
 			font-weight: bold;
+		}
+		.header {
+			background-color: red;
 		}
 		.items {
 			font-size: 8pt;
@@ -122,7 +126,7 @@
 <body>
 	<div class="container">
 		<div class="side-info">
-			<img class="company-logo" src="logo.jpg" alt="">
+			<img class="company-logo" src="{% static 'minierp/img/logo.png' %}" style="max-width: 75%;" alt="">
 			<div class="invoice-info">
 				<span class="number">INVOICE # {{ invoice.invoice_number }}</span>
 				<span class="date">{{ invoice.date_create }}</span>
@@ -146,7 +150,7 @@
 			<div class="items">
 				<table>
 					<thead>
-						<tr>
+						<tr class="header">
 							<th></th>
 							<th>Name</th>
 							<th>Period</th>
@@ -157,7 +161,7 @@
 					<tbody>
 						{% for item in invoice_item %}
 						<tr>
-							<td>-</td>
+							<td>{{ forloop.counter }}</td>
 							<td>{{ item.invoiced_item }}</td>
 							<td>{{ item.period }}</td>
 							<td>Rp {{ item.amount }}</td>
@@ -167,25 +171,25 @@
 							<td></td>
 							<td>Manajemen Fee</td>
 							<td>10%</td>
-							<td>$ 100</td>
+							<td>Rp {{ fee }}</td>
 						</tr>
 						<tr>
 							<td></td>
 							<td>PPN</td>
 							<td>10%</td>
-							<td>$ 100</td>
+							<td>Rp {{ ppn }}</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td>PPh</td>
+							<td>PPh21</td>
 							<td>10%</td>
-							<td>$ 100</td>
+							<td>Rp {{ pph21 }}</td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><b>Total</b></td>
 							<td></td>
-							<td><b>$ 18.000</b></td>
+							<td><b>Rp {{ total }}</b></td>
 						</tr>
 					</tbody>
 					{% endif %}

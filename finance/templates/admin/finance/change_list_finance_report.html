@@ -4,7 +4,7 @@
 
 {% block object-tools-items %}
   <li>
-  	<a href="{% url opts|admin_urlname:'generate_finance_statement' %}" class="grp-state-focus report_link">{% trans "Generate Finance Statement" %}</a>
+  	<a href="{% url opts|admin_urlname:'generate_finance_statement' %}" class="grp-state-focus report_link"><i class="fa fa-print fa-lg"></i> {% trans "Finance Statement" %}</a>
   </li>
   {{ block.super }}
 {% endblock %}
