@@ -237,7 +237,7 @@ class InvoiceTransactionAdmin(admin.ModelAdmin):
         'date',
         'amount'
     )
-    change_list_template = 'admin/finance/change_list_finance_report.html'
+    # change_list_template = 'admin/finance/change_list_finance_report.html'
     report_intermediate_template = 'finance/finance_report_generation.html'
 
     def get_urls(self):
@@ -262,9 +262,6 @@ class InvoiceTransactionAdmin(admin.ModelAdmin):
         return finance_statement_url + urls
 
     def generate_finance_statement(self, request):
-        import pdb
-        pdb.set_trace()
-
         form = FinanceStatementPeriodForm(request.POST or None)
 
         if form.is_valid():

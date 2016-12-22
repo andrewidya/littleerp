@@ -65,7 +65,6 @@ class SupplierAdmin(admin.ModelAdmin):
         })
     )
     search_fields = ('name', )
-    change_list_template = 'admin/general_affair/change_list.html'
 
     def get_urls(self):
         urls = super(SupplierAdmin, self).get_urls()
