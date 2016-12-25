@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.css' %}">
+		<title>Pengajuan Penggajian</title>
+		<style>
+			html, body {
+				font-family: "PT Sans";
+				font-size: 80%;
+			}
+			.header-title {
+				font-weight: bold;
+				font-size: 85%;
+			}
+			.payroll_proposal_report {
+				page-break-after: always;
+			}
+			.payroll_proposal_report:last-child {
+				page-break-after: avoid;
+			}
+			@page {
+				size: A4 landscape;
+				margin: 0.5cm 1cm;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			{% if data %}
+				{% for payroll in data %}
+					{% include "operational/report/include/pengajuan_payroll_item.html" %}
+				{% endfor %}
+			{% endif %}
+		</div>
+		
+	</body>
+</html>

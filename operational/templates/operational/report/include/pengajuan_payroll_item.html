@@ -1,0 +1,89 @@
+{% load minierp_tags %}
+<div class="payroll_proposal_report">
+	<div class="header">
+		<div class="row">
+			<div class="header-title col-sm-12 text-center">
+				<span><b>DATA PEGAWAI</b></span><br />
+				<span><b>PT COMMERSIAL PRIMA SERVISINDO</b></span><br />
+				<span><b>BULAN</b></span><br />
+			</div>
+		</div>
+	</div>
+	<p>LOKASI : {{ payroll.0 }}</p>
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>No</th>
+				<th>Nama Pegawai</th>
+				<th>NRG</th>
+				<th>Jabatan</th>
+				<th>Lokasi Kerja</th>
+				<th>Nama Bank</th>
+				<th>No Rekening</th>
+				<th>Gaji Ditransfer</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for pay in payroll.1 %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ pay.contract.employee.get_full_name }}</td>
+				<td>{{ pay.contract.employee.reg_number }}</td>
+				<td>{{ pay.contract.employee.job_title.name }}</td>
+				<td>{{ payroll.0 }}</td>
+				<td>{{ pay.contract.employee.bank.name }}</td>
+				<td>{{ pay.contract.employee.bank_account }}</td>
+				<td>{{ pay.total }}</td>
+			{% endfor %}
+			</tr>
+			<tr class="table-footer">
+				<td>**</td>
+				<td>Total Pengajuan</td>
+				<td colspan="4">Total Pegawai {% total_employee payroll.1 %} orang</td>
+				<td>Total Gaji</td>
+				<td>{% total_salary payroll.1 %}</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>Lembar Persetujuan</p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th colspan="2">Prepared by</th>
+				<th colspan="2">Approved by</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<br />
+					<br />
+					<br />
+					<span>Dede Sugiarto</span><br />
+					<span>SPV Ns Division</span>
+				</td>
+				<td>
+					<br />
+					<br />
+					<br />
+					<span>Abdul Kholil</span><br />
+					<span>Head of Sc Division</span>
+				</td>
+				<td>
+					<br />
+					<br />
+					<br />
+					<span>Rizki Nutrianggono</span><br />
+					<span>SPV HRD</span>
+				</td>
+				<td>
+					<br />
+					<br />
+					<br />
+					<span>Totok Triantmoko, Msi</span><br />
+					<span>Senior Operational Manager</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

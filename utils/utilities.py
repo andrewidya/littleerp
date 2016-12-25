@@ -1,3 +1,5 @@
+from functools import update_wrapper
+
 import pyexcel as pe
 import tablib
 from import_export import resources
@@ -83,3 +85,17 @@ def Terbilang(x):
     else:
         Hasil = Terbilang(n / 1000000000) + ' Milyar' + Terbilang(n % 100000000)
     return Hasil
+
+
+def get_model_info(obj):
+    app_label = obj.model._meta.app_label
+    try:
+        return (app_label, obj.model._meta.model_name,)
+    except AttributeError:
+        return (app_label, obj.model._meta.module_name,)
+
+
+def wrap(obj, view):
+    def wrapper(*args, **kwargs):
+        return obj.admin_site.admin_view(view, cacheable=True)(*args, **kwargs)
+    return update_wrapper(wrapper, view)

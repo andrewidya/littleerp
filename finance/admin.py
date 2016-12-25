@@ -8,11 +8,10 @@ from jet.admin import CompactInline
 import django
 from django.contrib import admin
 from django.contrib.admin.options import IS_POPUP_VAR
-from django.template import Context
 from django.template.response import TemplateResponse
 
 from reporting.admin import HTMLModelReportMixin
-from reporting.utils import HTML2PDF
+from reporting.response import PDFResponse
 from finance.models import (Invoice, InvoiceDetail, InvoicedItemType,
                             InvoiceState, InvoiceTransaction, PaidPayroll,
                             TransactionType)
@@ -106,21 +105,22 @@ class PaidPayrollAdmin(admin.ModelAdmin):
                 'tunjangan': [],
                 'lain': []
             }
-            data = payroll.payrolldetail_set.selected(
+            payroll_item['period'] = payroll.period.end_date
+            data = payroll.payrolldetail_set.select_related(
                 'salary',
                 'salary__salary_category'
             ).all().order_by('salary__salary_category')
             for detail in data:
-                if detail.salary.salary_category.name == "Potongan":
+                if detail.salary.calculate_condition == "-":
                     payroll_item['detail']['potongan'].append(detail)
                 elif detail.salary.salary_category.name == "Tunjangan":
                     payroll_item['detail']['tunjangan'].append(detail)
                 elif detail.salary.salary_category.name == "Lain-lain":
                     payroll_item['detail']['lain'].append(detail)
             container.append(payroll_item)
-        context = Context({'container': container})
-        html_pdf = HTML2PDF(context, template_name='finance/report/payslip.html', output='payslip.pdf')
-        return html_pdf.render(request)
+        context = {'container': container}
+        template = 'finance/report/payslip.html'
+        return PDFResponse(request, template, context, filename='payslip.pdf')
     print_payslip.short_description = 'Print payslip for selected payroll'
 
 
@@ -267,10 +267,9 @@ class InvoiceTransactionAdmin(admin.ModelAdmin):
         if form.is_valid():
             record = get_financial_statement()
             finance_list = [obj for obj in record]
-            context = Context({'finance_list': finance_list})
-            html_pdf = HTML2PDF(context, template_name='finance/report/finance_statement.html',
-                                output='document.pdf')
-            return html_pdf.render(request)
+            context = {'finance_list': finance_list}
+            template = 'finance/report/finance_statement.html'
+            return PDFResponse(request, template, context, filename="finance_statement.pdf")
 
         context = {}
 

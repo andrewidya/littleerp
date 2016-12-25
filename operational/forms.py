@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 
 from operational.models import PayrollPeriod, Payroll
 
@@ -29,3 +30,7 @@ class PayrollCreationForm(forms.ModelForm):
         if period.state == "CLOSE":
             raise forms.ValidationError('Cannot add payroll in closed period')
         return period
+
+
+class PayrollProposalReportForm(forms.Form):
+    period = forms.DateField(widget=AdminDateWidget)
