@@ -23,13 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'en(g%a=uend@&#n_zu9pr71iz-5x_$94q_=hk)k$af%ys!%@z_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] if DEBUG else ['*']
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'jet.dashboard',
     'jet',
@@ -51,7 +51,7 @@ INSTALLED_APPS = (
     'finance',
     'reporting',
     'general_affair',
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,16 +103,26 @@ REST_FRAMEWORK = {
     )
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'minierp',
-        'HOST': 'localhost',
-        'USER': 'copsadmin',
-        'PASSWORD': 'copscops',
-        'PORT': '3306',
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    INTERNAL_IPS = '127.0.0.1'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'minierp',
+            'HOST': 'localhost',
+            'USER': 'copsadmin',
+            'PASSWORD': 'copscops',
+            'PORT': '3306',
+        }
+    }
 
 
 # Internationalization
@@ -133,12 +143,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/'),
+    os.path.join(BASE_DIR, 'minierp/static/'),
 )
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '../media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -164,7 +174,42 @@ MINIERP_SETTINGS = {
     },
 }
 
-JET_DEFAULT_THEME = 'custom'
+JET_DEFAULT_THEME = 'cops'
 JET_SIDE_MENU_COMPACT = True
-REPORT_BUILDER_GLOBAL_EXPORT = True
+REPORT_BUILDER_INCLUDE = [
+    'customer',
+    'salesorder',
+    'salesorderdetail',
+    'satisficationpointcategory',
+    'satisficationpointrateitem',
+    'satisfication',
+    'satisficationdetail',
+    'employee',
+    'employeeaddress',
+    'familyofemployee',
+    'education',
+    'paidpayroll',
+    'invoice',
+    'invoicedetail',
+    'invoicetransaction',
+    'visitcustomer',
+    'visitpointrateitem',
+    'visitcustomerdetail',
+    'payroll',
+    'payrolldetail'
+    'attendance',
+    'course',
+    'coursetype',
+    'trainingschedule',
+    'trainingclass',
+    'supplier',
+    'itemtype',
+    'itemcategory',
+    'item',
+    'purchaseorder',
+    'orderreceipt',
+    'itemissued',
+    'idreleasetype',
+    'idcard'
+]
 JET_CHANGE_FORM_SIBLING_LINKS = False

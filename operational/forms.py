@@ -33,4 +33,9 @@ class PayrollCreationForm(forms.ModelForm):
 
 
 class PayrollProposalReportForm(forms.Form):
+    REPORT_CHOICES = (
+        (1, 'Pengajuan Payroll'),
+        (2, 'Rincian Payroll')
+    )
     period = forms.DateField(widget=AdminDateWidget)
+    report_type = forms.ChoiceField(required=True, choices=REPORT_CHOICES)

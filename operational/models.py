@@ -463,6 +463,7 @@ class Payroll(models.Model):
         attendance = Attendance.objects.get(period=self.period, employee=self.contract.employee)
         return attendance
 
+    @property
     def normative_overtime(self):
         """Get normative overtime.
 
@@ -476,6 +477,7 @@ class Payroll(models.Model):
         attendance = self.get_attendance()
         return self.normal_overtime * attendance.ln
 
+    @property
     def specific_overtime(self):
         """Get specific overtime.
 
@@ -490,6 +492,7 @@ class Payroll(models.Model):
         salary_per_day = self.base_salary_per_day
         return attendance.lk * Decimal(salary_per_day)
 
+    @property
     def changing_overtime(self):
         """Get changable overtime.
 
@@ -504,6 +507,7 @@ class Payroll(models.Model):
         salary_per_day = self.base_salary_per_day
         return attendance.lp * Decimal(salary_per_day)
 
+    @property
     def hourly_overtime(self):
         """Get hourly based overtime.
 
@@ -548,6 +552,46 @@ class Payroll(models.Model):
         l4 = attendance.l4 * rate * Decimal(4.00)
         return ln + lp + lk + l1 + l2 + l3 + l4
     calculate_overtime.short_description = 'Total Overtime'
+
+    @property
+    def deduction_by_attendance(self):
+        attendance = self.get_attendance()
+        salary_per_day = self.base_salary_per_day
+        return self.calculate_decrease(attendance, salary_per_day)
+
+    @property
+    def deduction_by_salary(self):
+        """Checking salary components which decrease total salary.
+
+        """
+        total = 0
+        other_salaries = self.payrolldetail_set.select_related('salary').all()
+        for detail in other_salaries:
+            if detail.salary.calculate_condition == '-':
+                total += detail.value
+        return total
+
+    @property
+    def total_deduction(self):
+        return self.deduction_by_attendance + self.deduction_by_salary
+
+    @property
+    def total_overtime(self):
+        salary_per_day = self.base_salary_per_day
+        attendance = self.get_attendance()
+        return self.calculate_overtime(attendance, salary_per_day)
+
+    @property
+    def induction_salary(self):
+        attendance = self.get_attendance()
+        salary_per_day = self.base_salary_per_day
+        salary = self.base_salary + self.back_pay
+        other_salaries = self.payrolldetail_set.select_related('salary').all()
+        for detail in other_salaries:
+            if detail.salary.calculate_condition == '+':
+                salary += detail.value
+        salary += self.calculate_overtime(attendance, salary_per_day)
+        return salary
 
     def calculate_decrease(self, attendance, salary_per_day):
         """Get decreasable type salaries.

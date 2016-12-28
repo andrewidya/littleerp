@@ -1,0 +1,104 @@
+{% load minierp_tags %}
+<div class="payroll_detail_report">
+			<div class="header">
+				<div class="row">
+					<div class="header-title col-sm-12 text-center">
+						<span><b>RINCIAN PEMBAYARA GAJI PEGAWAI</b></span><br />
+						<span><b>PT COMMERSIAL PRIMA SERVISINDO</b></span><br />
+						<span><b>BULAN</b></span><br />
+					</div>
+				</div>
+			</div>
+			<p>LOKASI : {{ payroll.0 }}</p>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th rowspan="2">No</th>
+						<th rowspan="2">Nama Pegawai</th>
+						<th rowspan="2">NRG</th>
+						<th rowspan="2">Jabatan</th>
+						<th colspan="7" class="text-center">Pendapatan</th>
+						<th rowspan="2">Upah Pendapatan</th>
+						<th colspan="5" class="text-center">Potongan</th>
+						<th rowspan="2">Total Potongan</th>
+						<th rowspan="2">Gaji Diterima</th>
+					</tr>
+					<tr>
+						<th>Upah</th>
+						<th>Tunj Kerja</th>
+						<th>Lembur Rutin</th>
+						<th>Tunj Jabatan</th>
+						<th>Lembur Khusus</th>
+						<th>Lembur</th>
+						<th>Rapel Upah</th>
+						<th>BPJS TK</th>
+						<th>Pot Tidak Masuk</th>
+						<th>Pot Lain</th>
+						<th>BPJS Kes</th>
+						<th>PPh21</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for pay in payroll.1 %}
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ pay.contract.employee.get_full_name }}</td>
+						<td>{{ pay.contract.employee.reg_number }}</td>
+						<td>{{ pay.contract.employee.job_title.name }}</td>
+						<td>{{ pay.base_salary }}</td>
+						<td>Dummy Text</td>
+						<td>Dummy Text</td>
+						<td>Dummy Text</td>
+						<td>{{ pay.specific_overtime }}</td>
+						<td>{{ pay.total_overtime }}</td>
+						<td>{{ pay.back_pay }}</td>
+						<td>{{ pay.induction_salary }}</td>
+						<td>Dummy Text</td>
+						<td>{{ pay.deduction_by_attendance }}</td>
+						<td>Dummy Text</td>
+						<td>Dummy Text</td>
+						<td>Dummy Text</td>
+						<td>{{ pay.total_deduction }}</td>
+						<td>{{ pay.total }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<br />
+			<table class="table">
+				<thead>
+					<tr>
+						<th colspan="6">Prepared by</th>
+						<th colspan="13">Approved by</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="6"">
+							<br />
+							<br />
+							<br />
+							<br />
+							<span>Dede Sugiarto</span><br />
+							<span>SPV Ns Division</span>
+						</td>
+						<td colspan="7"">
+							<br />
+							<br />
+							<br />
+							<br />
+							<span>Rizki Nutrianggono</span><br />
+							<span>SPV HRD</span>
+						</td>
+						<td colspan="6"">
+							<br />
+							<br />
+							<br />
+							<br />
+							<span>Totok Triantmoko, Msi</span><br />
+							<span>Senior Operational Manager</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>

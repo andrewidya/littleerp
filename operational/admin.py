@@ -238,6 +238,47 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
         return payroll_extra_url + urls
 
+    def _payroll_proposal_report(self, request, queryset):
+        template = 'operational/report/pengajuan_payroll.html'
+        context = {}
+        data = []
+
+        for payroll in queryset:
+            data.append(
+                (payroll.contract.service_related.sales_order.customer.name,
+                 payroll)
+            )
+
+        d = defaultdict(list)
+
+        for key, value in data:
+            d[key].append(value)
+
+        context['data'] = sorted(d.items())
+
+        return PDFResponse(request, template, context,
+                           filename="pengajuan_gaji.pdf")
+
+    def _payroll_detail_report(self, request, queryset):
+        template = 'operational/report/rincian_payroll.html'
+        context = {}
+        data = []
+
+        for payroll in queryset:
+            data.append(
+                (payroll.contract.service_related.sales_order.customer.name,
+                 payroll)
+            )
+
+        d = defaultdict(list)
+
+        for key, value in data:
+            d[key].append(value)
+
+        context['data'] = sorted(d.items())
+
+        return TemplateResponse(request, template, context)
+
     def payroll_proposal(self, request, *args, **kwargs):
         form = PayrollProposalReportForm(request.POST or None)
 
@@ -248,25 +289,12 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
                 Q(period__start_date__year=period.year) &
                 Q(state=PayrollState.FINAL)
             ).order_by('contract__service_related__sales_order__customer')
-            template = 'operational/report/pengajuan_payroll.html'
-            context = {}
-            data = []
 
-            for payroll in queryset:
-                data.append(
-                    (payroll.contract.service_related.sales_order.customer.name,
-                     payroll)
-                )
+            if form.cleaned_data['report_type'] == '1':
+                return self._payroll_proposal_report(request, queryset)
 
-            d = defaultdict(list)
-
-            for key, value in data:
-                d[key].append(value)
-
-            context['data'] = sorted(d.items())
-
-            return PDFResponse(request, template, context,
-                               filename="pengajuan_gaji.pdf")
+            if form.cleaned_data['report_type'] == '2':
+                return self._payroll_detail_report(request, queryset)
 
         context = {}
         template = 'operational/payroll_report_form.html'
