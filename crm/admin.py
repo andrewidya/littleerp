@@ -20,6 +20,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'name',
         'tax_id_number',
         'phone_number',
+        'pic_name',
         'join_date',
         'parent',
     )
@@ -30,7 +31,7 @@ class CustomerAdmin(admin.ModelAdmin):
                 'logo',
                 ('code', 'name'), ('address', 'city'),
                 ('phone_number', 'tax_id_number'),
-                'parent', 'join_date'
+                'pic_name', 'parent', 'join_date'
             )
         }),
     )
@@ -69,6 +70,7 @@ class SalesOrderAdmin(admin.ModelAdmin):
         'date_create',
         ('date_start', 'date_end'),
         'customer',
+        'contract',
         'tax',
         'fee',
         'fee_calculate_condition',
@@ -77,6 +79,7 @@ class SalesOrderAdmin(admin.ModelAdmin):
     )
     list_display = (
         'number',
+        'contract',
         'customer',
         'date_start',
         'date_end',

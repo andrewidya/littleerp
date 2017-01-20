@@ -5,10 +5,11 @@ from django.utils.translation import ugettext as _
 
 
 class Customer(models.Model):
-    parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('Head Office'))
+    parent = models.ForeignKey('self', null=True, blank=True, verbose_name=_('PIC'))
     code = models.CharField(verbose_name=_('Code'), max_length=10, unique=True)
     name = models.CharField(verbose_name=_('Name'), max_length=50)
     phone_number = models.CharField(verbose_name=_('Phone Number'), max_length=15, null=True, blank=True)
+    pic_name = models.CharField(verbose_name=_('Person In Charge'), max_length=15, null=True, blank=True)
     address = models.CharField(verbose_name=_('Address'), max_length=100, blank=True)
     city = models.CharField(verbose_name=_('City'), max_length=50, blank=True)
     field = models.CharField(verbose_name=_('Field'), max_length=20, blank=True)
@@ -59,6 +60,7 @@ class SalesOrder(models.Model):
     date_end = models.DateField(verbose_name=_('Contract End Date'))
     customer = models.ForeignKey(Customer, verbose_name=_('Customer Name'))
     reference = models.CharField(verbose_name=_('Reference'), max_length=255, blank=True)
+    contract = models.CharField(verbose_name=_('Contract Ref'), max_length=255, blank=True)
     note = models.TextField(blank=True)
     tax = models.DecimalField(
         max_digits=12,
