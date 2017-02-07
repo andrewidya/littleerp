@@ -31,7 +31,13 @@ class CustomerAdmin(admin.ModelAdmin):
                 'logo',
                 ('code', 'name'), ('address', 'city'),
                 ('phone_number', 'tax_id_number'),
-                'pic_name', 'parent', 'join_date'
+                'parent', 'join_date'
+            )
+        }),
+        ('PIC Information', {
+            'fields': (
+                'pic_name',
+                'pic_phone_number',
             )
         }),
     )
@@ -68,9 +74,9 @@ class SalesOrderAdmin(admin.ModelAdmin):
     fields = (
         'number',
         'date_create',
-        ('date_start', 'date_end'),
         'customer',
         'contract',
+        ('date_start', 'date_end'),
         'tax',
         'fee',
         'fee_calculate_condition',
