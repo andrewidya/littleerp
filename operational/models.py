@@ -3,7 +3,6 @@ from __future__ import division
 from decimal import Decimal
 
 from django_fsm import FSMField, transition
-
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext as _
@@ -86,7 +85,7 @@ class VisitCustomerDetail(models.Model):
 
 class PayrollPeriod(models.Model):
     """Payroll period models.
-
+    
     Records & classifiying ``Payroll`` & ``Attendance`` objects
     periodicly based on spesific date
 

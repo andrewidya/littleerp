@@ -45,7 +45,7 @@ class PayrollPeriodFormTest(TestCase):
         form = PayrollPeriodForm(data=data)
         self.assertFalse(form.is_valid())
         self.assertIn('end_date', form.errors)
-        self.assertEqual(form.errors['end_date'], [u'this field must be greater than Start Date'])
+        self.assertEqual(form.errors['end_date'], [u'This field must be greater than Start Date'])
 
 
 class PayrollCreationFormTest(TestCase):
@@ -81,4 +81,4 @@ class PayrollCreationFormTest(TestCase):
         }
         self.assertEqual(self.period.state, u'OPEN')
         form = PayrollCreationForm(data=data)
-        self.asserFalse(form.is_valid())
+        self.assertTrue(form.is_valid())

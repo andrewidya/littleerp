@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.safestring import mark_safe
@@ -93,18 +95,16 @@ class SalesOrder(models.Model):
     service_demand_list.allow_tags = True
     service_demand_list.short_description = 'Service Demand'
 
+    @property
+    def sales_order_number(self):
+        return self.__unicode__()
+
     def total_price(self):
-        total = 0
-        sales_order_detail = (self.salesorderdetail_set.all()
-                              .filter(sales_order=self).prefetch_related('servicesalarydetail_set'))
-        for service in sales_order_detail:
-            service_price = 0
-            salary = 0
-            for service_salary in service.servicesalarydetail_set.all():
-                salary += service_salary.price
-            service_price = salary + service.basic_salary
-            total += service_price * service.quantity
-        return total
+        sales_order_detail = self.salesorderdetail_set.all()
+        total = Decimal(0.00)
+        for order_detail in sales_order_detail:
+            total = total + order_detail.total_line_price()
+        return total       
     total_price.short_description = 'Total Price'
 
     def sales_order_detail_page(self):
@@ -126,7 +126,8 @@ class SalesOrderDetail(models.Model):
         max_digits=12,
         decimal_places=2,
         null=True,
-        blank=True
+        blank=True,
+        default=Decimal(0.00)
     )
     other_salary_detail = models.ManyToManyField(
         'ServiceSalaryItem',
@@ -148,6 +149,14 @@ class SalesOrderDetail(models.Model):
     @staticmethod
     def autocomplete_search_fields():
         return ('sales_order__number', 'service__name')
+    
+    def total_line_price(self):
+        service_price = self.servicesalarydetail_set.aggregate(total=models.Sum('price'))
+        return self.quantity * (self.basic_salary + service_price['total'])
+    
+    @property
+    def total_price(self):
+        return self.total_line_price()
 
 
 class ItemCategory(models.Model):
@@ -183,7 +192,7 @@ class ServiceSalaryItem(models.Model):
 
 
 class ServiceSalaryDetail(models.Model):
-    service_order_detail = models.ForeignKey(
+    sales_order_detail = models.ForeignKey(
         SalesOrderDetail,
         verbose_name=_('Service Order Detail'),
         on_delete=models.CASCADE
@@ -197,10 +206,10 @@ class ServiceSalaryDetail(models.Model):
     class Meta:
         verbose_name = 'Detail Salary Per Service'
         verbose_name_plural = 'Detail Salary Per Service'
-        unique_together = (('service_order_detail', 'service_salary_item'),)
+        unique_together = (('sales_order_detail', 'service_salary_item'),)
 
     def __unicode__(self):
-        return '{0}:{1}'.format(self.service_salary_item.name, self.service_order_detail.sales_order.number)
+        return '{0}:{1}'.format(self.service_salary_item.name, self.sales_order_detail.sales_order.number)
 
 
 class SatisficationPointCategory(models.Model):

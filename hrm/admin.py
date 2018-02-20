@@ -178,6 +178,7 @@ class SalaryNameAdmin(admin.ModelAdmin):
 class OtherSalaryInline(admin.TabularInline):
     model = OtherSalary
     fields = ('salary_name', 'value')
+    extra = 0
 
 
 @admin.register(EmployeeContract)

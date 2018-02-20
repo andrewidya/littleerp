@@ -8,3 +8,5 @@ notes
 .coverage
 minierp.sublime-project
 minierp.sublime-workspace
+wingdbstub.py
+wingdebugpw
