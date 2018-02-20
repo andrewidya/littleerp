@@ -12,7 +12,7 @@ def set_evaluation_ranking(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=LeaveTaken)
-def update_annual_leave(sender, instance, created, **kwargs):
+def update_annual_leave(sender, inAnnualLeavestance, created, **kwargs):
     annual_leave, created = AnnualLeave.objects.get_or_create(
         employee=instance.employee,
         leave_type=instance.leave_type,

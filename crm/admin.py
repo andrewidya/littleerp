@@ -67,6 +67,7 @@ class SalesOrderDetailInline(admin.TabularInline):
 
 class ServiceSalaryDetailInline(admin.TabularInline):
     model = ServiceSalaryDetail
+    extra = 0
 
 
 @admin.register(SalesOrder)
@@ -84,7 +85,7 @@ class SalesOrderAdmin(admin.ModelAdmin):
         'note'
     )
     list_display = (
-        'number',
+        'sales_order_number',
         'contract',
         'customer',
         'date_start',
@@ -119,7 +120,7 @@ class SalesOrderDetailAdmin(admin.ModelAdmin):
         'sales_order',
         'get_service',
         'quantity',
-        'basic_salary'
+        'total_price',
     )
     list_filter = ('service', 'sales_order__number',)
     search_fields = ['sales_order__number', 'sales_order__customer__name']
@@ -143,9 +144,9 @@ class ServiceAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceSalaryDetail)
 class ServiceSalaryDetailAdmin(admin.ModelAdmin):
-    list_display = ('service_order_detail', 'service_salary_item', 'price')
-    list_filter = ('service_order_detail__sales_order__number',)
-    search_fields = ['service_order_detail__sales_order__number', 'service_salary_item__name']
+    list_display = ('sales_order_detail', 'service_salary_item', 'price')
+    list_filter = ('sales_order_detail__sales_order__number',)
+    search_fields = ['sales_order_detail__sales_order__number', 'service_salary_item__name']
 
 
 class SatisficationDetailInline(admin.TabularInline):

@@ -116,6 +116,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 
 class PayrollDetailInline(admin.TabularInline):
     model = PayrollDetail
+    extra = 0
 
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.state != PayrollState.DRAFT:
@@ -238,7 +239,10 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
         return payroll_extra_url + urls
 
-    def _payroll_proposal_report(self, request, queryset):
+    def _payroll_proposal_report(self, request, queryset, period):
+        import locale
+        import pdb
+        pdb.set_trace()
         template = 'operational/report/pengajuan_payroll.html'
         context = {}
         data = []
@@ -255,6 +259,9 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
             d[key].append(value)
 
         context['data'] = sorted(d.items())
+        
+        context['payroll_period'] = period.strftime("%B %Y")
+        
 
         return PDFResponse(request, template, context,
                            filename="pengajuan_gaji.pdf")
@@ -291,7 +298,7 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
             ).order_by('contract__service_related__sales_order__customer')
 
             if form.cleaned_data['report_type'] == '1':
-                return self._payroll_proposal_report(request, queryset)
+                return self._payroll_proposal_report(request, queryset, period)
 
             if form.cleaned_data['report_type'] == '2':
                 return self._payroll_detail_report(request, queryset)

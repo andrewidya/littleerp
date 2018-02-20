@@ -92,6 +92,7 @@ class PaidPayrollAdmin(admin.ModelAdmin):
             ``HttpResponse``
                       PDF data formated objects
         """
+        import wingdbstub
         payroll_list = queryset.select_related(
             'contract',
             'contract__employee'
@@ -104,7 +105,7 @@ class PaidPayrollAdmin(admin.ModelAdmin):
                 'potongan': [],
                 'tunjangan': [],
                 'lain': []
-            }
+            } 
             payroll_item['period'] = payroll.period.end_date
             data = payroll.payrolldetail_set.select_related(
                 'salary',
@@ -113,12 +114,13 @@ class PaidPayrollAdmin(admin.ModelAdmin):
             for detail in data:
                 if detail.salary.calculate_condition == "-":
                     payroll_item['detail']['potongan'].append(detail)
-                elif detail.salary.salary_category.name == "Tunjangan":
+                elif "tunjangan" in detail.salary.salary_category.name.lower():
                     payroll_item['detail']['tunjangan'].append(detail)
                 elif detail.salary.salary_category.name == "Lain-lain":
                     payroll_item['detail']['lain'].append(detail)
             container.append(payroll_item)
         context = {'container': container}
+
         template = 'finance/report/payslip.html'
         return PDFResponse(request, template, context, filename='payslip.pdf')
     print_payslip.short_description = 'Print payslip for selected payroll'

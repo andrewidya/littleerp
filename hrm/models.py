@@ -538,3 +538,4 @@ class OtherSalary(models.Model):
 
     def __unicode__(self):
         return self.salary_name.name
+

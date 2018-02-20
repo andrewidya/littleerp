@@ -145,12 +145,12 @@ class ServiceSalaryDetailModel(TestCase):
     def test_service_salary_detail_creation(self):
         sales_order = self._get_sales_order()
         service_salary_detail = ServiceSalaryDetail.objects.create(
-            service_order_detail=SalesOrderDetail.objects.get(pk=1),
+            sales_order_detail=SalesOrderDetail.objects.get(pk=1),
             service_salary_item=ServiceSalaryItem.objects.get(pk=1),
             price=Decimal(100000.00)
         )
         another_service_salary_detail = ServiceSalaryDetail.objects.create(
-            service_order_detail=SalesOrderDetail.objects.get(pk=1),
+            sales_order_detail=SalesOrderDetail.objects.get(pk=1),
             service_salary_item=ServiceSalaryItem.objects.get(pk=2),
             price=Decimal(200000.00)
         )
