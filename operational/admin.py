@@ -234,15 +234,12 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
         payroll_extra_url = [
             url(r'proposal/$',
                 self.admin_site.admin_view(self.payroll_proposal),
-                name='%s_%s_proposal' % info)
+                name='%s_%s_proposal' % info)html
         ]
 
         return payroll_extra_url + urls
 
     def _payroll_proposal_report(self, request, queryset, period):
-        import locale
-        import pdb
-        pdb.set_trace()
         template = 'operational/report/pengajuan_payroll.html'
         context = {}
         data = []
@@ -258,15 +255,14 @@ class PayrollAdmin(FSMTransitionMixin, admin.ModelAdmin):
         for key, value in data:
             d[key].append(value)
 
-        context['data'] = sorted(d.items())
-        
+        context['data'] = sorted(d.items())        
         context['payroll_period'] = period.strftime("%B %Y")
         
 
         return PDFResponse(request, template, context,
                            filename="pengajuan_gaji.pdf")
 
-    def _payroll_detail_report(self, request, queryset):
+    def _payroll_detail_report(self, request, queryset):        
         template = 'operational/report/rincian_payroll.html'
         context = {}
         data = []

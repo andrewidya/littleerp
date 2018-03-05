@@ -12,6 +12,12 @@ from crm.models import (Customer, ItemCategory, SalesOrder, SalesOrderDetail,
 from crm.widgets import AdminImageWidget
 
 
+class CustomerPlus(object):
+    pass
+
+
+CustomerPlus
+
 class CustomerAdmin(admin.ModelAdmin):
     list_filter = ('parent', 'join_date')
     list_display = (
