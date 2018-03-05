@@ -106,6 +106,11 @@ class Invoice(models.Model):
         for detail in self.invoicedetail_set.all():
             total += detail.amount
         return total
+    
+    @property
+    def invoice_value(self):
+        total = self.calculate_total() + (self.calculate_total() * self.fee)
+        return total.quantize(Decimal('.01'))
 
 
 class InvoicedItemType(models.Model):

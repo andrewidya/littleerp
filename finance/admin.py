@@ -154,6 +154,7 @@ class InvoiceAdmin(FSMTransitionMixin, HTMLModelReportMixin, admin.ModelAdmin):
         'sales_order',
         'formated_invoice_number',
         'date_create',
+        'invoice_value',
         'state'
     )
     fieldsets = (

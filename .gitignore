@@ -1,4 +1,6 @@
 .gitignore
+error.log
+function_note
 *.pyc
 static/*
 db.sqlite3
