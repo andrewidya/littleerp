@@ -92,7 +92,6 @@ class PaidPayrollAdmin(admin.ModelAdmin):
             ``HttpResponse``
                       PDF data formated objects
         """
-        import wingdbstub
         payroll_list = queryset.select_related(
             'contract',
             'contract__employee'

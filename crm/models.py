@@ -149,6 +149,14 @@ class SalesOrderDetail(models.Model):
     @staticmethod
     def autocomplete_search_fields():
         return ('sales_order__number', 'service__name')
+    
+    def total_line_price(self):
+        service_price = self.servicesalarydetail_set.aggregate(total=models.Sum('price'))
+        return self.quantity * (self.basic_salary + service_price['total'])
+    
+    @property
+    def total_price(self):
+        return self.total_line_price()
 
     def total_line_price(self):
         service_price = self.servicesalarydetail_set.aggregate(total=models.Sum('price'))
