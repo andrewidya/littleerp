@@ -1,3 +1,4 @@
+.gitignore
 *.pyc
 static/*
 db.sqlite3
@@ -10,3 +11,5 @@ minierp.sublime-project
 minierp.sublime-workspace
 wingdbstub.py
 wingdebugpw
+.vscode
+.vscode/*
